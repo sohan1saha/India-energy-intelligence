@@ -1,25 +1,38 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Helper component to center and fly map to selected node coordinates
+function MapFlyToHandler({ targetPos }: { targetPos: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (targetPos) {
+      map.flyTo(targetPos, 6.5, { duration: 1.5 });
+    }
+  }, [targetPos, map]);
+  return null;
+}
+
 // Custom Animated Leaflet HTML DivIcons
-const createRadarIcon = (color: string, label: string, isAlert: boolean = false) => {
-  const pulseHtml = isAlert
-    ? `<span class="absolute -inset-1.5 rounded-full bg-red-500/40 animate-ping"></span>`
+const createRadarIcon = (color: string, label: string, isHighlighted: boolean = false, isAlert: boolean = false) => {
+  const pulseHtml = (isAlert || isHighlighted)
+    ? `<span class="absolute -inset-2.5 rounded-full ${isHighlighted ? 'bg-amber-400/60' : 'bg-red-500/40'} animate-ping"></span>`
     : '';
+
+  const scaleClass = isHighlighted ? 'scale-150 ring-4 ring-amber-400' : 'group-hover:scale-125';
 
   return L.divIcon({
     className: 'custom-leaflet-marker',
     html: `
       <div class="relative flex items-center justify-center cursor-pointer group">
         ${pulseHtml}
-        <div style="background-color: ${color};" class="w-4 h-4 rounded-full border-2 border-white shadow-lg flex items-center justify-center relative z-10 transition-transform group-hover:scale-125">
+        <div style="background-color: ${color};" class="w-4 h-4 rounded-full border-2 border-white shadow-xl flex items-center justify-center relative z-10 transition-transform ${scaleClass}">
           <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
         </div>
-        <div class="absolute left-5 bg-slate-900/90 text-white font-mono text-[9px] px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap shadow-md hidden group-hover:block z-20">
+        <div class="absolute left-5 bg-slate-900/90 text-white font-mono text-[9px] px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap shadow-md ${isHighlighted ? 'block' : 'hidden group-hover:block'} z-20">
           ${label}
         </div>
       </div>
@@ -29,12 +42,11 @@ const createRadarIcon = (color: string, label: string, isAlert: boolean = false)
   });
 };
 
-const chokepointIcon = createRadarIcon('#EF4444', 'CRITICAL THREAT ZONE', true);
-const tankerIcon = createRadarIcon('#F59E0B', 'LIVE AIS SUPERTANKER', false);
-const sprIcon = createRadarIcon('#10B981', 'ISPRL RESERVE CAVERN', false);
-const portIcon = createRadarIcon('#0284C7', 'DEEPWATER SPM BERTH / BYPASS TERMINAL', false);
+interface LiveLeafletMapProps {
+  selectedNodeId: string | null;
+}
 
-export default function LiveLeafletMap() {
+export default function LiveLeafletMap({ selectedNodeId }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
@@ -73,118 +85,150 @@ export default function LiveLeafletMap() {
   // Key GIS Locations
   const locations = [
     {
+      id: "fujairah",
       name: "Fujairah ADCOP Bypass Terminal (UAE)",
-      pos: [25.18, 56.36],
+      pos: [25.18, 56.36] as [number, number],
       type: "port",
-      status: "ACTIVE BYPASS",
-      capacity: "1.5M bpd Pipeline Capacity",
-      desc: "Abu Dhabi Crude Oil Pipeline terminal bypassing Strait of Hormuz to Gulf of Oman.",
+      color: "#0284C7",
+      label: "DEEPWATER SPM BYPASS TERMINAL",
+      desc: "Abu Dhabi Crude Oil Pipeline terminal bypassing Strait of Hormuz.",
       action: "540,000 bpd Rerouted to India"
     },
     {
+      id: "hormuz",
       name: "Strait of Hormuz (Chokepoint)",
-      pos: [26.56, 56.25],
+      pos: [26.56, 56.25] as [number, number],
       type: "chokepoint",
-      status: "HIGH_RISK",
+      color: "#EF4444",
+      label: "CRITICAL THREAT ZONE",
+      isAlert: true,
       threatScore: "82.5/100",
-      volume: "1.89M bpd Transit",
-      desc: "Elevated US-Iran standoff, naval patrols, mine/missile threats along Iranian coast.",
+      desc: "Elevated US-Iran standoff, naval patrols along Iranian coast.",
       action: "Initiate Fujairah ADCOP Bypass"
     },
     {
+      id: "red_sea",
       name: "Bab-el-Mandeb & Red Sea",
-      pos: [12.58, 43.33],
+      pos: [12.58, 43.33] as [number, number],
       type: "chokepoint",
-      status: "HIGH_RISK",
+      color: "#EF4444",
+      label: "CRITICAL THREAT ZONE",
+      isAlert: true,
       threatScore: "76.0/100",
-      volume: "1.12M bpd Transit",
-      desc: "Continuous Houthi drone/missile zone. Cape of Good Hope rerouting active (+16 days).",
+      desc: "Continuous Houthi drone/missile zone. Cape detour active.",
       action: "Reroute via Yanbu Petroline"
     },
     {
+      id: "vadinar",
       name: "Vadinar SPM Berth (Gujarat)",
-      pos: [22.45, 69.66],
+      pos: [22.45, 69.66] as [number, number],
       type: "port",
-      status: "OPERATIONAL",
+      color: "#0284C7",
+      label: "VADINAR DEEPWATER SPM BERTH",
       capacity: "55.0M bbls Storage",
-      desc: "Deepwater Single Point Mooring serving Reliance Jamnagar & Nayara Refineries."
+      desc: "Deepwater Single Point Mooring serving Reliance Jamnagar & Nayara."
     },
     {
+      id: "mundra",
       name: "Mundra Port Crude Terminal",
-      pos: [22.75, 69.70],
+      pos: [22.75, 69.70] as [number, number],
       type: "port",
-      status: "OPERATIONAL",
+      color: "#0284C7",
+      label: "MUNDRA CRUDE TERMINAL",
       capacity: "Mundra-Panipat Pipeline Origin",
-      desc: "Key import terminal feeding IOCL Panipat refinery complex (15 MMT)."
+      desc: "Key import terminal feeding IOCL Panipat refinery complex."
     },
     {
+      id: "jnpt",
       name: "JNPT / Nhava Sheva (Mumbai)",
-      pos: [18.95, 72.95],
+      pos: [18.95, 72.95] as [number, number],
       type: "port",
-      status: "OPERATIONAL",
-      capacity: "West Coast Freight Hub",
+      color: "#0284C7",
+      label: "WEST COAST FREIGHT HUB",
+      capacity: "BPCL & HPCL Mumbai Intake",
       desc: "BPCL Mumbai & HPCL Mumbai refinery crude intake terminal."
     },
     {
+      id: "padur",
       name: "Padur ISPRL Cavern",
-      pos: [13.25, 74.78],
+      pos: [13.25, 74.78] as [number, number],
       type: "spr",
-      status: "READY (100%)",
+      color: "#10B981",
+      label: "PADUR 2.5 MMT ISPRL CAVERN",
       capacity: "2.50 MMT (18.37M bbls)",
       desc: "Strategic Petroleum Reserve underground rock cavern. Subsea pipeline to MRPL."
     },
     {
+      id: "mangalore",
       name: "Mangalore ISPRL Cavern",
-      pos: [12.91, 74.85],
+      pos: [12.91, 74.85] as [number, number],
       type: "spr",
-      status: "READY (80%)",
+      color: "#10B981",
+      label: "MANGALORE 1.5 MMT CAVERN",
       capacity: "1.50 MMT (11.02M bbls)",
       desc: "Strategic Petroleum Reserve cavern connected to Mangalore Refinery (MRPL)."
     },
     {
+      id: "visakh",
       name: "Visakhapatnam ISPRL Cavern",
-      pos: [17.68, 83.21],
+      pos: [17.68, 83.21] as [number, number],
       type: "spr",
-      status: "READY (90%)",
+      color: "#10B981",
+      label: "VISAKHAPATNAM 1.33 MMT CAVERN",
       capacity: "1.33 MMT (9.77M bbls)",
       desc: "East Coast Strategic Petroleum Reserve linked to HPCL Visakh refinery."
     },
     {
+      id: "paradip",
       name: "Paradip SPM Berth (Odisha)",
-      pos: [20.26, 86.67],
+      pos: [20.26, 86.67] as [number, number],
       type: "port",
-      status: "OPERATIONAL",
+      color: "#0284C7",
+      label: "PARADIP DEEPWATER SPM BERTH",
       capacity: "24.0M bbls Storage",
       desc: "IOCL Paradip 15 MMT refinery deepwater crude offloading SPM."
     },
     {
+      id: "desh_vishal",
       name: "VLCC Desh Vishal (Live AIS)",
-      pos: [deshLat, deshLng],
+      pos: [deshLat, deshLng] as [number, number],
       type: "tanker",
+      color: "#F59E0B",
+      label: "VLCC DESH VISHAL (2.0M bbls)",
       status: "14.5 Knots • Heading 124°",
       cargo: "2.0M bbls Basrah Heavy",
       desc: "MMSI 419001234 • Indian Flag (SCI) • Live GPS Telemetry Active.",
       action: "Destination: Vadinar SPM (ETA Aug 24)"
     },
     {
+      id: "swarna_kamal",
       name: "VLCC Swarna Kamal (Live AIS)",
-      pos: [swarnaLat, swarnaLng],
+      pos: [swarnaLat, swarnaLng] as [number, number],
       type: "tanker",
+      color: "#F59E0B",
+      label: "VLCC SWARNA KAMAL (2.0M bbls)",
       status: "13.8 Knots • Heading 142°",
       cargo: "2.0M bbls Murban Sweet",
       desc: "MMSI 419005678 • SCI Fleet • ADCOP Bypassed Cargo in Transit.",
       action: "Destination: Mangalore SPM (ETA Aug 25)"
     },
     {
+      id: "ratna_shalini",
       name: "VLCC Ratna Shalini (Live AIS)",
-      pos: [ratnaLat, ratnaLng],
+      pos: [ratnaLat, ratnaLng] as [number, number],
       type: "tanker",
+      color: "#F59E0B",
+      label: "VLCC RATNA SHALINI (1.9M bbls)",
       status: "15.1 Knots • Heading 022°",
       cargo: "1.9M bbls WTI Midland",
       desc: "MMSI 419009876 • Great Eastern Fleet • Transatlantic Sourcing Route.",
       action: "Destination: Paradip SPM (ETA Aug 26)"
     }
   ];
+
+  // Selected Target FlyTo Position
+  const selectedLocation = locations.find(l => l.id === selectedNodeId);
+  const targetPos = selectedLocation ? selectedLocation.pos : null;
 
   // Primary & Alternative Routes
   const hormuzCorridor: [number, number][] = [[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]];
@@ -200,6 +244,9 @@ export default function LiveLeafletMap() {
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
+        {/* Dynamic FlyTo Handler */}
+        <MapFlyToHandler targetPos={targetPos} />
+
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -209,14 +256,12 @@ export default function LiveLeafletMap() {
         <Polyline positions={adcopBypassRoute} color="#0284C7" weight={3} dashArray="6, 10" />
         <Polyline positions={eastCoastLane} color="#10B981" weight={2.5} dashArray="4, 8" />
 
-        {locations.map((loc, idx) => {
-          const icon = loc.type === 'chokepoint' ? chokepointIcon
-            : loc.type === 'spr' ? sprIcon
-            : loc.type === 'tanker' ? tankerIcon
-            : portIcon;
+        {locations.map((loc) => {
+          const isSelected = selectedNodeId === loc.id;
+          const icon = createRadarIcon(loc.color, loc.label, isSelected, loc.isAlert);
 
           return (
-            <Marker key={idx} position={loc.pos as [number, number]} icon={icon}>
+            <Marker key={loc.id} position={loc.pos} icon={icon}>
               <Popup className="custom-dark-popup">
                 <div className="font-mono text-xs p-1 max-w-[250px] space-y-1.5">
                   <div className="flex items-center justify-between border-b pb-1 border-slate-200">

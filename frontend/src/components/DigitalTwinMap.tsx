@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Database, Factory, Anchor, Navigation, ShieldCheck, X, Activity, Server, ArrowRight } from 'lucide-react';
+import { Database, Factory, Anchor, Navigation, ShieldCheck, X } from 'lucide-react';
 
 const LiveLeafletMap = dynamic(() => import('./LiveLeafletMap'), {
   ssr: false,
@@ -145,7 +145,7 @@ export const DigitalTwinMap: React.FC<{
 
       {/* Live Interactive Leaflet GIS Map Container */}
       <div className="mb-3 flex-1">
-        <LiveLeafletMap />
+        <LiveLeafletMap selectedNodeId={selectedNodeId} />
       </div>
 
       {/* Node Selection Cards Grid */}
@@ -239,7 +239,7 @@ export const DigitalTwinMap: React.FC<{
         </div>
       </div>
 
-      {/* DETAILED STRATEGIC NODE INTELLIGENCE PANEL (Rendered when clicked!) */}
+      {/* DETAILED STRATEGIC NODE INTELLIGENCE PANEL */}
       {activeNode && (
         <div className={`p-4 rounded-xl border font-mono transition-all duration-200 ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
