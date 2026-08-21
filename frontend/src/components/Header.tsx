@@ -37,8 +37,23 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Title */}
-        <div>
+        {/* Title & Custom Alphabetical Monogram Emblem */}
+        <div className="flex items-center gap-3">
+          <div className="relative flex items-center justify-center">
+            {/* Outer Glowing Gradient Ring */}
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-600 to-cyan-500 p-[1.5px] shadow-lg shadow-amber-500/20">
+              <div className={`w-full h-full rounded-[10.5px] flex items-center justify-center font-mono font-black text-xs tracking-tighter ${
+                theme === 'dark' ? 'bg-slate-950' : 'bg-slate-900'
+              }`}>
+                <span className="bg-gradient-to-r from-amber-400 via-yellow-200 to-cyan-400 bg-clip-text text-transparent font-black tracking-tighter text-[13px]">
+                  UA
+                </span>
+              </div>
+            </div>
+            {/* Live Shield Pulse Dot */}
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse border-2 border-slate-950" />
+          </div>
+
           <h1 className="text-xl font-bold tracking-tight">UrjaAegis AI</h1>
         </div>
 
