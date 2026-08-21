@@ -9,17 +9,18 @@
 
 ---
 
-## Live Demo & Repository Links
+## Live Production Demo & Repository Links
 
-- **Live Demo Dashboard**: [https://india-energy-intelligence.vercel.app](https://india-energy-intelligence.vercel.app) *(Local Dev: `http://localhost:3000`)*
-- **API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Live Production Railway App**: [https://india-energy-intelligence-production.up.railway.app](https://india-energy-intelligence-production.up.railway.app)
+- **Live OpenAPI Swagger Documentation**: [https://india-energy-intelligence-production.up.railway.app/docs](https://india-energy-intelligence-production.up.railway.app/docs)
+- **Local Dev Dashboard**: [http://localhost:3000](http://localhost:3000)
 - **GitHub Repository**: [https://github.com/sohan1saha/India-energy-intelligence](https://github.com/sohan1saha/India-energy-intelligence)
 
 ---
 
 ## Hero Screenshot
 
-![UrjaAegis AI Executive Dashboard](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/hero_dashboard.png)
+![UrjaAegis AI Executive Dashboard](docs/hero_dashboard.png)
 
 ---
 
@@ -86,22 +87,22 @@ graph TD
 ## Feature Screenshots
 
 ### 1. Geopolitical Risk Radar & Chokepoint Threat Index
-![Geopolitical Risk Radar](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/risk_radar.png)
+![Geopolitical Risk Radar](docs/risk_radar.png)
 
 ### 2. Supply Chain GIS Digital Twin & Telemetry Map
-![Supply Chain GIS Digital Twin](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/digital_twin_map.png)
+![Supply Chain GIS Digital Twin](docs/digital_twin_map.png)
 
 ### 3. Disruption Scenario Sandbox & Macroeconomic Impact Simulator
-![Disruption Scenario Sandbox](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/scenario_sandbox.png)
+![Disruption Scenario Sandbox](docs/scenario_sandbox.png)
 
 ### 4. ISPRL Strategic Petroleum Reserve LP Drawdown Optimizer
-![ISPRL SPR Optimizer](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/spr_optimizer.png)
+![ISPRL SPR Optimizer](docs/spr_optimizer.png)
 
 ### 5. Adaptive Procurement Rerouting Matrix & Tender Generator
-![Procurement Rerouting Matrix](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/procurement_matrix.png)
+![Procurement Rerouting Matrix](docs/procurement_matrix.png)
 
 ### 6. Live War & Conflict Maritime News Intelligence Wire
-![Live Maritime Intelligence Wire](https://raw.githubusercontent.com/sohan1saha/India-energy-intelligence/main/docs/news_wire.png)
+![Live Maritime Intelligence Wire](docs/news_wire.png)
 
 ---
 
@@ -216,7 +217,7 @@ Subject to:
 
 ### Continuous Integration & Version Control
 - **Repository**: Git & GitHub (`origin/main`)
-- **Deployment**: Vercel (Frontend) & Render / Railway (Backend)
+- **Deployment**: Vercel (Frontend) & Railway (Backend & Frontend Production)
 
 ---
 
@@ -287,7 +288,7 @@ The FastAPI backend exposes the following RESTful OpenAPI endpoints:
 - `POST /api/copilot/chat`
   - Interactive endpoint powering **Urja Sathi AI (ऊर्जा साथी)** for natural language energy security queries.
 
-Full interactive Swagger UI documentation is available at `http://localhost:8000/docs`.
+Full interactive Swagger UI documentation is available at `https://india-energy-intelligence-production.up.railway.app/docs`.
 
 ---
 
