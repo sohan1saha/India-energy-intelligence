@@ -34,9 +34,6 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
         <h2 className="text-sm font-bold uppercase tracking-wider">Geopolitical Risk Intelligence Agent</h2>
-        <span className="px-2 py-0.5 text-xs font-medium rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/20 font-mono">
-          Click Card to View Map Chokepoint
-        </span>
       </div>
 
       {/* Corridor Grid */}
