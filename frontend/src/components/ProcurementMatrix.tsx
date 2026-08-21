@@ -96,10 +96,6 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
           </span>
         </div>
 
-        <p className="text-[11px] text-slate-500 font-sans mb-3">
-          Click any emergency strategy card below to highlight its supply routes on the Live GIS Map. Click an active card again to deselect.
-        </p>
-
         {/* Strategy Selection Cards Grid (3 Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-4 font-mono">
           {strategies.map((strat) => {
