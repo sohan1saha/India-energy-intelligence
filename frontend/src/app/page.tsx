@@ -13,6 +13,7 @@ import { ShieldAlert, Database, Navigation, Activity, Bot } from 'lucide-react';
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const [corridors, setCorridors] = useState<any[]>([
     {
@@ -24,7 +25,7 @@ export default function Home() {
       daily_vessel_count: 42,
       transit_delay_days: 4.5,
       war_risk_insurance_pct: 1.25,
-      threat_description: "Elevated US-Iran standoff, naval patrols, mine/missile threats along Iranian coast."
+      threat_description: "Elevated US-Iran military standoff, naval patrols, GPS spoofing, and mine/missile threats along Iranian coast."
     },
     {
       id: "c2",
@@ -35,7 +36,7 @@ export default function Home() {
       daily_vessel_count: 18,
       transit_delay_days: 16.0,
       war_risk_insurance_pct: 1.50,
-      threat_description: "Continuous Houthi missile/drone attacks; major tankers diverted around Cape of Good Hope."
+      threat_description: "Continuous Houthi anti-ship missile/drone attacks; major tankers forced into 16-day Cape of Good Hope detour."
     },
     {
       id: "c3",
@@ -46,7 +47,7 @@ export default function Home() {
       daily_vessel_count: 85,
       transit_delay_days: 0.5,
       war_risk_insurance_pct: 0.05,
-      threat_description: "Dense maritime traffic; low geopolitical threat; key for Russian Far East ESPO crude."
+      threat_description: "Dense maritime traffic; low geopolitical threat; key corridor for Russian Far East (ESPO) & Asian trade."
     },
     {
       id: "c4",
@@ -57,7 +58,7 @@ export default function Home() {
       daily_vessel_count: 60,
       transit_delay_days: 15.0,
       war_risk_insurance_pct: 0.15,
-      threat_description: "Bunkering congestion at South African ports (Port Louis, Durban) due to Red Sea diversions."
+      threat_description: "Congestion at South African bunkering ports (Port Louis, Durban) due to Red Sea diversions."
     }
   ]);
 
@@ -227,6 +228,10 @@ export default function Home() {
     }
   };
 
+  const handleSelectNode = (codeId: string | null) => {
+    setSelectedNodeId(codeId);
+  };
+
   return (
     <div className={`min-h-screen transition-colors duration-200 ${
       theme === 'dark' ? 'bg-dark-bg text-dark-text' : 'bg-cream-bg text-cream-text'
@@ -293,19 +298,26 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP (The Visual Centerpiece - 100% Width) */}
+        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP (100% Width) */}
         <div className="w-full">
           <DigitalTwinMap
             theme={theme}
             nodes={[]}
             daysOfCover={9.5}
             totalReserveMbbl={39.16}
+            selectedNodeId={selectedNodeId}
+            onSelectNode={handleSelectNode}
           />
         </div>
 
-        {/* TIER 3: GEOPOLITICAL RISK INTELLIGENCE AGENT (Full Width 4-Corridor Grid) */}
+        {/* TIER 3: GEOPOLITICAL RISK INTELLIGENCE AGENT (Interactive Click to Map Chokepoint Sync) */}
         <div className="w-full">
-          <RiskRadar theme={theme} corridors={corridors} />
+          <RiskRadar
+            theme={theme}
+            corridors={corridors}
+            selectedNodeId={selectedNodeId}
+            onSelectCorridor={(codeId) => handleSelectNode(selectedNodeId === codeId ? null : codeId)}
+          />
         </div>
 
         {/* TIER 4: SECONDARY SPLIT GRID (60% Scenario Sandbox / 40% ISPRL Optimizer) */}
@@ -322,7 +334,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 5: FULL-WIDTH ACTION COMMAND SECTION (Adaptive Procurement Orchestrator & Inline MoPNG Spec) */}
+        {/* TIER 5: FULL-WIDTH ACTION COMMAND SECTION (Adaptive Procurement Orchestrator & Inline Spec) */}
         <div className="w-full">
           <ProcurementMatrix
             theme={theme}

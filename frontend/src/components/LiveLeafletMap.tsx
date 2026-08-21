@@ -87,8 +87,58 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Key GIS Locations
+  // Key GIS Locations (14 total: 4 Chokepoint Corridors, 3 Tankers, 3 Caverns, 4 SPM Ports)
   const locations = [
+    {
+      id: "hormuz",
+      name: "Strait of Hormuz (Chokepoint)",
+      pos: [26.56, 56.25] as [number, number],
+      type: "chokepoint",
+      color: "#EF4444",
+      label: "STRAIT OF HORMUZ (82.5/100)",
+      isAlert: true,
+      threatScore: "82.5/100",
+      volume: "1.89M bpd Transit",
+      desc: "Elevated US-Iran military standoff, naval patrols, mine/missile threats along Iranian coast.",
+      action: "Initiate Fujairah ADCOP Bypass"
+    },
+    {
+      id: "red_sea",
+      name: "Bab-el-Mandeb & Red Sea",
+      pos: [12.58, 43.33] as [number, number],
+      type: "chokepoint",
+      color: "#EF4444",
+      label: "BAB-EL-MANDEB & RED SEA (76/100)",
+      isAlert: true,
+      threatScore: "76.0/100",
+      volume: "1.12M bpd Transit",
+      desc: "Continuous Houthi anti-ship missile/drone attacks; major tankers forced into 16-day Cape detour.",
+      action: "Reroute via Yanbu Petroline"
+    },
+    {
+      id: "malacca",
+      name: "Strait of Malacca",
+      pos: [4.15, 100.50] as [number, number],
+      type: "chokepoint",
+      color: "#10B981",
+      label: "STRAIT OF MALACCA (24/100)",
+      threatScore: "24.0/100",
+      volume: "85 Vessels / Day",
+      desc: "Dense maritime traffic; low geopolitical threat; key corridor for Russian Far East (ESPO) & Asian trade.",
+      action: "Normal Operational Status"
+    },
+    {
+      id: "cape_gh",
+      name: "Cape of Good Hope",
+      pos: [-34.35, 18.47] as [number, number],
+      type: "chokepoint",
+      color: "#F59E0B",
+      label: "CAPE OF GOOD HOPE (35/100)",
+      threatScore: "35.0/100",
+      volume: "60 Vessels / Day",
+      desc: "Congestion at South African bunkering ports (Port Louis, Durban) due to Red Sea diversions.",
+      action: "Monitor Cape Bunkering Delays (+15 Days)"
+    },
     {
       id: "fujairah",
       name: "Fujairah ADCOP Bypass Terminal (UAE)",
@@ -98,30 +148,6 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       label: "DEEPWATER SPM BYPASS TERMINAL",
       desc: "Abu Dhabi Crude Oil Pipeline terminal bypassing Strait of Hormuz.",
       action: "540,000 bpd Rerouted to India"
-    },
-    {
-      id: "hormuz",
-      name: "Strait of Hormuz (Chokepoint)",
-      pos: [26.56, 56.25] as [number, number],
-      type: "chokepoint",
-      color: "#EF4444",
-      label: "CRITICAL THREAT ZONE",
-      isAlert: true,
-      threatScore: "82.5/100",
-      desc: "Elevated US-Iran standoff, naval patrols along Iranian coast.",
-      action: "Initiate Fujairah ADCOP Bypass"
-    },
-    {
-      id: "red_sea",
-      name: "Bab-el-Mandeb & Red Sea",
-      pos: [12.58, 43.33] as [number, number],
-      type: "chokepoint",
-      color: "#EF4444",
-      label: "CRITICAL THREAT ZONE",
-      isAlert: true,
-      threatScore: "76.0/100",
-      desc: "Continuous Houthi drone/missile zone. Cape detour active.",
-      action: "Reroute via Yanbu Petroline"
     },
     {
       id: "vadinar",
