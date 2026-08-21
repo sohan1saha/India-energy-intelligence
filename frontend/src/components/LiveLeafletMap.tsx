@@ -13,7 +13,7 @@ const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean
     : isSelected
     ? 'bg-amber-500 ring-amber-400'
     : isLightMode
-    ? 'bg-sky-600 ring-slate-800'
+    ? 'bg-sky-700 ring-slate-900'
     : 'bg-white ring-cyan-400';
   
   const labelColor = isAlert
@@ -21,7 +21,7 @@ const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean
     : isSelected
     ? 'text-amber-600 font-extrabold scale-110'
     : isLightMode
-    ? 'text-slate-900 font-extrabold'
+    ? 'text-slate-950 font-extrabold'
     : 'text-slate-100 font-bold';
 
   return L.divIcon({
@@ -68,7 +68,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   if (!isMounted) {
     return (
       <div className={`w-full h-[520px] rounded-xl flex items-center justify-center text-xs font-mono ${
-        theme === 'dark' ? 'bg-slate-900 text-slate-400' : 'bg-[#E8E4DC] text-slate-800'
+        theme === 'dark' ? 'bg-slate-900 text-slate-400' : 'bg-[#BCC5D1] text-slate-900'
       }`}>
         Loading High-Definition AIS Maritime Telemetry Radar...
       </div>
@@ -172,7 +172,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
-      theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17]' : 'border-[#B8B2A6] bg-[#E8E4DC]'
+      theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17]' : 'border-[#7E8C9F] bg-[#BCC5D1]'
     }`}>
       <MapContainer
         key={`leaflet-map-${theme}`}
@@ -244,7 +244,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
             >
               <Popup className={theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup'}>
                 <div className="font-mono text-xs p-1 space-y-1">
-                  <strong className={theme === 'dark' ? 'text-white block font-bold' : 'text-slate-900 block font-bold'}>{port.name}</strong>
+                  <strong className={theme === 'dark' ? 'text-white block font-bold' : 'text-slate-950 block font-bold'}>{port.name}</strong>
                   {port.origin && <p className="text-[10px] text-emerald-600 font-bold">ORIGIN: {port.origin}</p>}
                   {port.destination && <p className="text-[10px] text-sky-600 font-bold">DESTINATION: {port.destination}</p>}
                   {port.cargo && <p className="text-[10px] text-amber-700 font-extrabold">CARGO: {port.cargo}</p>}
@@ -258,7 +258,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       {/* SHIP VOYAGE ROUTE CARD */}
       {selectedNodeId && ['desh_vishal', 'swarna_kamal', 'ratna_shalini'].includes(selectedNodeId) && (
         <div className={`absolute bottom-4 left-4 p-3.5 rounded-lg border shadow-xl z-20 font-mono text-[11px] max-w-sm ${
-          theme === 'dark' ? 'bg-slate-900/95 border-amber-500/50 text-slate-100' : 'bg-[#F3EFE7] border-[#B8B2A6] text-slate-900'
+          theme === 'dark' ? 'bg-slate-900/95 border-amber-500/50 text-slate-100' : 'bg-[#D4DCEC] border-[#7E8C9F] text-slate-950'
         }`}>
           <div className="flex items-center justify-between border-b pb-1.5 mb-2 border-inherit">
             <span className="font-bold text-amber-600 uppercase tracking-wide">
@@ -281,7 +281,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       {/* MARITIME LOGISTICS LEGEND CARD */}
       {selectedStrategyId && (
         <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
-          theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-[#F3EFE7] border-[#B8B2A6] text-slate-900'
+          theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-[#D4DCEC] border-[#7E8C9F] text-slate-950'
         }`}>
           <div className="font-bold uppercase tracking-wider mb-2 border-b pb-1 border-inherit flex items-center justify-between gap-3">
             <span>ACTIVE STRATEGY NETWORK</span>
