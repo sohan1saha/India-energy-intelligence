@@ -32,8 +32,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_1',
       category: 'chokepoint',
       categoryLabel: 'WAR & CONFLICT ALERT',
-      sourceName: 'Reuters Energy',
-      articleUrl: 'https://www.reuters.com/business/energy/shipping-strait-hormuz-disrupted-amid-regional-tensions-2024-04-15/',
+      sourceName: 'gCaptain Maritime Wire',
+      articleUrl: 'https://www.gcaptain.com/',
       title: 'Strait of Hormuz Naval Patrols & Missile Threat Escalate Crude Transport Risks',
       summary: 'Naval standoff and drone strikes near narrowest transit corridor cause severe maritime bottlenecks. US-Iran conflict pushes war risk insurance surcharges up +1.25%.',
       timestamp: 'TODAY • 12 MINS AGO',
@@ -44,8 +44,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_2',
       category: 'pipeline',
       categoryLabel: 'PIPELINE & TERMINAL',
-      sourceName: 'The Economic Times',
-      articleUrl: 'https://economictimes.indiatimes.com/industry/energy/oil-gas/meil-bags-rs-5700-cr-project-to-build-strategic-petroleum-reserve-at-padur/articleshow/113198083.cms',
+      sourceName: 'Economic Times Energy',
+      articleUrl: 'https://energy.economictimes.indiatimes.com/',
       title: 'India Expedites Padur 2.5 MMT Strategic Petroleum Reserve Expansion',
       summary: 'MoPNG initiates fast-track SPR releases and cavern expansions at Padur to protect domestic refiners against Gulf conflict blockades and maritime transit delays.',
       timestamp: 'TODAY • 45 MINS AGO',
@@ -56,8 +56,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_3',
       category: 'chokepoint',
       categoryLabel: 'RED SEA CONFLICT',
-      sourceName: 'Reuters World News',
-      articleUrl: 'https://www.reuters.com/business/energy/red-sea-attacks-force-tankers-take-longer-route-around-africa-2024-01-15/',
+      sourceName: 'Maritime Executive',
+      articleUrl: 'https://www.maritime-executive.com/',
       title: 'Red Sea Missile Strikes Force Crude Tankers into 16-Day Cape of Good Hope Detour',
       summary: 'Houthi naval drone attacks off Bab-el-Mandeb force major crude carriers to reroute around South Africa, adding 4,500 nautical miles and $1.8M fuel surcharge per voyage.',
       timestamp: 'TODAY • 2 HOURS AGO',
@@ -68,8 +68,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_4',
       category: 'fleet',
       categoryLabel: 'FLEET TELEMETRY',
-      sourceName: 'Maritime Executive',
-      articleUrl: 'https://maritime-executive.com/article/shipping-corporation-of-india-expands-vlcc-fleet',
+      sourceName: 'MarineLink News',
+      articleUrl: 'https://www.marinelink.com/',
       title: 'VLCC Desh Vishal Enters Gulf of Oman Under Escort Carrying 2.0M bbls Crude',
       summary: 'Shipping Corporation of India (SCI) supertanker navigating Fujairah bypass corridor at 14.5 knots under active naval surveillance toward Vadinar SPM Berth (Gujarat).',
       timestamp: 'YESTERDAY • AUG 21',
@@ -81,7 +81,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'pipeline',
       categoryLabel: 'BYPASS CORRIDOR',
       sourceName: 'Hydrocarbons Technology',
-      articleUrl: 'https://www.hydrocarbons-technology.com/projects/abu-dhabi-crude-oil-pipeline-adcop/',
+      articleUrl: 'https://www.hydrocarbons-technology.com/',
       title: 'ADNOC Increases Fujairah ADCOP Deepwater Terminal Throughput to 540k bpd',
       summary: 'Abu Dhabi Crude Oil Pipeline (ADCOP) bypasses Strait of Hormuz directly to Fujairah offshore berths, securing Murban crude intake for Indian refiners.',
       timestamp: 'AUG 20, 2026',
@@ -92,8 +92,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_6',
       category: 'fleet',
       categoryLabel: 'ATLANTIC CRUDE ROUTE',
-      sourceName: 'MarineLink News',
-      articleUrl: 'https://www.marinelink.com/news/us-crude-exports-india-surge-vlcc-495200',
+      sourceName: 'gCaptain Tanker News',
+      articleUrl: 'https://www.gcaptain.com/',
       title: 'VLCC Ratna Shalini Transatlantic Voyage Delivers 1.9M bbls WTI to Paradip',
       summary: 'US Gulf Coast crude shipments to East Coast Indian refineries surge as refiners replace Middle Eastern sour slates with transatlantic sweet crude.',
       timestamp: 'AUG 19, 2026',
@@ -104,7 +104,6 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
 
   const [newsList, setNewsList] = useState<NewsItem[]>(initialNewsItems);
 
-  // Auto-refresh simulation wire for daily news updates on conflicts & crude shipping
   useEffect(() => {
     const timer = setInterval(() => {
       setLastUpdated(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
@@ -241,7 +240,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                   {news.impactBadge}
                 </span>
                 <span className="text-[10px] text-slate-500 font-mono group-hover:text-amber-500 transition flex items-center gap-1">
-                  <span>Open Full Article ↗</span>
+                  <span>Open Article ↗</span>
                 </span>
               </div>
             </div>
