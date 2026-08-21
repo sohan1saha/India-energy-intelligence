@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Sun, Moon, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sun, Moon, Activity, Clock } from 'lucide-react';
 
 interface HeaderProps {
   theme: 'dark' | 'cream';
@@ -9,6 +9,27 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
+  const [timeString, setTimeString] = useState<string>('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const time24 = `${hours}:${minutes}:${seconds}`;
+      
+      const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' };
+      const dateStr = now.toLocaleDateString('en-GB', options).toUpperCase();
+      
+      setTimeString(`${time24}  |  ${dateStr}`);
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <header className={`border-b p-4 px-6 transition-colors duration-200 ${
       theme === 'dark'
@@ -19,6 +40,18 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         {/* Title */}
         <div>
           <h1 className="text-xl font-bold tracking-tight">UrjaAegis AI</h1>
+        </div>
+
+        {/* Middle: Live 24-Hour Time, Day & Date */}
+        <div className="flex items-center justify-center">
+          <div className={`flex items-center gap-2.5 px-4 py-1.5 rounded-lg border font-mono text-xs font-bold transition ${
+            theme === 'dark'
+              ? 'bg-dark-bg border-dark-border text-amber-400'
+              : 'bg-cream-bg border-cream-border text-amber-800'
+          }`}>
+            <Clock className="w-4 h-4 text-alert-amber animate-pulse" />
+            <span>{timeString || '00:00:00  |  LOADING...'}</span>
+          </div>
         </div>
 
         {/* Status Indicator & Theme Toggle */}
