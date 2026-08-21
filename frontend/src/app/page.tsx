@@ -426,14 +426,6 @@ export default function Home() {
           />
         </div>
 
-        {/* TIER 3.5: LIVE GEOPOLITICAL & MARITIME NEWS INTELLIGENCE WIRE */}
-        <div className="w-full">
-          <GeopoliticalNewsFeed
-            theme={theme}
-            onSelectLocation={handleSelectNode}
-          />
-        </div>
-
         {/* TIER 4: SECONDARY SPLIT GRID (60% Scenario Sandbox / 40% ISPRL Optimizer) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           <div className="lg:col-span-7 flex flex-col">
@@ -460,6 +452,14 @@ export default function Home() {
             strategies={strategies}
             selectedStrategyId={selectedStrategyId}
             onSelectStrategy={(id) => setSelectedStrategyId(id)}
+          />
+        </div>
+
+        {/* TIER 6: LIVE GEOPOLITICAL & MARITIME NEWS INTELLIGENCE WIRE (MOVED TO BOTTOM) */}
+        <div className="w-full">
+          <GeopoliticalNewsFeed
+            theme={theme}
+            onSelectLocation={handleSelectNode}
           />
         </div>
 
