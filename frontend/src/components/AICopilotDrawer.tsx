@@ -24,7 +24,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     {
       id: '1',
       sender: 'ai',
-      text: "🤖 UrjaAegis AI Copilot - Energy Security & Procurement AI Advisor\n\nI am connected live to India's Energy Supply Chain Digital Twin, ISPRL Strategic Reserves, and AIS Satellite Vessel Telemetry.\n\nFeel free to ask me any question about supertankers, pipeline bypasses, refinery assays, or price shocks!"
+      text: "🤖 Urja Sathi AI (ऊर्जा साथी) - Energy Security & Procurement AI Advisor\n\nI am connected live to India's Energy Supply Chain Digital Twin, ISPRL Strategic Reserves, and AIS Satellite Vessel Telemetry.\n\nFeel free to ask me any question about supertankers, pipeline bypasses, refinery assays, or price shocks!"
     }
   ]);
   const [input, setInput] = useState('');
@@ -59,14 +59,14 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: data.response || 'UrjaAegis AI copilot query executed successfully.'
+        text: data.response || 'Urja Sathi query executed successfully.'
       };
       setMessages(prev => [...prev, aiMsg]);
     } catch (e) {
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: "UrjaAegis AI Response:\n\n• Strait of Hormuz Risk: 82.5/100 (HIGH_RISK). US-Iran standoff.\n• Red Sea Risk: 76.0/100 (HIGH_RISK). Cape detour (+16 days).\n• ISPRL Reserve Buffer: 39.16M bbls (~9.5 days).\n\nAction: Emergency Fujairah ADCOP bypass routing recommended."
+        text: "Urja Sathi AI Response:\n\n• Strait of Hormuz Risk: 82.5/100 (HIGH_RISK). US-Iran standoff.\n• Red Sea Risk: 76.0/100 (HIGH_RISK). Cape detour (+16 days).\n• ISPRL Reserve Buffer: 39.16M bbls (~9.5 days).\n\nAction: Emergency Fujairah ADCOP bypass routing recommended."
       };
       setMessages(prev => [...prev, aiMsg]);
     } finally {
@@ -87,8 +87,8 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-alert-amber" />
           <div>
-            <h3 className="font-bold text-sm">AI Energy Security Copilot</h3>
-            <span className="text-[10px] text-slate-400 font-mono block">Live Intelligence Advisor</span>
+            <h3 className="font-bold text-sm">Urja Sathi AI (ऊर्जा साथी)</h3>
+            <span className="text-[10px] text-slate-400 font-mono block">Energy Security Intelligence Companion</span>
           </div>
         </div>
         <button onClick={onClose} className="p-1 rounded hover:bg-slate-700/30">
@@ -140,7 +140,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
         {loading && (
           <div className="p-3 rounded-lg bg-alert-amber/10 text-alert-amber text-xs animate-pulse font-mono flex items-center gap-2 border border-alert-amber/20">
             <Bot className="w-4 h-4 animate-spin" />
-            <span>UrjaAegis AI reasoning over live GIS digital twin & reserve graphs...</span>
+            <span>Urja Sathi reasoning over live GIS digital twin & reserve graphs...</span>
           </div>
         )}
       </div>
@@ -154,7 +154,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage(input)}
-          placeholder="Ask AI Copilot about vessels, pipelines, SPR, or crude prices..."
+          placeholder="Ask Urja Sathi about vessels, pipelines, SPR, or crude prices..."
           className={`flex-1 px-3.5 py-2.5 rounded-lg text-xs border outline-none font-sans ${
             theme === 'dark'
               ? 'bg-[#182030] border-slate-700 text-slate-100 placeholder-slate-400 focus:border-alert-amber'
