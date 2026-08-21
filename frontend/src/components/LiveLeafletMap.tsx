@@ -171,8 +171,8 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   ];
 
   return (
-    <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
-      theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17]' : 'border-[#7E8C9F] bg-[#BCC5D1]'
+    <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border relative z-0 ${
+      theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17] shadow-2xl' : 'border-[#7E8C9F] bg-[#BCC5D1]'
     }`}>
       <MapContainer
         key={`leaflet-map-${theme}`}
