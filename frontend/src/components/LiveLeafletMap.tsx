@@ -32,22 +32,19 @@ const createRadarIcon = (color: string, label: string, isAlert: boolean = false)
 const chokepointIcon = createRadarIcon('#EF4444', 'CRITICAL THREAT ZONE', true);
 const tankerIcon = createRadarIcon('#F59E0B', 'LIVE AIS SUPERTANKER', false);
 const sprIcon = createRadarIcon('#10B981', 'ISPRL RESERVE CAVERN', false);
-const portIcon = createRadarIcon('#0284C7', 'DEEPWATER SPM BERTH', false);
+const portIcon = createRadarIcon('#0284C7', 'DEEPWATER SPM BERTH / BYPASS TERMINAL', false);
 
 export default function LiveLeafletMap() {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
-  // Dynamic AIS Telemetry Drift Simulation for Real-Time Vessel Tracking
   useEffect(() => {
-    // Reset stale Leaflet instance IDs on React hot-reload
     const container = L.DomUtil.get('leaflet-map-root');
     if (container !== null) {
       (container as any)._leaflet_id = null;
     }
     setIsMounted(true);
 
-    // Live AIS telemetry drift ticker every 3 seconds
     const interval = setInterval(() => {
       setVesselTicks(prev => prev + 1);
     }, 3000);
@@ -73,8 +70,17 @@ export default function LiveLeafletMap() {
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Key GIS Locations (12 total: 2 Chokepoints, 3 Live Tankers, 3 Caverns, 4 SPM Ports)
+  // Key GIS Locations
   const locations = [
+    {
+      name: "Fujairah ADCOP Bypass Terminal (UAE)",
+      pos: [25.18, 56.36],
+      type: "port",
+      status: "ACTIVE BYPASS",
+      capacity: "1.5M bpd Pipeline Capacity",
+      desc: "Abu Dhabi Crude Oil Pipeline terminal bypassing Strait of Hormuz to Gulf of Oman.",
+      action: "540,000 bpd Rerouted to India"
+    },
     {
       name: "Strait of Hormuz (Chokepoint)",
       pos: [26.56, 56.25],
@@ -194,18 +200,15 @@ export default function LiveLeafletMap() {
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
-        {/* CartoDB High-Contrast Dark Basemap */}
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
 
-        {/* Shipping Route Lines */}
         <Polyline positions={hormuzCorridor} color="#EF4444" weight={3} dashArray="8, 12" />
         <Polyline positions={adcopBypassRoute} color="#0284C7" weight={3} dashArray="6, 10" />
         <Polyline positions={eastCoastLane} color="#10B981" weight={2.5} dashArray="4, 8" />
 
-        {/* Map Markers */}
         {locations.map((loc, idx) => {
           const icon = loc.type === 'chokepoint' ? chokepointIcon
             : loc.type === 'spr' ? sprIcon
@@ -229,7 +232,7 @@ export default function LiveLeafletMap() {
 
                   {loc.status && (
                     <div className="text-[10px] text-amber-900 font-semibold bg-amber-100 p-1 rounded">
-                      Live Telemetry: {loc.status}
+                      Status: {loc.status}
                     </div>
                   )}
                   
