@@ -13,7 +13,7 @@ import { ShieldAlert, Database, Navigation, Activity, Bot } from 'lucide-react';
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
 
   const [corridors, setCorridors] = useState<any[]>([
     {
@@ -228,8 +228,24 @@ export default function Home() {
     }
   };
 
-  const handleSelectNode = (codeId: string | null) => {
-    setSelectedNodeId(codeId);
+  const handleToggleNode = (id: string) => {
+    setSelectedNodeIds(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllCategory = (category: 'all' | 'chokepoint' | 'tanker' | 'spr' | 'port') => {
+    if (category === 'all') {
+      setSelectedNodeIds([]);
+    } else if (category === 'chokepoint') {
+      setSelectedNodeIds(['hormuz', 'red_sea']);
+    } else if (category === 'tanker') {
+      setSelectedNodeIds(['desh_vishal', 'swarna_kamal', 'ratna_shalini']);
+    } else if (category === 'spr') {
+      setSelectedNodeIds(['padur', 'mangalore', 'visakh']);
+    } else if (category === 'port') {
+      setSelectedNodeIds(['vadinar', 'mundra', 'jnpt', 'paradip']);
+    }
   };
 
   return (
@@ -298,25 +314,27 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP (100% Width) */}
+        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP & SIMULTANEOUS TELEMETRY GRID */}
         <div className="w-full">
           <DigitalTwinMap
             theme={theme}
             nodes={[]}
             daysOfCover={9.5}
             totalReserveMbbl={39.16}
-            selectedNodeId={selectedNodeId}
-            onSelectNode={handleSelectNode}
+            selectedNodeIds={selectedNodeIds}
+            onToggleNode={handleToggleNode}
+            onSelectAllCategory={handleSelectAllCategory}
+            onResetWideView={() => setSelectedNodeIds([])}
           />
         </div>
 
-        {/* TIER 3: GEOPOLITICAL RISK INTELLIGENCE AGENT (Interactive Click to Map Chokepoint Sync) */}
+        {/* TIER 3: GEOPOLITICAL RISK INTELLIGENCE AGENT */}
         <div className="w-full">
           <RiskRadar
             theme={theme}
             corridors={corridors}
-            selectedNodeId={selectedNodeId}
-            onSelectCorridor={(codeId) => handleSelectNode(selectedNodeId === codeId ? null : codeId)}
+            selectedNodeId={selectedNodeIds.length === 1 ? selectedNodeIds[0] : null}
+            onSelectCorridor={(codeId) => handleToggleNode(codeId)}
           />
         </div>
 

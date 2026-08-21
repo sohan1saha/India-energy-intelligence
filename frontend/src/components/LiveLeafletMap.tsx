@@ -6,15 +6,16 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Helper component to center and fly map to selected node coordinates or reset to wide view
-function MapFlyToHandler({ targetPos }: { targetPos: [number, number] | null }) {
+function MapFlyToHandler({ selectedNodeIds, locations }: { selectedNodeIds: string[]; locations: any[] }) {
   const map = useMap();
   useEffect(() => {
-    if (targetPos) {
-      map.flyTo(targetPos, 6.5, { duration: 1.5 });
+    if (selectedNodeIds.length === 1) {
+      const target = locations.find(l => l.id === selectedNodeIds[0]);
+      if (target) map.flyTo(target.pos, 6.5, { duration: 1.5 });
     } else {
       map.flyTo([19.5, 67.5], 5, { duration: 1.5 });
     }
-  }, [targetPos, map]);
+  }, [selectedNodeIds, locations, map]);
   return null;
 }
 
@@ -24,7 +25,7 @@ const createRadarIcon = (color: string, label: string, isHighlighted: boolean = 
     ? `<span class="absolute -inset-2.5 rounded-full ${isHighlighted ? 'bg-amber-400/60' : 'bg-red-500/40'} animate-ping"></span>`
     : '';
 
-  const scaleClass = isHighlighted ? 'scale-150 ring-4 ring-amber-400' : 'group-hover:scale-125';
+  const scaleClass = isHighlighted ? 'scale-150 ring-4 ring-amber-400 font-bold' : 'group-hover:scale-125';
 
   return L.divIcon({
     className: 'custom-leaflet-marker',
@@ -34,7 +35,7 @@ const createRadarIcon = (color: string, label: string, isHighlighted: boolean = 
         <div style="background-color: ${color};" class="w-4 h-4 rounded-full border-2 border-white shadow-xl flex items-center justify-center relative z-10 transition-transform ${scaleClass}">
           <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
         </div>
-        <div class="absolute left-5 bg-slate-900/90 text-white font-mono text-[9px] px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap shadow-md ${isHighlighted ? 'block' : 'hidden group-hover:block'} z-20">
+        <div class="absolute left-5 bg-slate-900/90 text-white font-mono text-[9px] px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap shadow-md ${isHighlighted ? 'block font-bold border-amber-400' : 'hidden group-hover:block'} z-20">
           ${label}
         </div>
       </div>
@@ -46,10 +47,10 @@ const createRadarIcon = (color: string, label: string, isHighlighted: boolean = 
 
 interface LiveLeafletMapProps {
   theme: 'dark' | 'cream';
-  selectedNodeId: string | null;
+  selectedNodeIds: string[];
 }
 
-export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMapProps) {
+export default function LiveLeafletMap({ theme, selectedNodeIds }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
@@ -87,7 +88,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Key GIS Locations (14 total: 4 Chokepoint Corridors, 3 Tankers, 3 Caverns, 4 SPM Ports)
+  // Key GIS Locations
   const locations = [
     {
       id: "hormuz",
@@ -257,18 +258,12 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
     }
   ];
 
-  // Selected Target FlyTo Position
-  const selectedLocation = locations.find(l => l.id === selectedNodeId);
-  const targetPos = selectedLocation ? selectedLocation.pos : null;
-
-  // Dynamic Tile URL based on Theme
   const tileUrl = theme === 'dark'
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
   const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
 
-  // Primary & Alternative Routes
   const hormuzCorridor: [number, number][] = [[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]];
   const adcopBypassRoute: [number, number][] = [[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]];
   const eastCoastLane: [number, number][] = [[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]];
@@ -284,9 +279,8 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
-        <MapFlyToHandler targetPos={targetPos} />
+        <MapFlyToHandler selectedNodeIds={selectedNodeIds} locations={locations} />
 
-        {/* Dynamic CartoDB Dark / Voyager Light Basemap */}
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url={tileUrl}
@@ -297,7 +291,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
         <Polyline positions={eastCoastLane} color="#10B981" weight={2.5} dashArray="4, 8" />
 
         {locations.map((loc) => {
-          const isSelected = selectedNodeId === loc.id;
+          const isSelected = selectedNodeIds.includes(loc.id);
           const icon = createRadarIcon(loc.color, loc.label, isSelected, loc.isAlert);
 
           return (
