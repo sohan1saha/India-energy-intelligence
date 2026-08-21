@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Radio, ExternalLink, RefreshCw, AlertTriangle } from 'lucide-react';
+import { ExternalLink, RefreshCw } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -129,14 +129,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
     }`}>
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded bg-red-500/10 border border-red-500/30 text-red-500">
-            <AlertTriangle className="w-4 h-4 animate-pulse" />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider">Live War & Conflict Crude Shipping Intelligence Wire</h2>
-            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Updated daily with active geopolitical conflict reports, chokepoint blockades & crude oil transport news</p>
-          </div>
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-wider">Live War & Conflict Crude Shipping Intelligence Wire</h2>
         </div>
 
         {/* Live Refresh Button */}
