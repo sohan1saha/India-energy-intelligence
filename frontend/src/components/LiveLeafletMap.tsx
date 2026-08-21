@@ -18,85 +18,40 @@ function MapFlyToHandler({
     if (targetPos) {
       map.flyTo(targetPos, 6.5, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_bypass') {
-      map.flyTo([21.0, 64.0], 5.5, { duration: 1.5 });
+      map.flyTo([21.0, 64.0], 5.2, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_global_pivot') {
-      map.flyTo([5.0, 30.0], 3.2, { duration: 1.5 });
+      map.flyTo([10.0, 35.0], 3.2, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_far_east') {
       map.flyTo([18.0, 105.0], 4.0, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_latam') {
-      map.flyTo([-15.0, 10.0], 3.0, { duration: 1.5 });
+      map.flyTo([-10.0, 15.0], 2.8, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_national_surge') {
       map.flyTo([18.5, 76.0], 5.8, { duration: 1.5 });
     } else {
-      map.flyTo([19.5, 67.5], 5, { duration: 1.5 });
+      map.flyTo([19.5, 67.5], 4.8, { duration: 1.5 });
     }
   }, [targetPos, selectedStrategyId, map]);
   return null;
 }
 
-// Function to generate sweeping, magnetic-field-style elliptical circular arcs between waypoints
-function generateMagneticFieldArc(start: [number, number], end: [number, number], arcOffset: number = 0.35): [number, number][] {
-  const points: [number, number][] = [];
-  const steps = 30;
-
-  const midLat = (start[0] + end[0]) / 2;
-  const midLng = (start[1] + end[1]) / 2;
-
-  const dx = end[1] - start[1];
-  const dy = end[0] - start[0];
-  const dist = Math.sqrt(dx * dx + dy * dy);
-
-  // Perpendicular magnetic field line vector offset
-  const perpLat = -dx / (dist || 1) * dist * arcOffset;
-  const perpLng = dy / (dist || 1) * dist * arcOffset;
-
-  const ctrlLat = midLat + perpLat;
-  const ctrlLng = midLng + perpLng;
-
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const lat = (1 - t) * (1 - t) * start[0] + 2 * (1 - t) * t * ctrlLat + t * t * end[0];
-    const lng = (1 - t) * (1 - t) * start[1] + 2 * (1 - t) * t * ctrlLng + t * t * end[1];
-    points.push([lat, lng]);
-  }
-  return points;
-}
-
-// Function to convert multi-waypoint routes into magnetic field arcs
-function generateMagneticRoute(waypoints: [number, number][], arcOffset: number = 0.35): [number, number][] {
-  if (waypoints.length < 2) return waypoints;
-  let fullPath: [number, number][] = [];
-  for (let i = 0; i < waypoints.length - 1; i++) {
-    const segmentArc = generateMagneticFieldArc(waypoints[i], waypoints[i + 1], arcOffset);
-    if (i > 0) segmentArc.shift();
-    fullPath = fullPath.concat(segmentArc);
-  }
-  return fullPath;
-}
-
-// Custom Animated Leaflet HTML DivIcons
-const createRadarIcon = (color: string, label: string, isHighlighted: boolean = false, isAlert: boolean = false) => {
-  const pulseHtml = (isAlert || isHighlighted)
-    ? `<span class="absolute -inset-2.5 rounded-full ${isHighlighted ? 'bg-amber-400/60' : 'bg-red-500/40'} animate-ping"></span>`
-    : '';
-
-  const scaleClass = isHighlighted ? 'scale-150 ring-4 ring-amber-400 font-bold' : 'group-hover:scale-125';
+// Custom Shipping Network Base Port Ring Marker (Matching Wallenius Wilhelmsen shipping map style)
+const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean = false) => {
+  const size = isMajor ? 'w-3 h-3' : 'w-2 h-2';
+  const color = isAlert ? 'bg-red-500 ring-red-400' : 'bg-white ring-cyan-400';
+  const labelColor = isAlert ? 'text-red-400 font-extrabold' : 'text-slate-100 font-bold';
 
   return L.divIcon({
-    className: 'custom-leaflet-marker',
+    className: 'custom-leaflet-port-marker',
     html: `
       <div class="relative flex items-center justify-center cursor-pointer group">
-        ${pulseHtml}
-        <div style="background-color: ${color};" class="w-4 h-4 rounded-full border-2 border-white shadow-xl flex items-center justify-center relative z-10 transition-transform ${scaleClass}">
-          <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
-        </div>
-        <div class="absolute left-5 bg-slate-900/90 text-white font-mono text-[9px] px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap shadow-md ${isHighlighted ? 'block font-bold border-amber-400' : 'hidden group-hover:block'} z-20">
-          ${label}
+        <div class="${size} rounded-full ${color} ring-2 shadow-lg transition-transform group-hover:scale-150"></div>
+        <div class="absolute left-3.5 top-[-4px] text-[9px] font-mono tracking-wider ${labelColor} whitespace-nowrap uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] select-none">
+          ${name}
         </div>
       </div>
     `,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8]
+    iconSize: [12, 12],
+    iconAnchor: [6, 6]
   });
 };
 
@@ -144,266 +99,80 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Key GIS Locations (Including International Terminal Pins)
-  const locations = [
-    {
-      id: "hormuz",
-      name: "Strait of Hormuz (Chokepoint)",
-      pos: [26.56, 56.25] as [number, number],
-      type: "chokepoint",
-      color: "#EF4444",
-      label: "STRAIT OF HORMUZ (82.5/100)",
-      isAlert: true,
-      threatScore: "82.5/100",
-      volume: "1.89M bpd Transit",
-      desc: "Elevated US-Iran military standoff, naval patrols, mine/missile threats along Iranian coast.",
-      action: "Initiate Fujairah ADCOP Bypass"
-    },
-    {
-      id: "red_sea",
-      name: "Bab-el-Mandeb & Red Sea",
-      pos: [12.58, 43.33] as [number, number],
-      type: "chokepoint",
-      color: "#EF4444",
-      label: "BAB-EL-MANDEB & RED SEA (76/100)",
-      isAlert: true,
-      threatScore: "76.0/100",
-      volume: "1.12M bpd Transit",
-      desc: "Continuous Houthi anti-ship missile/drone attacks; major tankers forced into 16-day Cape detour.",
-      action: "Reroute via Yanbu Petroline"
-    },
-    {
-      id: "malacca",
-      name: "Strait of Malacca",
-      pos: [4.15, 100.50] as [number, number],
-      type: "chokepoint",
-      color: "#10B981",
-      label: "STRAIT OF MALACCA (24/100)",
-      threatScore: "24.0/100",
-      volume: "85 Vessels / Day",
-      desc: "Dense maritime traffic; low geopolitical threat; key corridor for Russian Far East (ESPO) & Asian trade.",
-      action: "Normal Operational Status"
-    },
-    {
-      id: "cape_gh",
-      name: "Cape of Good Hope",
-      pos: [-34.35, 18.47] as [number, number],
-      type: "chokepoint",
-      color: "#F59E0B",
-      label: "CAPE OF GOOD HOPE (35/100)",
-      threatScore: "35.0/100",
-      volume: "60 Vessels / Day",
-      desc: "Congestion at South African bunkering ports (Port Louis, Durban) due to Red Sea diversions.",
-      action: "Monitor Cape Bunkering Delays (+15 Days)"
-    },
-    {
-      id: "fujairah",
-      name: "Fujairah ADCOP Bypass Terminal (UAE)",
-      pos: [25.18, 56.36] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "DEEPWATER SPM BYPASS TERMINAL",
-      desc: "Abu Dhabi Crude Oil Pipeline terminal bypassing Strait of Hormuz.",
-      action: "540,000 bpd Rerouted to India"
-    },
-    {
-      id: "yanbu",
-      name: "Yanbu Petroline Red Sea Terminal (Saudi Arabia)",
-      pos: [24.08, 38.06] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "YANBU PETROLINE TERMINAL",
-      desc: "Saudi Aramco East-West pipeline terminal on Red Sea coast.",
-      action: "420,000 bpd Rerouted via Red Sea"
-    },
-    {
-      id: "santos",
-      name: "Santos Basin Offshore Terminal (Brazil)",
-      pos: [-23.96, -46.33] as [number, number],
-      type: "port",
-      color: "#8B5CF6",
-      label: "BRAZIL PETROBRAS TUPI TERMINAL",
-      desc: "Deepwater Santos Basin offshore loading terminal for Tupi & Lula medium crude.",
-      action: "480,000 bpd Transatlantic Sourcing"
-    },
-    {
-      id: "kozmino",
-      name: "Kozmino Pacific Oil Terminal (Russia)",
-      pos: [42.73, 133.08] as [number, number],
-      type: "port",
-      color: "#10B981",
-      label: "KOZMINO ESPO PACIFIC TERMINAL",
-      desc: "ESPO crude Pacific pipeline export terminal near Nakhodka.",
-      action: "600,000 bpd Pacific Corridor Sourcing"
-    },
-    {
-      id: "us_gulf",
-      name: "Enterprise Offshore US Gulf Terminal (Texas, USA)",
-      pos: [28.95, -95.35] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "US GULF WTI EXPORT HUB",
-      desc: "Deepwater Freeport offshore VLCC terminal exporting WTI Midland crude.",
-      action: "420,000 bpd Transatlantic Sourcing"
-    },
-    {
-      id: "ongc_mumbai",
-      name: "ONGC Mumbai High Offshore Platform (India)",
-      pos: [19.42, 71.33] as [number, number],
-      type: "spr",
-      color: "#EC4899",
-      label: "ONGC MUMBAI HIGH PLATFORM",
-      desc: "India's largest domestic offshore crude production complex.",
-      action: "360,000 bpd Production Surge"
-    },
-    {
-      id: "vadinar",
-      name: "Vadinar SPM Berth (Gujarat)",
-      pos: [22.45, 69.66] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "VADINAR DEEPWATER SPM BERTH",
-      capacity: "55.0M bbls Storage",
-      desc: "Deepwater Single Point Mooring serving Reliance Jamnagar & Nayara."
-    },
-    {
-      id: "mundra",
-      name: "Mundra Port Crude Terminal",
-      pos: [22.75, 69.70] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "MUNDRA CRUDE TERMINAL",
-      capacity: "Mundra-Panipat Pipeline Origin",
-      desc: "Key import terminal feeding IOCL Panipat refinery complex."
-    },
-    {
-      id: "padur",
-      name: "Padur ISPRL Cavern",
-      pos: [13.25, 74.78] as [number, number],
-      type: "spr",
-      color: "#10B981",
-      label: "PADUR 2.5 MMT ISPRL CAVERN",
-      capacity: "2.50 MMT (18.37M bbls)",
-      desc: "Strategic Petroleum Reserve underground rock cavern. Subsea pipeline to MRPL."
-    },
-    {
-      id: "mangalore",
-      name: "Mangalore ISPRL Cavern",
-      pos: [12.91, 74.85] as [number, number],
-      type: "spr",
-      color: "#10B981",
-      label: "MANGALORE 1.5 MMT CAVERN",
-      capacity: "1.50 MMT (11.02M bbls)",
-      desc: "Strategic Petroleum Reserve cavern connected to Mangalore Refinery (MRPL)."
-    },
-    {
-      id: "visakh",
-      name: "Visakhapatnam ISPRL Cavern",
-      pos: [17.68, 83.21] as [number, number],
-      type: "spr",
-      color: "#10B981",
-      label: "VISAKHAPATNAM 1.33 MMT CAVERN",
-      capacity: "1.33 MMT (9.77M bbls)",
-      desc: "East Coast Strategic Petroleum Reserve linked to HPCL Visakh refinery."
-    },
-    {
-      id: "paradip",
-      name: "Paradip SPM Berth (Odisha)",
-      pos: [20.26, 86.67] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "PARADIP DEEPWATER SPM BERTH",
-      capacity: "24.0M bbls Storage",
-      desc: "IOCL Paradip 15 MMT refinery deepwater crude offloading SPM."
-    },
-    {
-      id: "desh_vishal",
-      name: "VLCC Desh Vishal (Live AIS)",
-      pos: [deshLat, deshLng] as [number, number],
-      type: "tanker",
-      color: "#F59E0B",
-      label: "VLCC DESH VISHAL (2.0M bbls)",
-      status: "14.5 Knots • Heading 124°",
-      cargo: "2.0M bbls Basrah Heavy",
-      origin: "Fujairah ADCOP Terminal (UAE)",
-      destination: "Vadinar SPM (Gujarat) [ETA Aug 24]",
-      desc: "MMSI 419001234 • Indian Flag (SCI) • Live Telemetry Active"
-    },
-    {
-      id: "swarna_kamal",
-      name: "VLCC Swarna Kamal (Live AIS)",
-      pos: [swarnaLat, swarnaLng] as [number, number],
-      type: "tanker",
-      color: "#F59E0B",
-      label: "VLCC SWARNA KAMAL (2.0M bbls)",
-      status: "13.8 Knots • Heading 142°",
-      cargo: "2.0M bbls Murban Sweet",
-      origin: "Fujairah ADCOP Terminal (UAE)",
-      destination: "Mangalore SPM (MRPL) [ETA Aug 25]",
-      desc: "MMSI 419005678 • SCI Fleet • ADCOP Bypass Active"
-    },
-    {
-      id: "ratna_shalini",
-      name: "VLCC Ratna Shalini (Live AIS)",
-      pos: [ratnaLat, ratnaLng] as [number, number],
-      type: "tanker",
-      color: "#F59E0B",
-      label: "VLCC RATNA SHALINI (1.9M bbls)",
-      status: "15.1 Knots • Heading 022°",
-      cargo: "1.9M bbls WTI Midland",
-      origin: "Enterprise US Gulf Terminal (Texas, USA)",
-      destination: "Paradip SPM (Odisha) [ETA Aug 26]",
-      desc: "MMSI 419009876 • Great Eastern Fleet • Transatlantic Sourcing"
-    }
+  // Global Maritime Shipping Network Base Ports (Matching reference map nodes)
+  const ports = [
+    // Indian Gateways & Terminals
+    { id: "vadinar", name: "VADINAR", pos: [22.45, 69.66] as [number, number], isMajor: true },
+    { id: "mundra", name: "MUNDRA", pos: [22.75, 69.70] as [number, number], isMajor: false },
+    { id: "mumbai", name: "MUMBAI / JNPT", pos: [18.95, 72.95] as [number, number], isMajor: true },
+    { id: "mangalore", name: "MANGALORE", pos: [12.91, 74.85] as [number, number], isMajor: true },
+    { id: "padur", name: "PADUR SPR", pos: [13.25, 74.78] as [number, number], isMajor: false },
+    { id: "kochi", name: "KOCHI", pos: [9.93, 76.26] as [number, number], isMajor: false },
+    { id: "visakh", name: "VISAKHAPATNAM", pos: [17.68, 83.21] as [number, number], isMajor: true },
+    { id: "paradip", name: "PARADIP", pos: [20.26, 86.67] as [number, number], isMajor: true },
+    { id: "haldia", name: "HALDIA", pos: [22.02, 88.06] as [number, number], isMajor: false },
+
+    // Middle East Base Ports
+    { id: "fujairah", name: "FUJAIRAH ADCOP", pos: [25.18, 56.36] as [number, number], isMajor: true },
+    { id: "jebel_ali", name: "JEBEL ALI", pos: [25.00, 55.06] as [number, number], isMajor: false },
+    { id: "sohar", name: "SOHAR", pos: [24.36, 56.73] as [number, number], isMajor: false },
+    { id: "dammam", name: "DAMMAM", pos: [26.43, 50.10] as [number, number], isMajor: false },
+    { id: "hamad", name: "HAMAD", pos: [25.01, 51.61] as [number, number], isMajor: false },
+    { id: "kuwait", name: "KUWAIT CITY", pos: [29.37, 47.97] as [number, number], isMajor: false },
+    { id: "jeddah", name: "JEDDAH", pos: [21.48, 39.19] as [number, number], isMajor: false },
+    { id: "yanbu", name: "YANBU PETROLINE", pos: [24.08, 38.06] as [number, number], isMajor: true },
+
+    // Chokepoints (Alert Pins)
+    { id: "hormuz", name: "HORMUZ (ALERT)", pos: [26.56, 56.25] as [number, number], isMajor: true, isAlert: true },
+    { id: "red_sea", name: "RED SEA (ALERT)", pos: [12.58, 43.33] as [number, number], isMajor: true, isAlert: true },
+    { id: "malacca", name: "MALACCA STRAIT", pos: [4.15, 100.50] as [number, number], isMajor: true },
+
+    // International Overseas Hubs
+    { id: "durban", name: "DURBAN", pos: [-29.85, 31.02] as [number, number], isMajor: false },
+    { id: "cape_town", name: "CAPE TOWN", pos: [-33.92, 18.42] as [number, number], isMajor: true },
+    { id: "singapore", name: "SINGAPORE", pos: [1.35, 103.81] as [number, number], isMajor: true },
+    { id: "klang", name: "PORT KLANG", pos: [3.00, 101.40] as [number, number], isMajor: false },
+    { id: "jakarta", name: "JAKARTA", pos: [-6.20, 106.84] as [number, number], isMajor: false },
+    { id: "shanghai", name: "SHANGHAI", pos: [31.23, 121.47] as [number, number], isMajor: true },
+    { id: "hongkong", name: "HONG KONG", pos: [22.31, 114.16] as [number, number], isMajor: false },
+    { id: "kozmino", name: "KOZMINO RUSSIA", pos: [42.73, 133.08] as [number, number], isMajor: true },
+    { id: "yokohama", name: "YOKOHAMA", pos: [35.44, 139.63] as [number, number], isMajor: false },
+    { id: "santos", name: "SANTOS BRAZIL", pos: [-23.96, -46.33] as [number, number], isMajor: true },
+    { id: "houston", name: "HOUSTON US GULF", pos: [28.95, -95.35] as [number, number], isMajor: true }
   ];
 
   // Selected Target FlyTo Position
-  const selectedLocation = locations.find(l => l.id === selectedNodeId);
+  const selectedLocation = ports.find(p => p.id === selectedNodeId);
   const targetPos = selectedLocation ? selectedLocation.pos : null;
 
   const tileUrl = theme === 'dark'
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
-  const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
-
-  // Magnetic Field Lines Style Arc Arrays (Sweeping outward magnetic field loops)
-  const strat1Routes = [
-    generateMagneticFieldArc([25.18, 56.36], [22.45, 69.66], 0.30),
-    generateMagneticFieldArc([25.18, 56.36], [22.45, 69.66], -0.30), // Outer magnetic loop
-    generateMagneticRoute([[24.08, 38.06], [18.00, 40.00], [12.58, 43.33], [12.00, 52.00], [12.91, 74.85]], 0.35)
+  // Wallenius Wilhelmsen Style Oceanic Trunk Lines (Curved coastline-following shipping corridors)
+  const middleEastPersianGulfCorridor: [number, number][] = [
+    [29.37, 47.97], [26.43, 50.10], [25.01, 51.61], [25.00, 55.06], [26.56, 56.25], [25.18, 56.36], [24.36, 56.73], [deshLat, deshLng], [22.45, 69.66]
   ];
 
-  const strat2Routes = [
-    generateMagneticRoute([[28.95, -95.35], [24.00, -85.00], [23.00, -79.00], [18.00, -50.00], [0.00, -25.00], [-20.00, -10.00], [-34.35, 18.47], [-30.00, 45.00], [-10.00, 65.00], [20.26, 86.67]], 0.40),
-    generateMagneticRoute([[42.73, 133.08], [34.00, 128.00], [25.00, 122.00], [12.00, 112.00], [4.15, 100.50], [6.00, 93.00], [15.00, 88.00], [20.26, 86.67]], 0.35)
+  const redSeaBypassCorridor: [number, number][] = [
+    [24.08, 38.06], [21.48, 39.19], [18.00, 40.20], [12.58, 43.33], [12.00, 51.00], [swarnaLat, swarnaLng], [12.91, 74.85]
   ];
 
-  const strat3Routes = [
-    generateMagneticRoute([[42.73, 133.08], [34.00, 128.00], [22.00, 120.00], [12.00, 112.00], [4.15, 100.50], [8.00, 90.00], [17.68, 83.21], [20.26, 86.67]], 0.35),
-    generateMagneticFieldArc([42.73, 133.08], [20.26, 86.67], -0.50) // Wide outer magnetic field loop
+  const farEastPacificCorridor: [number, number][] = [
+    [42.73, 133.08], [35.44, 139.63], [31.23, 121.47], [22.31, 114.16], [3.00, 101.40], [1.35, 103.81], [4.15, 100.50], [10.00, 93.00], [17.68, 83.21], [20.26, 86.67]
   ];
 
-  const strat4Routes = [
-    generateMagneticRoute([[-23.96, -46.33], [-28.00, -35.00], [-34.00, -10.00], [-34.35, 18.47], [-28.00, 45.00], [-10.00, 62.00], [12.00, 68.00], [22.45, 69.66]], 0.45),
-    generateMagneticFieldArc([-23.96, -46.33], [22.45, 69.66], -0.60) // Direct outward magnetic field arc
+  const atlanticCapeCorridor: [number, number][] = [
+    [28.95, -95.35], [24.00, -85.00], [-23.96, -46.33], [-29.85, 31.02], [-33.92, 18.42], [-30.00, 45.00], [ratnaLat, ratnaLng], [20.26, 86.67]
   ];
 
-  const strat5Routes = [
-    generateMagneticFieldArc([13.25, 74.78], [12.91, 74.85], 0.25),
-    generateMagneticFieldArc([17.68, 83.21], [20.26, 86.67], 0.25),
-    generateMagneticFieldArc([19.42, 71.33], [22.45, 69.66], 0.30),
-    generateMagneticFieldArc([19.42, 71.33], [22.45, 69.66], -0.30)
+  const domesticSurgeCorridor: [number, number][] = [
+    [13.25, 74.78], [12.91, 74.85], [17.68, 83.21], [20.26, 86.67], [19.42, 71.33], [22.45, 69.66]
   ];
-
-  const baselineHormuz = generateMagneticFieldArc([26.56, 56.25], [22.45, 69.66], 0.25);
-  const baselineHormuzOuter = generateMagneticFieldArc([26.56, 56.25], [22.45, 69.66], -0.25);
-  const baselineAdcop = generateMagneticFieldArc([25.18, 56.36], [12.91, 74.85], 0.25);
-  const baselineEastCoast = generateMagneticFieldArc([84.20, 11.50], [20.26, 86.67], 0.25);
 
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
-      theme === 'dark' ? 'border-slate-700/60' : 'border-stone-300'
+      theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17]' : 'border-stone-300 bg-[#FAF8F5]'
     }`}>
       <MapContainer
         key={`leaflet-map-${theme}`}
@@ -419,145 +188,80 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           url={tileUrl}
         />
 
-        {/* Dynamic Strategy Magnetic Field Style Sweeping Arcs Overlay */}
-        {selectedStrategyId === 'strat_bypass' && strat1Routes.map((r, i) => (
-          <Polyline key={`s1-${i}`} positions={r} color="#D97706" weight={4.5} dashArray="6, 8" />
-        ))}
-
-        {selectedStrategyId === 'strat_global_pivot' && strat2Routes.map((r, i) => (
-          <Polyline key={`s2-${i}`} positions={r} color="#0284C7" weight={4.5} dashArray="6, 8" />
-        ))}
-
-        {selectedStrategyId === 'strat_far_east' && strat3Routes.map((r, i) => (
-          <Polyline key={`s3-${i}`} positions={r} color="#10B981" weight={4.5} dashArray="6, 8" />
-        ))}
-
-        {selectedStrategyId === 'strat_latam' && strat4Routes.map((r, i) => (
-          <Polyline key={`s4-${i}`} positions={r} color="#8B5CF6" weight={4.5} dashArray="6, 8" />
-        ))}
-
-        {selectedStrategyId === 'strat_national_surge' && strat5Routes.map((r, i) => (
-          <Polyline key={`s5-${i}`} positions={r} color="#EC4899" weight={5} dashArray="4, 6" />
-        ))}
-
-        {/* Baseline Standard Corridors with Dual Magnetic Field Loops */}
-        {!selectedStrategyId && (
+        {/* ELEGANT SHIPPING NETWORK TRUNK LINES (Matching reference logistics map) */}
+        
+        {/* Strategy 1: Middle East Express Bypass (Cyan / Amber) */}
+        {(!selectedStrategyId || selectedStrategyId === 'strat_bypass') && (
           <>
-            <Polyline positions={baselineHormuz} color="#EF4444" weight={3} dashArray="8, 12" />
-            <Polyline positions={baselineHormuzOuter} color="#EF4444" weight={2} dashArray="4, 8" />
-            <Polyline positions={baselineAdcop} color="#0284C7" weight={3} dashArray="6, 10" />
-            <Polyline positions={baselineEastCoast} color="#10B981" weight={2.5} dashArray="4, 8" />
+            <Polyline positions={middleEastPersianGulfCorridor} color="#00F0FF" weight={2.5} opacity={0.8} />
+            <Polyline positions={redSeaBypassCorridor} color="#F59E0B" weight={2.5} opacity={0.85} dashArray="4, 6" />
           </>
         )}
 
-        {locations.map((loc) => {
-          const isSelected = selectedNodeId === loc.id;
-          const icon = createRadarIcon(loc.color, loc.label, isSelected, loc.isAlert);
+        {/* Strategy 2: Atlantic Transatlantic Long-Haul (Red) */}
+        {(!selectedStrategyId || selectedStrategyId === 'strat_global_pivot') && (
+          <Polyline positions={atlanticCapeCorridor} color="#EF4444" weight={2.5} opacity={0.85} />
+        )}
 
-          return (
-            <Marker
-              key={loc.id}
-              position={loc.pos}
-              icon={icon}
-              eventHandlers={{
-                mouseover: (e) => {
-                  e.target.openPopup();
-                },
-                mouseout: (e) => {
-                  e.target.closePopup();
-                }
-              }}
-            >
-              <Popup className={popupClass}>
-                <div className={`font-mono text-xs p-1 max-w-[275px] space-y-1.5 ${
-                  theme === 'dark' ? 'text-slate-100' : 'text-stone-900'
-                }`}>
-                  {/* Header Title */}
-                  <div className="flex items-center justify-between border-b pb-1 border-slate-500/30">
-                    <strong className={`font-bold text-xs ${
-                      theme === 'dark' ? 'text-white' : 'text-stone-900'
-                    }`}>{loc.name}</strong>
-                    {loc.threatScore && (
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                        theme === 'dark'
-                          ? 'bg-red-500/20 border border-red-500/40 text-red-400'
-                          : 'bg-red-100 border border-red-300 text-red-700'
-                      }`}>
-                        {loc.threatScore}
-                      </span>
-                    )}
-                  </div>
-                  
-                  <p className={`text-[11px] font-sans leading-tight ${
-                    theme === 'dark' ? 'text-slate-300' : 'text-stone-700'
-                  }`}>{loc.desc}</p>
+        {/* Strategy 3: Far East Pacific ESPO Line (Emerald) */}
+        {(!selectedStrategyId || selectedStrategyId === 'strat_far_east') && (
+          <Polyline positions={farEastPacificCorridor} color="#10B981" weight={2.5} opacity={0.85} />
+        )}
 
-                  {/* Route Badges with Perfect Light & Dark Theme Contrast */}
-                  {loc.origin && (
-                    <div className={`text-[10px] font-bold p-1.5 rounded flex items-start gap-1 ${
-                      theme === 'dark'
-                        ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40'
-                        : 'bg-emerald-100 text-emerald-950 border border-emerald-300'
-                    }`}>
-                      <span className={theme === 'dark' ? 'text-emerald-400 font-extrabold' : 'text-emerald-900 font-extrabold'}>ORIGIN:</span>
-                      <span className="truncate">{loc.origin}</span>
-                    </div>
-                  )}
+        {/* Strategy 4: Latin America Santos Route (Purple) */}
+        {selectedStrategyId === 'strat_latam' && (
+          <Polyline positions={atlanticCapeCorridor} color="#A855F7" weight={3} opacity={0.9} />
+        )}
 
-                  {loc.destination && (
-                    <div className={`text-[10px] font-bold p-1.5 rounded flex items-start gap-1 ${
-                      theme === 'dark'
-                        ? 'bg-sky-950/80 text-sky-300 border border-sky-500/40'
-                        : 'bg-sky-100 text-sky-950 border border-sky-300'
-                    }`}>
-                      <span className={theme === 'dark' ? 'text-sky-400 font-extrabold' : 'text-sky-900 font-extrabold'}>DESTINATION:</span>
-                      <span className="truncate">{loc.destination}</span>
-                    </div>
-                  )}
+        {/* Strategy 5: National Reserve Surge (Pink) */}
+        {selectedStrategyId === 'strat_national_surge' && (
+          <Polyline positions={domesticSurgeCorridor} color="#EC4899" weight={3.5} opacity={0.9} dashArray="3, 5" />
+        )}
 
-                  {loc.status && (
-                    <div className={`text-[10px] font-bold p-1 rounded ${
-                      theme === 'dark'
-                        ? 'bg-amber-950/80 text-amber-300 border border-amber-500/40'
-                        : 'bg-amber-100 text-amber-950 border border-amber-300'
-                    }`}>
-                      STATUS: {loc.status}
-                    </div>
-                  )}
-                  
-                  {loc.capacity && (
-                    <div className={`text-[10px] font-bold p-1 rounded ${
-                      theme === 'dark'
-                        ? 'bg-slate-800/80 text-slate-200 border border-slate-700'
-                        : 'bg-stone-100 text-stone-900 border border-stone-300'
-                    }`}>
-                      CAPACITY: {loc.capacity}
-                    </div>
-                  )}
-                  {loc.cargo && (
-                    <div className={`text-[10px] font-bold p-1 rounded ${
-                      theme === 'dark'
-                        ? 'bg-slate-800/90 text-amber-300 border border-slate-700'
-                        : 'bg-amber-100 text-amber-950 border border-amber-300'
-                    }`}>
-                      CARGO: {loc.cargo}
-                    </div>
-                  )}
-                  {loc.action && (
-                    <div className={`text-[10px] font-bold p-1.5 rounded ${
-                      theme === 'dark'
-                        ? 'text-sky-300 bg-sky-950/80 border border-sky-500/40'
-                        : 'text-blue-950 bg-blue-100 border border-blue-300'
-                    }`}>
-                      ACTION: {loc.action}
-                    </div>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
+        {/* RENDERING ALL GLOBAL BASE PORTS AS CLEAN RING DOTS & LABELS */}
+        {ports.map((port) => (
+          <Marker
+            key={port.id}
+            position={port.pos}
+            icon={createPortIcon(port.name, port.isMajor, port.isAlert)}
+          >
+            <Popup className={theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup'}>
+              <div className="font-mono text-xs p-1">
+                <strong className="text-white block font-bold">{port.name} PORT HUB</strong>
+                <span className="text-[10px] text-slate-300">Base Port & Maritime Intake Terminal</span>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
+
+      {/* MARITIME LOGISTICS LEGEND CARD (Matching Wallenius Wilhelmsen Map Reference) */}
+      <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
+        theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-white/90 border-stone-300 text-stone-800'
+      }`}>
+        <div className="font-bold uppercase tracking-wider mb-2 border-b pb-1 border-inherit flex items-center justify-between gap-3">
+          <span>MARITIME SERVICE NETWORK</span>
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        </div>
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-0.5 bg-red-500"></span>
+            <span>TRANSATLANTIC & CAPE SERVICE</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-0.5 bg-cyan-400"></span>
+            <span>PERSIAN GULF / ADCOP BYPASS</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-0.5 bg-emerald-500"></span>
+            <span>FAR EAST & ESPO PACIFIC CORRIDOR</span>
+          </div>
+          <div className="flex items-center gap-2 pt-1 border-t border-inherit">
+            <span className="w-2 h-2 rounded-full bg-white ring-1 ring-cyan-400"></span>
+            <span>BASE PORTS & SPM TERMINALS</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
