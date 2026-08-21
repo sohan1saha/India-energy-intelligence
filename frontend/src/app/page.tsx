@@ -9,14 +9,13 @@ import { SPROptimizerCard } from '@/components/SPROptimizerCard';
 import { ProcurementMatrix } from '@/components/ProcurementMatrix';
 import { AICopilotDrawer } from '@/components/AICopilotDrawer';
 import { TenderModal } from '@/components/TenderModal';
-import { Bot } from 'lucide-react';
+import { ShieldAlert, Database, Navigation, Activity, Bot, ArrowUpRight, TrendingUp } from 'lucide-react';
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
   const [isTenderModalOpen, setIsTenderModalOpen] = useState<boolean>(false);
 
-  // Default initial mock state from backend data
   const [corridors, setCorridors] = useState<any[]>([
     {
       id: "c1",
@@ -185,7 +184,6 @@ export default function Home() {
 
   const [activeTender, setActiveTender] = useState<any>(strategies[0]);
 
-  // Fetch backend APIs on load if FastAPI server is active
   useEffect(() => {
     fetch('http://localhost:8000/api/risk/report')
       .then(res => res.json())
@@ -211,7 +209,6 @@ export default function Home() {
       const data = await res.json();
       setSimulationResult(data);
     } catch (e) {
-      // Mock calculation update if backend is offline
       const deficit = (1890000 * (hormuz / 100)) + (1125000 * (redSea / 100) * 0.45);
       setSimulationResult({
         scenario_name: 'Custom Disruption Simulation',
@@ -250,14 +247,70 @@ export default function Home() {
         onOpenTenderModal={() => handleOpenTenderModal(strategies[0])}
       />
 
-      {/* Main Container */}
-      <main className="p-4 md:p-6 space-y-5 max-w-[1600px] mx-auto">
-        {/* Direction 1: Risk Radar */}
-        <RiskRadar theme={theme} corridors={corridors} />
+      {/* Main Command Center Container */}
+      <main className="p-4 md:p-6 space-y-6 max-w-[1680px] mx-auto">
+        
+        {/* TIER 1: TOP HERO KPI BANNER (Executive Situational Awareness) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
+          {/* Card 1: National Risk Index */}
+          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <span>NATIONAL RISK INDEX</span>
+              <ShieldAlert className="w-4 h-4 text-alert-red" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-alert-red">72.2</span>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-alert-red/10 text-alert-red border border-alert-red/30">
+                HIGH RISK
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans">Hormuz & Red Sea Chokepoint Alerts Active</p>
+          </div>
 
-        {/* Grid 2: Digital Twin Map & Scenario Sandbox */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <div className="lg:col-span-6">
+          {/* Card 2: ISPRL Reserve Cover */}
+          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <span>ISPRL STRATEGIC RESERVE</span>
+              <Database className="w-4 h-4 text-alert-emerald" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-alert-emerald">9.5 Days</span>
+              <span className="text-xs text-slate-400">39.16M bbls</span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans">Visakhapatnam, Mangalore & Padur Caverns</p>
+          </div>
+
+          {/* Card 3: Daily Imports & Dependency */}
+          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <span>DAILY CRUDE IMPORTS</span>
+              <Activity className="w-4 h-4 text-alert-amber" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-alert-amber">4.5M bpd</span>
+              <span className="text-xs text-alert-amber font-semibold">88% Import Dep.</span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans">45% Volume Transits Strait of Hormuz</p>
+          </div>
+
+          {/* Card 4: Supertankers at Sea */}
+          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <span>SUPERTANKERS AT SEA</span>
+              <Navigation className="w-4 h-4 text-alert-cyan" />
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-alert-cyan">3 VLCCs</span>
+              <span className="text-xs text-slate-400">35.5M bbls</span>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans">Indian Ocean & Arabian Sea Corridors</p>
+          </div>
+        </div>
+
+        {/* TIER 2: PRIMARY SPLIT GRID (70% Live GIS Map Centerpiece + 30% Threat Radar) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* Main Interactive Map (7 Cols / ~60%) */}
+          <div className="lg:col-span-7 flex flex-col">
             <DigitalTwinMap
               theme={theme}
               nodes={[]}
@@ -265,28 +318,39 @@ export default function Home() {
               totalReserveMbbl={39.16}
             />
           </div>
-          <div className="lg:col-span-6">
+
+          {/* Live Geopolitical Threat Radar (5 Cols / ~40%) */}
+          <div className="lg:col-span-5 flex flex-col">
+            <RiskRadar theme={theme} corridors={corridors} />
+          </div>
+        </div>
+
+        {/* TIER 3: SECONDARY SPLIT GRID (60% Scenario Modeller + 40% ISPRL Reserve Optimizer) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* Disruption Scenario Modeller (7 Cols) */}
+          <div className="lg:col-span-7 flex flex-col">
             <ScenarioSandbox
               theme={theme}
               onSimulate={handleSimulateScenario}
               simulationResult={simulationResult}
             />
           </div>
-        </div>
 
-        {/* Grid 3: SPR Optimizer & Procurement Matrix */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <div className="lg:col-span-5">
+          {/* ISPRL Strategic Reserve Optimizer (5 Cols) */}
+          <div className="lg:col-span-5 flex flex-col">
             <SPROptimizerCard theme={theme} daysExtended={18.0} />
           </div>
-          <div className="lg:col-span-7">
-            <ProcurementMatrix
-              theme={theme}
-              strategies={strategies}
-              onOpenTenderModal={(strat) => handleOpenTenderModal(strat)}
-            />
-          </div>
         </div>
+
+        {/* TIER 4: FULL-WIDTH ACTION COMMAND SECTION (Adaptive Procurement Orchestrator & Tenders) */}
+        <div className="w-full">
+          <ProcurementMatrix
+            theme={theme}
+            strategies={strategies}
+            onOpenTenderModal={(strat) => handleOpenTenderModal(strat)}
+          />
+        </div>
+
       </main>
 
       {/* Floating AI Copilot Trigger Button */}
