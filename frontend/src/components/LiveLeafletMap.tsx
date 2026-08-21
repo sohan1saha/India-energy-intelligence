@@ -55,12 +55,12 @@ export default function LiveLeafletMap() {
   const fujairahToMangalore: [number, number][] = [[25.18, 56.36], [15.10, 71.40], [12.91, 74.85]];
 
   return (
-    <div className="w-full h-[320px] rounded-lg overflow-hidden border border-slate-700/50 shadow-inner">
+    <div className="w-full h-[320px] rounded-lg overflow-hidden border border-slate-700/50 shadow-inner relative z-0">
       <MapContainer
         center={[18.0, 68.0]}
         zoom={4}
         scrollWheelZoom={false}
-        className="w-full h-full"
+        className="w-full h-full relative z-0"
       >
         {/* Dark Mode CartoDB Tile Layer */}
         <TileLayer
