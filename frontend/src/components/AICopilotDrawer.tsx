@@ -49,7 +49,8 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/copilot/chat', {
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${apiBaseUrl}/api/copilot/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: textToSend })
