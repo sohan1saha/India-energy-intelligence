@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Bot, Send, X, Sparkles } from 'lucide-react';
+import { Flame, Send, X, Sparkles } from 'lucide-react';
 
 interface AICopilotDrawerProps {
   theme: 'dark' | 'cream';
@@ -24,7 +24,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     {
       id: '1',
       sender: 'ai',
-      text: "🤖 Urja Sathi AI (ऊर्जा साथी) - Energy Security & Procurement AI Advisor\n\nI am connected live to India's Energy Supply Chain Digital Twin, ISPRL Strategic Reserves, and AIS Satellite Vessel Telemetry.\n\nFeel free to ask me any question about supertankers, pipeline bypasses, refinery assays, or price shocks!"
+      text: "🔥 Urja Sathi AI (ऊर्जा साथी) - Energy Security & Procurement AI Advisor\n\nI am connected live to India's Energy Supply Chain Digital Twin, ISPRL Strategic Reserves, and AIS Satellite Vessel Telemetry.\n\nFeel free to ask me any question about supertankers, pipeline bypasses, refinery assays, or price shocks!"
     }
   ]);
   const [input, setInput] = useState('');
@@ -85,7 +85,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
         theme === 'dark' ? 'border-amber-500/30 bg-[#121724]' : 'border-amber-500/20 bg-[#F4EFE6]'
       }`}>
         <div className="flex items-center gap-2">
-          <Bot className="w-5 h-5 text-alert-amber" />
+          <Flame className="w-5 h-5 text-alert-amber animate-pulse" />
           <div>
             <h3 className="font-bold text-sm">Urja Sathi AI (ऊर्जा साथी)</h3>
             <span className="text-[10px] text-slate-400 font-mono block">Energy Security Intelligence Companion</span>
@@ -139,7 +139,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
         ))}
         {loading && (
           <div className="p-3 rounded-lg bg-alert-amber/10 text-alert-amber text-xs animate-pulse font-mono flex items-center gap-2 border border-alert-amber/20">
-            <Bot className="w-4 h-4 animate-spin" />
+            <Flame className="w-4 h-4 animate-spin text-alert-amber" />
             <span>Urja Sathi reasoning over live GIS digital twin & reserve graphs...</span>
           </div>
         )}

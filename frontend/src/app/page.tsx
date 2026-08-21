@@ -9,7 +9,7 @@ import { SPROptimizerCard } from '@/components/SPROptimizerCard';
 import { ProcurementMatrix } from '@/components/ProcurementMatrix';
 import { GeopoliticalNewsFeed } from '@/components/GeopoliticalNewsFeed';
 import { AICopilotDrawer } from '@/components/AICopilotDrawer';
-import { ShieldAlert, Database, Navigation, Activity, Bot } from 'lucide-react';
+import { ShieldAlert, Database, Navigation, Activity, Flame } from 'lucide-react';
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
@@ -470,7 +470,7 @@ export default function Home() {
         onClick={() => setIsCopilotOpen(true)}
         className="fixed bottom-6 right-6 p-3.5 rounded-full bg-alert-amber text-white shadow-xl hover:bg-amber-700 transition z-40 flex items-center gap-2 text-xs font-bold"
       >
-        <Bot className="w-5 h-5" />
+        <Flame className="w-5 h-5 text-amber-200 animate-pulse" />
         <span className="hidden sm:inline">Urja Sathi</span>
       </button>
 
