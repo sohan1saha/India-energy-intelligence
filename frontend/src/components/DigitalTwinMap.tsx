@@ -108,8 +108,8 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'Shipping Corporation of India (SCI) Fleet • MMSI 419001234',
       stock: '2.0M bbls Basrah Heavy (At Sea)',
       status: 'Underway at 14.5 Knots • Heading 124°',
-      colorClass: 'text-alert-red',
-      badgeBg: 'bg-alert-red/10 border-alert-red/30 text-alert-red',
+      colorClass: 'text-alert-amber',
+      badgeBg: 'bg-alert-amber/10 border-alert-amber/30 text-alert-amber',
       badgeText: 'Live AIS Telemetry Active',
       refineryFeed: 'ORIGIN: Fujairah ADCOP Terminal (UAE) ➔ DESTINATION: Vadinar SPM (ETA Aug 24)',
       slateCompatibility: 'Basrah Heavy Crude (API 24.0°, Sulfur 3.8%) for Reliance Jamnagar',
@@ -117,6 +117,40 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       logisticsConnectivity: 'Origin: Fujairah ADCOP Terminal (UAE) ➔ Destination: Vadinar SPM (Gujarat, India)',
       drawdownRateOrSpeed: 'Cruising Speed: 14.5 Knots (26.8 km/h)',
       bufferDays: 'Delivery Target: 2.0M bbls in 48 Hours'
+    },
+    swarna_kamal: {
+      id: 'swarna_kamal',
+      name: 'VLCC Swarna Kamal (Indian Supertanker at Sea)',
+      type: '300,000 DWT Very Large Crude Carrier (VLCC)',
+      subtitle: 'Shipping Corporation of India (SCI) Fleet • MMSI 419005678',
+      stock: '2.0M bbls Murban Sweet (At Sea)',
+      status: 'Underway at 13.8 Knots • Heading 142°',
+      colorClass: 'text-alert-cyan',
+      badgeBg: 'bg-alert-cyan/10 border-alert-cyan/30 text-alert-cyan',
+      badgeText: 'Live AIS Telemetry Active',
+      refineryFeed: 'ORIGIN: Fujairah ADCOP Terminal (UAE) ➔ DESTINATION: Mangalore SPM (ETA Aug 25)',
+      slateCompatibility: 'Murban Sweet Crude (API 40.2°, Sulfur 0.78%) for MRPL Mangalore',
+      strategicRole: 'Origin: Fujairah ADCOP Terminal (UAE). Destination: Mangalore SPM Berth (MRPL, Karnataka). ADCOP bypass route active.',
+      logisticsConnectivity: 'Origin: Fujairah ADCOP Terminal (UAE) ➔ Destination: Mangalore SPM (Karnataka, India)',
+      drawdownRateOrSpeed: 'Cruising Speed: 13.8 Knots (25.5 km/h)',
+      bufferDays: 'Delivery Target: 2.0M bbls in 72 Hours'
+    },
+    ratna_shalini: {
+      id: 'ratna_shalini',
+      name: 'VLCC Ratna Shalini (Indian Supertanker at Sea)',
+      type: '300,000 DWT Very Large Crude Carrier (VLCC)',
+      subtitle: 'Great Eastern Shipping Fleet • MMSI 419009876',
+      stock: '1.9M bbls WTI Midland (At Sea)',
+      status: 'Underway at 15.1 Knots • Heading 022°',
+      colorClass: 'text-alert-emerald',
+      badgeBg: 'bg-alert-emerald/10 border-alert-emerald/30 text-alert-emerald',
+      badgeText: 'Live AIS Telemetry Active',
+      refineryFeed: 'ORIGIN: Enterprise US Gulf Terminal (Texas, USA) ➔ DESTINATION: Paradip SPM (ETA Aug 26)',
+      slateCompatibility: 'WTI Midland Crude (API 40.5°, Sulfur 0.20%) for IOCL Paradip',
+      strategicRole: 'Origin: Enterprise US Gulf Terminal (Texas, USA). Destination: Paradip SPM Berth (Odisha). Transatlantic route via Cape of Good Hope.',
+      logisticsConnectivity: 'Origin: Enterprise US Gulf Terminal (USA) ➔ Destination: Paradip SPM (Odisha, India)',
+      drawdownRateOrSpeed: 'Cruising Speed: 15.1 Knots (28.0 km/h)',
+      bufferDays: 'Delivery Target: 1.9M bbls in 96 Hours'
     }
   };
 
@@ -169,15 +203,20 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
 
       {/* Live Interactive Leaflet GIS Map Container */}
       <div className="mb-3 flex-1">
-        <LiveLeafletMap theme={theme} selectedNodeId={selectedNodeId} selectedStrategyId={selectedStrategyId} />
+        <LiveLeafletMap
+          theme={theme}
+          selectedNodeId={selectedNodeId}
+          selectedStrategyId={selectedStrategyId}
+          onSelectNode={onSelectNode}
+        />
       </div>
 
       {/* Node Selection Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs mb-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 font-mono text-xs mb-3">
         {/* Card 1: Vadinar */}
         <div
           onClick={() => toggleNodeSelection('vadinar')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'vadinar'
               ? 'border-alert-amber bg-alert-amber/10 shadow-md ring-2 ring-alert-amber'
               : theme === 'dark'
@@ -186,20 +225,20 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1.5 text-alert-amber font-bold text-[11px]">
-              <Anchor className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1 text-alert-amber font-bold text-[10px]">
+              <Anchor className="w-3 h-3" />
               <span>Vadinar SPM</span>
             </div>
-            {selectedNodeId === 'vadinar' && <span className="w-2 h-2 rounded-full bg-alert-amber animate-pulse" />}
+            {selectedNodeId === 'vadinar' && <span className="w-1.5 h-1.5 rounded-full bg-alert-amber animate-pulse" />}
           </div>
-          <p className="text-[10px] text-slate-500">Reliance / Nayara Hub</p>
-          <p className="font-bold text-[11px] mt-0.5 text-alert-amber">55.0M bbls Stock</p>
+          <p className="text-[9px] text-slate-500">Reliance / Nayara</p>
+          <p className="font-bold text-[10px] mt-0.5 text-alert-amber">55.0M bbls</p>
         </div>
 
         {/* Card 2: Padur */}
         <div
           onClick={() => toggleNodeSelection('padur')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'padur'
               ? 'border-alert-emerald bg-alert-emerald/10 shadow-md ring-2 ring-alert-emerald'
               : theme === 'dark'
@@ -208,20 +247,20 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1.5 text-alert-emerald font-bold text-[11px]">
-              <Database className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1 text-alert-emerald font-bold text-[10px]">
+              <Database className="w-3 h-3" />
               <span>Padur Cavern</span>
             </div>
-            {selectedNodeId === 'padur' && <span className="w-2 h-2 rounded-full bg-alert-emerald animate-pulse" />}
+            {selectedNodeId === 'padur' && <span className="w-1.5 h-1.5 rounded-full bg-alert-emerald animate-pulse" />}
           </div>
-          <p className="text-[10px] text-slate-500">ISPRL 2.5 MMT Reserve</p>
-          <p className="font-bold text-[11px] mt-0.5 text-alert-emerald">18.37M bbls (100%)</p>
+          <p className="text-[9px] text-slate-500">ISPRL 2.5 MMT</p>
+          <p className="font-bold text-[10px] mt-0.5 text-alert-emerald">18.37M bbls</p>
         </div>
 
         {/* Card 3: Paradip */}
         <div
           onClick={() => toggleNodeSelection('paradip')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'paradip'
               ? 'border-alert-cyan bg-alert-cyan/10 shadow-md ring-2 ring-alert-cyan'
               : theme === 'dark'
@@ -230,36 +269,80 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1.5 text-alert-cyan font-bold text-[11px]">
-              <Factory className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1 text-alert-cyan font-bold text-[10px]">
+              <Factory className="w-3 h-3" />
               <span>Paradip IOCL</span>
             </div>
-            {selectedNodeId === 'paradip' && <span className="w-2 h-2 rounded-full bg-alert-cyan animate-pulse" />}
+            {selectedNodeId === 'paradip' && <span className="w-1.5 h-1.5 rounded-full bg-alert-cyan animate-pulse" />}
           </div>
-          <p className="text-[10px] text-slate-500">East Coast Refinery</p>
-          <p className="font-bold text-[11px] mt-0.5 text-alert-cyan">24.0M bbls Stock</p>
+          <p className="text-[9px] text-slate-500">IOCL East Coast</p>
+          <p className="font-bold text-[10px] mt-0.5 text-alert-cyan">24.0M bbls</p>
         </div>
 
         {/* Card 4: Desh Vishal */}
         <div
           onClick={() => toggleNodeSelection('desh_vishal')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'desh_vishal'
-              ? 'border-alert-red bg-alert-red/10 shadow-md ring-2 ring-alert-red'
+              ? 'border-alert-amber bg-alert-amber/10 shadow-md ring-2 ring-alert-amber'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
               : 'bg-cream-bg border-cream-border hover:border-slate-400'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1.5 text-alert-red font-bold text-[11px]">
-              <Navigation className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1 text-alert-amber font-bold text-[10px]">
+              <Navigation className="w-3 h-3" />
               <span>Desh Vishal</span>
             </div>
-            {selectedNodeId === 'desh_vishal' && <span className="w-2 h-2 rounded-full bg-alert-red animate-pulse" />}
+            {selectedNodeId === 'desh_vishal' && <span className="w-1.5 h-1.5 rounded-full bg-alert-amber animate-pulse" />}
           </div>
-          <p className="text-[10px] text-slate-500">Fujairah ➔ Vadinar SPM</p>
-          <p className="font-bold text-[11px] mt-0.5 text-alert-red">2.0M bbls (At Sea)</p>
+          <p className="text-[9px] text-slate-500">Fujairah ➔ Vadinar</p>
+          <p className="font-bold text-[10px] mt-0.5 text-alert-amber">2.0M bbls</p>
+        </div>
+
+        {/* Card 5: Swarna Kamal */}
+        <div
+          onClick={() => toggleNodeSelection('swarna_kamal')}
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'swarna_kamal'
+              ? 'border-alert-cyan bg-alert-cyan/10 shadow-md ring-2 ring-alert-cyan'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-600'
+              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+          }`}
+        >
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-1 text-alert-cyan font-bold text-[10px]">
+              <Navigation className="w-3 h-3" />
+              <span>Swarna Kamal</span>
+            </div>
+            {selectedNodeId === 'swarna_kamal' && <span className="w-1.5 h-1.5 rounded-full bg-alert-cyan animate-pulse" />}
+          </div>
+          <p className="text-[9px] text-slate-500">Fujairah ➔ MRPL</p>
+          <p className="font-bold text-[10px] mt-0.5 text-alert-cyan">2.0M bbls</p>
+        </div>
+
+        {/* Card 6: Ratna Shalini */}
+        <div
+          onClick={() => toggleNodeSelection('ratna_shalini')}
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'ratna_shalini'
+              ? 'border-alert-emerald bg-alert-emerald/10 shadow-md ring-2 ring-alert-emerald'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-600'
+              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+          }`}
+        >
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-1 text-alert-emerald font-bold text-[10px]">
+              <Navigation className="w-3 h-3" />
+              <span>Ratna Shalini</span>
+            </div>
+            {selectedNodeId === 'ratna_shalini' && <span className="w-1.5 h-1.5 rounded-full bg-alert-emerald animate-pulse" />}
+          </div>
+          <p className="text-[9px] text-slate-500">US Gulf ➔ Paradip</p>
+          <p className="font-bold text-[10px] mt-0.5 text-alert-emerald">1.9M bbls</p>
         </div>
       </div>
 

@@ -68,9 +68,10 @@ interface LiveLeafletMapProps {
   theme: 'dark' | 'cream';
   selectedNodeId: string | null;
   selectedStrategyId?: string | null;
+  onSelectNode?: (nodeId: string | null) => void;
 }
 
-export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategyId }: LiveLeafletMapProps) {
+export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategyId, onSelectNode }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
@@ -149,7 +150,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "santos", name: "SANTOS BRAZIL", pos: [-23.96, -46.33] as [number, number], isMajor: true },
     { id: "houston", name: "HOUSTON US GULF", pos: [28.95, -95.35] as [number, number], isMajor: true },
 
-    // Supertankers at Sea (Matching Node IDs)
+    // Supertankers at Sea (Explicit Map Markers)
     { id: "desh_vishal", name: "VLCC DESH VISHAL (2.0M bbls)", pos: [deshLat, deshLng] as [number, number], isMajor: true, cargo: "2.0M bbls Basrah Heavy", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Vadinar SPM (Gujarat)" },
     { id: "swarna_kamal", name: "VLCC SWARNA KAMAL (2.0M bbls)", pos: [swarnaLat, swarnaLng] as [number, number], isMajor: true, cargo: "2.0M bbls Murban Sweet", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Mangalore SPM (MRPL)" },
     { id: "ratna_shalini", name: "VLCC RATNA SHALINI (1.9M bbls)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true, cargo: "1.9M bbls WTI Midland", origin: "Enterprise US Gulf Terminal (Texas, USA)", destination: "Paradip SPM (Odisha)" }
@@ -184,7 +185,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     [13.25, 74.78], [12.91, 74.85], [17.68, 83.21], [20.26, 86.67], [19.42, 71.33], [22.45, 69.66]
   ];
 
-  // Specific Vessel Live AIS Voyage Polylines (Rendered when a ship is clicked)
+  // Specific Vessel Live AIS Voyage Polylines (Rendered when ANY ship is clicked)
   const deshVishalVoyage: [number, number][] = [
     [25.18, 56.36], [24.80, 57.50], [deshLat, deshLng], [23.50, 64.00], [22.45, 69.66]
   ];
@@ -239,7 +240,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           <Polyline positions={domesticSurgeCorridor} color="#EC4899" weight={4} opacity={0.95} dashArray="3, 5" />
         )}
 
-        {/* DYNAMIC SHIP VOYAGE ROUTE POLYLINES - SHOWN WHEN A SPECIFIC SHIP IS CLICKED */}
+        {/* DYNAMIC SHIP VOYAGE ROUTE POLYLINES - SHOWN WHEN ANY SHIP IS CLICKED */}
         {selectedNodeId === 'desh_vishal' && (
           <Polyline positions={deshVishalVoyage} color="#F59E0B" weight={4.5} opacity={0.95} dashArray="6, 8" />
         )}
@@ -260,6 +261,15 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
               key={port.id}
               position={port.pos}
               icon={createPortIcon(port.name, port.isMajor, port.isAlert, isSelected)}
+              eventHandlers={{
+                click: () => {
+                  if (onSelectNode) {
+                    onSelectNode(selectedNodeId === port.id ? null : port.id);
+                  }
+                },
+                mouseover: (e) => e.target.openPopup(),
+                mouseout: (e) => e.target.closePopup()
+              }}
             >
               <Popup className={theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup'}>
                 <div className="font-mono text-xs p-1 space-y-1">
@@ -274,7 +284,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         })}
       </MapContainer>
 
-      {/* SHIP VOYAGE ROUTE CARD - SHOWN WHEN A SHIP IS SELECTED */}
+      {/* SHIP VOYAGE ROUTE CARD - SHOWN WHEN ANY SHIP IS SELECTED */}
       {selectedNodeId && ['desh_vishal', 'swarna_kamal', 'ratna_shalini'].includes(selectedNodeId) && (
         <div className={`absolute bottom-4 left-4 p-3.5 rounded-lg border shadow-xl z-20 font-mono text-[11px] max-w-sm ${
           theme === 'dark' ? 'bg-slate-900/95 border-amber-500/50 text-slate-100' : 'bg-white/95 border-amber-500 text-stone-900'
