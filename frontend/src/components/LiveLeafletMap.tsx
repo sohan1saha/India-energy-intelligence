@@ -1,38 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
-// Helper component to center and fly map to selected node coordinates, strategy focus, or reset to wide view
-function MapFlyToHandler({
-  targetPos,
-  selectedStrategyId
-}: {
-  targetPos: [number, number] | null;
-  selectedStrategyId: string | null;
-}) {
-  const map = useMap();
-  useEffect(() => {
-    if (targetPos) {
-      map.flyTo(targetPos, 6.5, { duration: 1.5 });
-    } else if (selectedStrategyId === 'strat_bypass') {
-      map.flyTo([21.0, 64.0], 5.2, { duration: 1.5 });
-    } else if (selectedStrategyId === 'strat_global_pivot') {
-      map.flyTo([5.0, 35.0], 3.2, { duration: 1.5 });
-    } else if (selectedStrategyId === 'strat_far_east') {
-      map.flyTo([18.0, 105.0], 4.0, { duration: 1.5 });
-    } else if (selectedStrategyId === 'strat_latam') {
-      map.flyTo([-10.0, 15.0], 2.8, { duration: 1.5 });
-    } else if (selectedStrategyId === 'strat_national_surge') {
-      map.flyTo([18.5, 76.0], 5.8, { duration: 1.5 });
-    } else {
-      map.flyTo([19.5, 67.5], 4.8, { duration: 1.5 });
-    }
-  }, [targetPos, selectedStrategyId, map]);
-  return null;
-}
 
 // Custom Shipping Network Base Port Ring Marker (Matching Wallenius Wilhelmsen shipping map style)
 const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean = false, isSelected: boolean = false) => {
@@ -156,10 +127,6 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "ratna_shalini", name: "VLCC RATNA SHALINI (1.9M bbls)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true, cargo: "1.9M bbls WTI Midland", origin: "Enterprise US Gulf Terminal (Texas, USA)", destination: "Paradip SPM (Odisha)" }
   ];
 
-  // Selected Target FlyTo Position
-  const selectedLocation = ports.find(p => p.id === selectedNodeId);
-  const targetPos = selectedLocation ? selectedLocation.pos : null;
-
   const tileUrl = theme === 'dark'
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
@@ -206,11 +173,10 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         key={`leaflet-map-${theme}`}
         center={[19.5, 67.5]}
         zoom={5}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
+        zoomControl={true}
         className="w-full h-full relative z-0"
       >
-        <MapFlyToHandler targetPos={targetPos} selectedStrategyId={selectedStrategyId || null} />
-
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url={tileUrl}
