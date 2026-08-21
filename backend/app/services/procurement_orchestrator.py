@@ -1,4 +1,4 @@
-# procurement_orchestrator.py: Adaptive Procurement Orchestrator
+# procurement_orchestrator.py: Adaptive Procurement Orchestrator (5 Comprehensive Strategies)
 import json
 from app.models.schemas import ProcurementReroutingRequest, ProcurementReroutingResult, ReroutingStrategy, SourcingAllocation
 
@@ -192,9 +192,121 @@ class AdaptiveProcurementOrchestrator:
             tender_summary_pdf_text="FAR EAST DIRECTIVE: Charter 6 Aframax vessels for Kozmino & De-Kastri terminals. Activate Visakhapatnam ISPRL cavern drawdown for East Coast refiners."
         )
 
+        # Strategy 4: Latin American Transatlantic Sourcing
+        strat4_allocations = [
+            SourcingAllocation(
+                source_country="Brazil (Santos Basin)",
+                supplier_name="Petrobras",
+                crude_grade="Lula / Tupi Medium",
+                api_gravity=29.8,
+                sulfur_pct=0.37,
+                volume_bpd=round(deficit_bpd * 0.40, 0),
+                transport_mode="VLCC Transatlantic via South Atlantic -> Cape of Good Hope",
+                transit_days=26.0,
+                landed_cost_usd_bbl=85.20,
+                refinery_fit_score=0.92
+            ),
+            SourcingAllocation(
+                source_country="Guyana (Stabroek Block)",
+                supplier_name="ExxonMobil / Hess",
+                crude_grade="Liza Sweet",
+                api_gravity=32.0,
+                sulfur_pct=0.58,
+                volume_bpd=round(deficit_bpd * 0.35, 0),
+                transport_mode="Suezmax Transatlantic via Cape Route",
+                transit_days=29.0,
+                landed_cost_usd_bbl=86.80,
+                refinery_fit_score=0.90
+            ),
+            SourcingAllocation(
+                source_country="Colombia (Coveñas Port)",
+                supplier_name="Ecopetrol",
+                crude_grade="Vasconia Heavy",
+                api_gravity=24.3,
+                sulfur_pct=0.96,
+                volume_bpd=round(deficit_bpd * 0.25, 0),
+                transport_mode="VLCC Transatlantic to Jamnagar & Vadinar",
+                transit_days=31.0,
+                landed_cost_usd_bbl=84.90,
+                refinery_fit_score=0.91
+            )
+        ]
+
+        tender4_json = json.dumps({
+            "tender_id": "MoPNG/LATAM-PIVOT/2026-08/STRAT-4",
+            "issuer": "Reliance Jamnagar & Nayara Joint Sourcing",
+            "total_volume_bpd": deficit_bpd,
+            "target_delivery_ports": ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Visakhapatnam (Andhra Pradesh)"],
+            "allocations": [a.model_dump() for a in strat4_allocations],
+            "execution_lead_time_hours": 16
+        }, indent=2)
+
+        strat4 = ReroutingStrategy(
+            strategy_id="strat_latam",
+            name="Latin American Heavy-Sweet Blend (Brazil Tupi + Guyana Liza + Vasconia)",
+            tagline="Transatlantic South American route bypassing Middle Eastern geopolitical risk corridors completely.",
+            landed_cost_usd_bbl=85.90,
+            cost_delta_vs_baseline_usd=7.40,
+            avg_transit_days=28.0,
+            overall_refinery_fit=0.91,
+            allocations=strat4_allocations,
+            executable_tender_json=tender4_json,
+            tender_summary_pdf_text="LATAM DIRECTIVE: Issue long-term term-contracts for Petrobras Tupi and Guyanese Liza crude. Dispatch 4 VLCCs via South Atlantic route."
+        )
+
+        # Strategy 5: National Strategic Reserve Drawdown & Domestic Production Surge
+        strat5_allocations = [
+            SourcingAllocation(
+                source_country="ISPRL National Caverns (Padur, Mangalore, Visakh)",
+                supplier_name="ISPRL Ministry of Petroleum",
+                crude_grade="National Strategic Reserve Blend",
+                api_gravity=32.5,
+                sulfur_pct=1.85,
+                volume_bpd=round(deficit_bpd * 0.70, 0),
+                transport_mode="Subsea Pipelines to MRPL/Visakh & Coastal Coastal Barges to Jamnagar",
+                transit_days=0.5,
+                landed_cost_usd_bbl=76.50,
+                refinery_fit_score=1.00
+            ),
+            SourcingAllocation(
+                source_country="India Domestic Production (Offshore & Onshore)",
+                supplier_name="ONGC / Oil India Ltd",
+                crude_grade="Mumbai High Sweet & Assam Crude",
+                api_gravity=38.8,
+                sulfur_pct=0.12,
+                volume_bpd=round(deficit_bpd * 0.30, 0),
+                transport_mode="Offshore Pipeline directly to JNPT Mumbai & Uran Docks",
+                transit_days=1.2,
+                landed_cost_usd_bbl=78.80,
+                refinery_fit_score=0.97
+            )
+        ]
+
+        tender5_json = json.dumps({
+            "tender_id": "MoPNG/NATIONAL-DEFENSE/2026-08/STRAT-5",
+            "issuer": "Cabinet Committee on Economic Affairs (CCEA) Emergency Order",
+            "total_volume_bpd": deficit_bpd,
+            "target_delivery_ports": ["Mangalore (Karnataka)", "Visakhapatnam (Andhra Pradesh)", "JNPT (Mumbai)", "Vadinar (Gujarat)"],
+            "allocations": [a.model_dump() for a in strat5_allocations],
+            "execution_lead_time_hours": 2
+        }, indent=2)
+
+        strat5 = ReroutingStrategy(
+            strategy_id="strat_national_surge",
+            name="National Reserve Drawdown & Domestic Surge (ISPRL 100% + ONGC Offshore)",
+            tagline="Immediate domestic defense response activating 100% ISPRL cavern release + ONGC Mumbai High surge.",
+            landed_cost_usd_bbl=77.20,
+            cost_delta_vs_baseline_usd=-1.30,
+            avg_transit_days=0.8,
+            overall_refinery_fit=0.99,
+            allocations=strat5_allocations,
+            executable_tender_json=tender5_json,
+            tender_summary_pdf_text="NATIONAL DEFENSE ORDER: CCEA authorizes maximum 840,000 bpd drawdown across all ISPRL rock caverns and 360,000 bpd ONGC Mumbai High production surge."
+        )
+
         return ProcurementReroutingResult(
             deficit_bpd=deficit_bpd,
-            strategies=[strat1, strat2, strat3],
+            strategies=[strat1, strat2, strat3, strat4, strat5],
             recommended_strategy_id="strat_bypass"
         )
 
