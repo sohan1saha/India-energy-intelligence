@@ -5,32 +5,36 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Custom Shipping Network Base Port Ring Marker (Matching Wallenius Wilhelmsen shipping map style)
+// Custom Shipping Network Base Port & Chokepoint Marker
 const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean = false, isSelected: boolean = false, isLightMode: boolean = false) => {
   const size = isMajor ? (isSelected ? 'w-4 h-4' : 'w-3 h-3') : 'w-2 h-2';
-  const color = isAlert
+  
+  // Highlight chokepoints with a distinct glowing neon fuchsia/purple color when selected
+  const color = isSelected
+    ? 'bg-fuchsia-500 ring-4 ring-fuchsia-300 shadow-2xl scale-125'
+    : isAlert
     ? 'bg-red-500 ring-red-400'
-    : isSelected
-    ? 'bg-amber-500 ring-amber-400'
     : isLightMode
     ? 'bg-sky-700 ring-slate-900'
     : 'bg-white ring-cyan-400';
   
-  const labelColor = isAlert
+  const labelColor = isSelected
+    ? 'text-fuchsia-400 font-extrabold scale-110'
+    : isAlert
     ? 'text-red-500 font-extrabold'
-    : isSelected
-    ? 'text-amber-600 font-extrabold scale-110'
     : isLightMode
     ? 'text-slate-950 font-extrabold'
     : 'text-slate-100 font-bold';
+
+  const pulseColor = isSelected ? 'bg-fuchsia-500/70 ring-4 ring-fuchsia-300' : 'bg-red-500/40';
 
   return L.divIcon({
     className: 'custom-leaflet-port-marker',
     html: `
       <div class="relative flex items-center justify-center cursor-pointer group">
-        ${(isAlert || isSelected) ? `<span class="absolute -inset-2.5 rounded-full ${isSelected ? 'bg-amber-500/50' : 'bg-red-500/40'} animate-ping"></span>` : ''}
-        <div class="${size} rounded-full ${color} ring-2 shadow-lg transition-transform group-hover:scale-150 relative z-10"></div>
-        <div class="absolute left-4 top-[-4px] text-[9px] font-mono tracking-wider ${labelColor} whitespace-nowrap uppercase drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)] select-none z-20">
+        ${(isAlert || isSelected) ? `<span class="absolute -inset-3 rounded-full ${pulseColor} animate-ping"></span>` : ''}
+        <div class="${size} rounded-full ${color} ring-2 shadow-xl transition-transform group-hover:scale-150 relative z-10"></div>
+        <div class="absolute left-4 top-[-4px] text-[9px] font-mono tracking-wider ${labelColor} whitespace-nowrap uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] select-none z-20">
           ${name}
         </div>
       </div>
@@ -108,7 +112,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "jeddah", name: "JEDDAH", pos: [21.48, 39.19] as [number, number], isMajor: false },
     { id: "yanbu", name: "YANBU PETROLINE", pos: [24.08, 38.06] as [number, number], isMajor: true },
 
-    // Geopolitical Risk Corridors & Chokepoints
+    // Geopolitical Risk Corridors & Chokepoints (Matching RiskRadar IDs)
     { id: "hormuz", name: "STRAIT OF HORMUZ (82.5/100)", pos: [26.56, 56.25] as [number, number], isMajor: true, isAlert: true },
     { id: "red_sea", name: "BAB-EL-MANDEB & RED SEA (76/100)", pos: [12.58, 43.33] as [number, number], isMajor: true, isAlert: true },
     { id: "malacca", name: "STRAIT OF MALACCA (24/100)", pos: [4.15, 100.50] as [number, number], isMajor: true },
@@ -170,6 +174,23 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     [28.95, -95.35], [24.00, -85.00], [-34.35, 18.47], [-20.00, 55.00], [ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]
   ];
 
+  // Specific Chokepoint Active Disruption Zone Polylines (Fuchsia Neon Highlight)
+  const hormuzDisruptionPolyline: [number, number][] = [
+    [25.00, 54.00], [26.56, 56.25], [25.50, 58.00]
+  ];
+
+  const redSeaDisruptionPolyline: [number, number][] = [
+    [14.50, 41.50], [12.58, 43.33], [11.50, 45.00]
+  ];
+
+  const malaccaDisruptionPolyline: [number, number][] = [
+    [2.50, 101.50], [4.15, 100.50], [6.00, 98.00]
+  ];
+
+  const capeGhDisruptionPolyline: [number, number][] = [
+    [-33.00, 16.50], [-34.35, 18.47], [-33.50, 21.00]
+  ];
+
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border relative z-0 ${
       theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17] shadow-2xl' : 'border-[#7E8C9F] bg-[#BCC5D1]'
@@ -209,6 +230,23 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
         {selectedStrategyId === 'strat_national_surge' && (
           <Polyline positions={domesticSurgeCorridor} color="#DB2777" weight={4.5} opacity={0.95} dashArray="3, 5" />
+        )}
+
+        {/* DYNAMIC CHOKEPOINT DISRUPTION HIGHLIGHT POLYLINES (NEON FUCHSIA) */}
+        {selectedNodeId === 'hormuz' && (
+          <Polyline positions={hormuzDisruptionPolyline} color="#E024A5" weight={6} opacity={0.95} dashArray="6, 8" />
+        )}
+
+        {selectedNodeId === 'red_sea' && (
+          <Polyline positions={redSeaDisruptionPolyline} color="#E024A5" weight={6} opacity={0.95} dashArray="6, 8" />
+        )}
+
+        {selectedNodeId === 'malacca' && (
+          <Polyline positions={malaccaDisruptionPolyline} color="#E024A5" weight={6} opacity={0.95} dashArray="6, 8" />
+        )}
+
+        {selectedNodeId === 'cape_gh' && (
+          <Polyline positions={capeGhDisruptionPolyline} color="#E024A5" weight={6} opacity={0.95} dashArray="6, 8" />
         )}
 
         {/* DYNAMIC SHIP VOYAGE ROUTE POLYLINES - SHOWN WHEN ANY SHIP IS CLICKED */}
@@ -274,6 +312,26 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           </p>
           <p className="text-[10px] text-amber-600 font-bold">
             LIVE VOYAGE ROUTE HIGHLIGHTED ON MAP 📍
+          </p>
+        </div>
+      )}
+
+      {/* CHOKEPOINT DISRUPTION TELEMETRY CARD */}
+      {selectedNodeId && ['hormuz', 'red_sea', 'malacca', 'cape_gh'].includes(selectedNodeId) && (
+        <div className={`absolute bottom-4 left-4 p-3.5 rounded-lg border shadow-xl z-20 font-mono text-[11px] max-w-sm ${
+          theme === 'dark' ? 'bg-slate-900/95 border-fuchsia-500/60 text-slate-100' : 'bg-[#D4DCEC] border-fuchsia-600 text-slate-950'
+        }`}>
+          <div className="flex items-center justify-between border-b pb-1.5 mb-2 border-inherit">
+            <span className="font-bold text-fuchsia-500 uppercase tracking-wide">
+              CHOKEPOINT DISRUPTION HIGHLIGHT
+            </span>
+            <span className="w-2.5 h-2.5 rounded-full bg-fuchsia-500 animate-ping"></span>
+          </div>
+          <p className="text-[10px] font-bold text-fuchsia-600 mb-1 uppercase">
+            {selectedNodeId === 'hormuz' ? 'STRAIT OF HORMUZ DISRUPTION ZONE' : selectedNodeId === 'red_sea' ? 'BAB-EL-MANDEB & RED SEA DISRUPTION' : selectedNodeId === 'malacca' ? 'STRAIT OF MALACCA CORRIDOR' : 'CAPE OF GOOD HOPE ROUTE'}
+          </p>
+          <p className="text-[10px] text-fuchsia-500 font-bold">
+            ACTIVE CHOKEPOINT HAZARD ZONE HIGHLIGHTED IN NEON FUCHSIA 📍
           </p>
         </div>
       )}
