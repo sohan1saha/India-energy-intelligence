@@ -17,12 +17,6 @@
 
 ---
 
-## Hero Screenshot
-
-![UrjaAegis AI Executive Dashboard](docs/hero_dashboard.png)
-
----
-
 ## 30-Second Project Explanation
 
 India imports **~88% of its crude oil demand (~4.5M bpd)**, with over **45% transiting through a single geopolitical flashpoint: the Strait of Hormuz**. Recent Middle Eastern conflicts, US-Iran naval standoffs, and Houthi missile strikes off the Bab-el-Mandeb Strait have forced supertankers into 16-day detours around the Cape of Good Hope, adding $1.8M in fuel surcharges per voyage and threatening severe refining deficits.
