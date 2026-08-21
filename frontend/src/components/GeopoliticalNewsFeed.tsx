@@ -30,7 +30,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'chokepoint',
       categoryLabel: 'CHOKEPOINT ALERT',
       sourceName: 'Reuters Energy',
-      articleUrl: 'https://www.reuters.com/markets/commodities/',
+      articleUrl: 'https://www.reuters.com/business/energy/',
       title: 'Strait of Hormuz Naval Patrols Intensify; GPS Spoofing Reported Off Qeshm Island',
       summary: 'Iranian Revolutionary Guard Corps (IRGC) fast patrol boats deployed near the narrowest transit corridor. US-Iran standoff has raised war risk insurance surcharges by +1.25%.',
       timestamp: '12 MINS AGO',
@@ -66,7 +66,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'directive',
       categoryLabel: 'GOVT DIRECTIVE',
       sourceName: 'Economic Times Energy',
-      articleUrl: 'https://energy.economictimes.indiatimes.com/news/oil-and-gas',
+      articleUrl: 'https://economictimes.indiatimes.com/industry/energy/oil-gas',
       title: 'MoPNG Authorizes 240,000 bpd Emergency Drawdown from Padur Strategic Cavern',
       summary: 'Ministry of Petroleum & Natural Gas activates subsea pipeline discharge from ISPRL Padur cavern to Mangalore Refinery (MRPL) to offset Middle East import delays.',
       timestamp: '1 HOUR AGO',
@@ -99,6 +99,10 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
     }
   ];
 
+  const handleOpenReport = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className={`p-5 rounded-xl border transition-colors ${
       theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
@@ -111,7 +115,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider">Live Geopolitical & Maritime News Wire</h2>
-            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Hover on any news card to reveal its direct article link</p>
+            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Click any news card or hover button to open official news reports</p>
           </div>
         </div>
       </div>
@@ -129,11 +133,9 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
             : 'bg-amber-500/10 text-amber-500 border-amber-500/30';
 
           return (
-            <a
+            <div
               key={news.id}
-              href={news.articleUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => handleOpenReport(news.articleUrl)}
               className={`p-4 rounded-lg border transition-all duration-200 flex flex-col justify-between group cursor-pointer ${
                 theme === 'dark'
                   ? 'bg-dark-bg border-dark-border hover:border-slate-500 hover:shadow-lg'
@@ -169,16 +171,23 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </p>
               </div>
 
-              {/* Hover-Only Toned-Down Action Button */}
+              {/* Hover-Only Action Button */}
               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-2">
-                <div className={`flex items-center justify-center gap-1.5 w-full py-1.5 rounded text-xs font-mono font-bold transition border ${
-                  theme === 'dark'
-                    ? 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700 hover:text-white'
-                    : 'bg-slate-200 text-slate-950 border-slate-400 hover:bg-slate-300'
-                }`}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenReport(news.articleUrl);
+                  }}
+                  className={`flex items-center justify-center gap-1.5 w-full py-1.5 rounded text-xs font-mono font-bold transition border ${
+                    theme === 'dark'
+                      ? 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700 hover:text-white'
+                      : 'bg-slate-200 text-slate-950 border-slate-400 hover:bg-slate-300'
+                  }`}
+                >
                   <span>Read Full Article on {news.sourceName}</span>
                   <ExternalLink className="w-3.5 h-3.5 text-amber-500" />
-                </div>
+                </button>
               </div>
 
               {/* Card Footer: Impact Badge */}
@@ -192,9 +201,11 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 }`}>
                   {news.impactBadge}
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono group-hover:text-amber-500 transition">Open Report ↗</span>
+                <span className="text-[10px] text-slate-500 font-mono group-hover:text-amber-500 transition flex items-center gap-1">
+                  <span>Open Report ↗</span>
+                </span>
               </div>
-            </a>
+            </div>
           );
         })}
       </div>
