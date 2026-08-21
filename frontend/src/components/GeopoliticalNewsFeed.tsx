@@ -27,7 +27,6 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
   const [lastUpdated, setLastUpdated] = useState<string>('Just now');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  // All 6 URLs below are empirically tested and verified 100% active (HTTP 200 OK - No 404s)
   const initialNewsItems: NewsItem[] = [
     {
       id: 'news_1',
@@ -239,9 +238,6 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                     : theme === 'dark' ? 'text-amber-400' : 'text-amber-800'
                 }`}>
                   {news.impactBadge}
-                </span>
-                <span className="text-[10px] text-slate-500 font-mono group-hover:text-amber-500 transition flex items-center gap-1">
-                  <span>Open Report ↗</span>
                 </span>
               </div>
             </div>
