@@ -5,12 +5,14 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Helper component to center and fly map to selected node coordinates
+// Helper component to center and fly map to selected node coordinates or reset to wide view
 function MapFlyToHandler({ targetPos }: { targetPos: [number, number] | null }) {
   const map = useMap();
   useEffect(() => {
     if (targetPos) {
       map.flyTo(targetPos, 6.5, { duration: 1.5 });
+    } else {
+      map.flyTo([19.5, 67.5], 5, { duration: 1.5 }); // Wide regional view default
     }
   }, [targetPos, map]);
   return null;

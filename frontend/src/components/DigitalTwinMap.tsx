@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Database, Factory, Anchor, Navigation, ShieldCheck, X } from 'lucide-react';
+import { Database, Factory, Anchor, Navigation, ShieldCheck, X, Maximize2 } from 'lucide-react';
 
 const LiveLeafletMap = dynamic(() => import('./LiveLeafletMap'), {
   ssr: false,
@@ -37,7 +37,7 @@ export const DigitalTwinMap: React.FC<{
   daysOfCover: number;
   totalReserveMbbl: number;
 }> = ({ theme, daysOfCover, totalReserveMbbl }) => {
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>('vadinar');
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const nodeDetails: Record<string, NodeDetail> = {
     vadinar: {
@@ -110,6 +110,10 @@ export const DigitalTwinMap: React.FC<{
     }
   };
 
+  const toggleNodeSelection = (id: string) => {
+    setSelectedNodeId(prev => prev === id ? null : id);
+  };
+
   const activeNode = selectedNodeId ? nodeDetails[selectedNodeId] : null;
 
   return (
@@ -118,8 +122,18 @@ export const DigitalTwinMap: React.FC<{
     }`}>
       {/* Header & Quick Stats Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-inherit">
-        <div>
+        <div className="flex items-center gap-3">
           <h2 className="text-sm font-bold uppercase tracking-wider">Supply Chain Digital Twin</h2>
+          {selectedNodeId && (
+            <button
+              onClick={() => setSelectedNodeId(null)}
+              className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-mono transition border border-slate-700"
+              title="Reset map view to show full region"
+            >
+              <Maximize2 className="w-3 h-3 text-alert-amber" />
+              <span>Reset Wide View</span>
+            </button>
+          )}
         </div>
         
         {/* Interactive GIS Legend Bar */}
@@ -152,7 +166,7 @@ export const DigitalTwinMap: React.FC<{
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs mb-3">
         {/* Card 1: Vadinar */}
         <div
-          onClick={() => setSelectedNodeId('vadinar')}
+          onClick={() => toggleNodeSelection('vadinar')}
           className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'vadinar'
               ? 'border-alert-amber bg-alert-amber/10 shadow-md'
@@ -174,7 +188,7 @@ export const DigitalTwinMap: React.FC<{
 
         {/* Card 2: Padur */}
         <div
-          onClick={() => setSelectedNodeId('padur')}
+          onClick={() => toggleNodeSelection('padur')}
           className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'padur'
               ? 'border-alert-emerald bg-alert-emerald/10 shadow-md'
@@ -196,7 +210,7 @@ export const DigitalTwinMap: React.FC<{
 
         {/* Card 3: Paradip */}
         <div
-          onClick={() => setSelectedNodeId('paradip')}
+          onClick={() => toggleNodeSelection('paradip')}
           className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'paradip'
               ? 'border-alert-cyan bg-alert-cyan/10 shadow-md'
@@ -218,7 +232,7 @@ export const DigitalTwinMap: React.FC<{
 
         {/* Card 4: Desh Vishal */}
         <div
-          onClick={() => setSelectedNodeId('desh_vishal')}
+          onClick={() => toggleNodeSelection('desh_vishal')}
           className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'desh_vishal'
               ? 'border-alert-red bg-alert-red/10 shadow-md'
@@ -259,7 +273,7 @@ export const DigitalTwinMap: React.FC<{
             <button
               onClick={() => setSelectedNodeId(null)}
               className="p-1 rounded hover:bg-slate-700/20 text-slate-400"
-              title="Close Panel"
+              title="Close Panel & Reset Wide View"
             >
               <X className="w-4 h-4" />
             </button>
