@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, Download, X, Check, Building2, Anchor, Clock, ShieldCheck, Code2, Eye } from 'lucide-react';
+import { FileText, Download, X, Check, Building2, Anchor, Clock, ShieldCheck } from 'lucide-react';
 
 interface TenderModalProps {
   theme: 'dark' | 'cream';
@@ -19,7 +19,6 @@ export const TenderModal: React.FC<TenderModalProps> = ({
   tenderText
 }) => {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formatted' | 'json'>('formatted');
 
   if (!isOpen) return null;
 
@@ -58,45 +57,19 @@ export const TenderModal: React.FC<TenderModalProps> = ({
               <p className="text-[11px] text-slate-500">Official Crude Rerouting & Procurement Specification Document</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-slate-700/20">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
 
-        {/* View Toggle Tabs */}
-        <div className="flex items-center justify-between px-4 pt-3 border-b border-inherit text-xs font-semibold">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
             <button
-              onClick={() => setActiveTab('formatted')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-t-lg border-b-2 transition ${
-                activeTab === 'formatted'
-                  ? 'border-alert-amber text-alert-amber font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-300'
-              }`}
+              onClick={handleCopy}
+              className="flex items-center gap-1 text-alert-amber hover:underline text-[11px] font-semibold"
             >
-              <Eye className="w-4 h-4" />
-              <span>Executive Formatted Tender Spec</span>
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
+              <span>{copied ? 'Copied Specification!' : 'Copy Spec JSON'}</span>
             </button>
-            <button
-              onClick={() => setActiveTab('json')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-t-lg border-b-2 transition ${
-                activeTab === 'json'
-                  ? 'border-alert-amber text-alert-amber font-bold'
-                  : 'border-transparent text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              <Code2 className="w-4 h-4" />
-              <span>Raw ERP JSON Payload</span>
+            <button onClick={onClose} className="p-1 rounded hover:bg-slate-700/20">
+              <X className="w-5 h-5" />
             </button>
           </div>
-
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-1 text-alert-amber hover:underline text-[11px]"
-          >
-            {copied ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
-            <span>{copied ? 'Copied Payload!' : 'Copy JSON'}</span>
-          </button>
         </div>
 
         {/* Content Body */}
@@ -107,74 +80,62 @@ export const TenderModal: React.FC<TenderModalProps> = ({
             <p className="text-xs leading-relaxed font-sans">{tenderText || "EMERGENCY DIRECTIVE: Dispatch 3 VLCCs to Fujairah ADCOP terminal (UAE) and 2 VLCCs to Yanbu Red Sea terminal. Initiate 240,000 bpd drawdown from Padur & Mangalore ISPRL caverns immediately."}</p>
           </div>
 
-          {/* Formatted View */}
-          {activeTab === 'formatted' ? (
-            <div className="space-y-4">
-              {/* Key Specs Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
-                <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-                  <span className="text-[10px] text-slate-500 block mb-1">TENDER ID & ISSUER</span>
-                  <p className="font-bold text-xs text-alert-amber">{parsedJson?.tender_id || "MoPNG/EMERGENCY/STRAT-1"}</p>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">{parsedJson?.issuer || "MoPNG / IOCL"}</span>
-                </div>
-
-                <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-                  <span className="text-[10px] text-slate-500 block mb-1">TOTAL REROUTED VOLUME</span>
-                  <p className="font-bold text-xs text-alert-emerald">
-                    {parsedJson?.total_volume_bpd ? (parsedJson.total_volume_bpd / 1000).toFixed(0) : '1,200'}k bpd
-                  </p>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">Crude Allocation</span>
-                </div>
-
-                <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-                  <span className="text-[10px] text-slate-500 block mb-1">EXECUTION LEAD TIME</span>
-                  <p className="font-bold text-xs text-alert-cyan">
-                    {parsedJson?.execution_lead_time_hours || 6} Hours
-                  </p>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">Emergency Dispatch</span>
-                </div>
-              </div>
-
-              {/* Delivery Ports */}
-              <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-                <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Target Delivery Terminals & Ports</span>
-                <div className="flex flex-wrap gap-2">
-                  {(parsedJson?.target_delivery_ports || ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"]).map((port: string, idx: number) => (
-                    <span key={idx} className="px-2.5 py-1 rounded bg-alert-cyan/10 text-alert-cyan border border-alert-cyan/30 text-xs font-semibold">
-                      ⚓ {port}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sourcing Breakdown List if present */}
-              {parsedJson?.allocations && (
-                <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-                  <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Approved Crude Allocations</span>
-                  <div className="space-y-2 font-mono text-[11px]">
-                    {parsedJson.allocations.map((a: any, idx: number) => (
-                      <div key={idx} className="flex items-center justify-between p-2 rounded border border-inherit">
-                        <div>
-                          <strong className="block text-xs">{a.supplier_name || a.source_country}</strong>
-                          <span className="text-slate-500">{a.crude_grade} ({a.transport_mode || 'VLCC'})</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="font-bold text-alert-amber">{(a.volume_bpd / 1000).toFixed(0)}k bpd</span>
-                          <span className="block text-[10px] text-slate-400">${a.landed_cost_usd_bbl}/bbl</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+          {/* Key Specs Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
+            <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-1">TENDER ID & ISSUER</span>
+              <p className="font-bold text-xs text-alert-amber">{parsedJson?.tender_id || "MoPNG/EMERGENCY/STRAT-1"}</p>
+              <span className="text-[10px] text-slate-400 block mt-0.5">{parsedJson?.issuer || "MoPNG / IOCL"}</span>
             </div>
-          ) : (
-            /* Raw JSON View */
-            <pre className={`p-3.5 rounded-lg border overflow-x-auto font-mono text-[11px] leading-relaxed ${
-              theme === 'dark' ? 'bg-dark-bg border-dark-border text-slate-300' : 'bg-cream-bg border-cream-border text-stone-800'
-            }`}>
-              {tenderJson}
-            </pre>
+
+            <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-1">TOTAL REROUTED VOLUME</span>
+              <p className="font-bold text-xs text-alert-emerald">
+                {parsedJson?.total_volume_bpd ? (parsedJson.total_volume_bpd / 1000).toFixed(0) : '1,200'}k bpd
+              </p>
+              <span className="text-[10px] text-slate-400 block mt-0.5">Crude Allocation</span>
+            </div>
+
+            <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-1">EXECUTION LEAD TIME</span>
+              <p className="font-bold text-xs text-alert-cyan">
+                {parsedJson?.execution_lead_time_hours || 6} Hours
+              </p>
+              <span className="text-[10px] text-slate-400 block mt-0.5">Emergency Dispatch</span>
+            </div>
+          </div>
+
+          {/* Delivery Ports */}
+          <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+            <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Target Delivery Terminals & Ports</span>
+            <div className="flex flex-wrap gap-2">
+              {(parsedJson?.target_delivery_ports || ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"]).map((port: string, idx: number) => (
+                <span key={idx} className="px-2.5 py-1 rounded bg-alert-cyan/10 text-alert-cyan border border-alert-cyan/30 text-xs font-semibold">
+                  ⚓ {port}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Approved Sourcing Breakdown */}
+          {parsedJson?.allocations && (
+            <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Approved Crude Sourcing & Allocation Breakdown</span>
+              <div className="space-y-2 font-mono text-[11px]">
+                {parsedJson.allocations.map((a: any, idx: number) => (
+                  <div key={idx} className="flex items-center justify-between p-2 rounded border border-inherit">
+                    <div>
+                      <strong className="block text-xs">{a.supplier_name || a.source_country}</strong>
+                      <span className="text-slate-500">{a.crude_grade} ({a.transport_mode || 'VLCC'})</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-bold text-alert-amber">{(a.volume_bpd / 1000).toFixed(0)}k bpd</span>
+                      <span className="block text-[10px] text-slate-400">${a.landed_cost_usd_bbl}/bbl</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
 
