@@ -6,16 +6,15 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Helper component to center and fly map to selected node coordinates or reset to wide view
-function MapFlyToHandler({ selectedNodeIds, locations }: { selectedNodeIds: string[]; locations: any[] }) {
+function MapFlyToHandler({ targetPos }: { targetPos: [number, number] | null }) {
   const map = useMap();
   useEffect(() => {
-    if (selectedNodeIds.length === 1) {
-      const target = locations.find(l => l.id === selectedNodeIds[0]);
-      if (target) map.flyTo(target.pos, 6.5, { duration: 1.5 });
+    if (targetPos) {
+      map.flyTo(targetPos, 6.5, { duration: 1.5 });
     } else {
       map.flyTo([19.5, 67.5], 5, { duration: 1.5 });
     }
-  }, [selectedNodeIds, locations, map]);
+  }, [targetPos, map]);
   return null;
 }
 
@@ -47,10 +46,10 @@ const createRadarIcon = (color: string, label: string, isHighlighted: boolean = 
 
 interface LiveLeafletMapProps {
   theme: 'dark' | 'cream';
-  selectedNodeIds: string[];
+  selectedNodeId: string | null;
 }
 
-export default function LiveLeafletMap({ theme, selectedNodeIds }: LiveLeafletMapProps) {
+export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
@@ -258,6 +257,10 @@ export default function LiveLeafletMap({ theme, selectedNodeIds }: LiveLeafletMa
     }
   ];
 
+  // Selected Target FlyTo Position
+  const selectedLocation = locations.find(l => l.id === selectedNodeId);
+  const targetPos = selectedLocation ? selectedLocation.pos : null;
+
   const tileUrl = theme === 'dark'
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
@@ -279,7 +282,7 @@ export default function LiveLeafletMap({ theme, selectedNodeIds }: LiveLeafletMa
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
-        <MapFlyToHandler selectedNodeIds={selectedNodeIds} locations={locations} />
+        <MapFlyToHandler targetPos={targetPos} />
 
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
@@ -291,7 +294,7 @@ export default function LiveLeafletMap({ theme, selectedNodeIds }: LiveLeafletMa
         <Polyline positions={eastCoastLane} color="#10B981" weight={2.5} dashArray="4, 8" />
 
         {locations.map((loc) => {
-          const isSelected = selectedNodeIds.includes(loc.id);
+          const isSelected = selectedNodeId === loc.id;
           const icon = createRadarIcon(loc.color, loc.label, isSelected, loc.isAlert);
 
           return (

@@ -13,7 +13,7 @@ import { ShieldAlert, Database, Navigation, Activity, Bot } from 'lucide-react';
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
-  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   const [corridors, setCorridors] = useState<any[]>([
     {
@@ -228,24 +228,8 @@ export default function Home() {
     }
   };
 
-  const handleToggleNode = (id: string) => {
-    setSelectedNodeIds(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-    );
-  };
-
-  const handleSelectAllCategory = (category: 'all' | 'chokepoint' | 'tanker' | 'spr' | 'port') => {
-    if (category === 'all') {
-      setSelectedNodeIds([]);
-    } else if (category === 'chokepoint') {
-      setSelectedNodeIds(['hormuz', 'red_sea']);
-    } else if (category === 'tanker') {
-      setSelectedNodeIds(['desh_vishal', 'swarna_kamal', 'ratna_shalini']);
-    } else if (category === 'spr') {
-      setSelectedNodeIds(['padur', 'mangalore', 'visakh']);
-    } else if (category === 'port') {
-      setSelectedNodeIds(['vadinar', 'mundra', 'jnpt', 'paradip']);
-    }
+  const handleSelectNode = (codeId: string | null) => {
+    setSelectedNodeId(codeId);
   };
 
   return (
@@ -314,17 +298,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP & SIMULTANEOUS TELEMETRY GRID */}
+        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP */}
         <div className="w-full">
           <DigitalTwinMap
             theme={theme}
             nodes={[]}
             daysOfCover={9.5}
             totalReserveMbbl={39.16}
-            selectedNodeIds={selectedNodeIds}
-            onToggleNode={handleToggleNode}
-            onSelectAllCategory={handleSelectAllCategory}
-            onResetWideView={() => setSelectedNodeIds([])}
+            selectedNodeId={selectedNodeId}
+            onSelectNode={handleSelectNode}
           />
         </div>
 
@@ -333,8 +315,8 @@ export default function Home() {
           <RiskRadar
             theme={theme}
             corridors={corridors}
-            selectedNodeId={selectedNodeIds.length === 1 ? selectedNodeIds[0] : null}
-            onSelectCorridor={(codeId) => handleToggleNode(codeId)}
+            selectedNodeId={selectedNodeId}
+            onSelectCorridor={(codeId) => handleSelectNode(selectedNodeId === codeId ? null : codeId)}
           />
         </div>
 
