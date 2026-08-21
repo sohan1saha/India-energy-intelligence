@@ -14,7 +14,7 @@ export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [selectedStrategyId, setSelectedStrategyId] = useState<string>('strat_bypass');
+  const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>(null);
 
   const [corridors, setCorridors] = useState<any[]>([
     {

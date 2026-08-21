@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CheckCircle2, Copy, Check, ShieldCheck, Anchor } from 'lucide-react';
+import { CheckCircle2, Copy, Check, ShieldCheck, Anchor, Maximize2 } from 'lucide-react';
 
 interface SourcingAllocation {
   source_country: string;
@@ -32,8 +32,8 @@ interface ReroutingStrategy {
 interface ProcurementMatrixProps {
   theme: 'dark' | 'cream';
   strategies: ReroutingStrategy[];
-  selectedStrategyId?: string;
-  onSelectStrategy?: (strategyId: string) => void;
+  selectedStrategyId?: string | null;
+  onSelectStrategy?: (strategyId: string | null) => void;
 }
 
 export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
@@ -42,31 +42,34 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
   selectedStrategyId: externalStrategyId,
   onSelectStrategy
 }) => {
-  const [internalStrategyId, setInternalStrategyId] = useState<string>(strategies[0]?.strategy_id || 'strat_bypass');
+  const [internalStrategyId, setInternalStrategyId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
   const activeStrategyId = externalStrategyId !== undefined ? externalStrategyId : internalStrategyId;
 
   const handleSelect = (id: string) => {
-    setInternalStrategyId(id);
+    const nextId = activeStrategyId === id ? null : id;
+    setInternalStrategyId(nextId);
     if (onSelectStrategy) {
-      onSelectStrategy(id);
+      onSelectStrategy(nextId);
     }
   };
 
-  const selectedStrategy = strategies.find(s => s.strategy_id === activeStrategyId) || strategies[0];
+  const selectedStrategy = strategies.find(s => s.strategy_id === activeStrategyId) || null;
 
   let parsedJson: any = null;
-  try {
-    parsedJson = JSON.parse(selectedStrategy?.executable_tender_json || '');
-  } catch (e) {
-    parsedJson = {
-      tender_id: "MoPNG/EMERGENCY/2026-08/STRAT-1",
-      issuer: "Ministry of Petroleum & Natural Gas / IOCL Chartering",
-      total_volume_bpd: 1200000,
-      target_delivery_ports: ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"],
-      execution_lead_time_hours: 6
-    };
+  if (selectedStrategy) {
+    try {
+      parsedJson = JSON.parse(selectedStrategy?.executable_tender_json || '');
+    } catch (e) {
+      parsedJson = {
+        tender_id: "MoPNG/EMERGENCY/2026-08/STRAT-1",
+        issuer: "Ministry of Petroleum & Natural Gas / IOCL Chartering",
+        total_volume_bpd: 1200000,
+        target_delivery_ports: ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"],
+        execution_lead_time_hours: 6
+      };
+    }
   }
 
   const handleCopyJson = () => {
@@ -85,14 +88,27 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
       }`}>
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
-          <div>
+          <div className="flex items-center gap-3">
             <h2 className="text-sm font-bold uppercase tracking-wider">Adaptive Procurement Orchestrator</h2>
-            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Click any emergency strategy card below to highlight its supply routes on the Live GIS Map</p>
+            {activeStrategyId && (
+              <button
+                onClick={() => handleSelect(activeStrategyId)}
+                className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-mono transition border border-slate-700"
+                title="Deselect strategy and reset map view"
+              >
+                <Maximize2 className="w-3 h-3 text-alert-amber" />
+                <span>Deselect Strategy (Show All Routes)</span>
+              </button>
+            )}
           </div>
           <span className="px-2.5 py-1 text-xs font-semibold rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/30 font-mono">
             100% Slate Compatible
           </span>
         </div>
+
+        <p className="text-[11px] text-slate-500 font-sans mb-3">
+          Click any emergency strategy card below to highlight its supply routes on the Live GIS Map. Click an active card again to deselect.
+        </p>
 
         {/* Strategy Selection Cards Grid (3 Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-4 font-mono">
@@ -104,7 +120,7 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
                 onClick={() => handleSelect(strat.strategy_id)}
                 className={`p-4 rounded-lg border cursor-pointer transition flex flex-col justify-between ${
                   isSelected
-                    ? 'border-alert-amber bg-alert-amber/5 ring-2 ring-alert-amber/50 shadow-lg scale-[1.01]'
+                    ? 'border-alert-amber bg-alert-amber/10 ring-2 ring-alert-amber/50 shadow-lg scale-[1.01]'
                     : theme === 'dark'
                     ? 'bg-dark-bg border-dark-border hover:border-slate-600'
                     : 'bg-cream-bg border-cream-border hover:border-slate-400'
@@ -146,8 +162,14 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
           <div className={`p-4 rounded-lg border ${
             theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
           }`}>
-            <h3 className="text-xs font-bold uppercase tracking-wide mb-3 font-mono">
-              Crude Basket Allocation & Logistics Rerouting
+            <h3 className="text-xs font-bold uppercase tracking-wide mb-3 font-mono flex items-center justify-between">
+              <span>Crude Basket Allocation & Logistics Rerouting ({selectedStrategy.name})</span>
+              <button
+                onClick={() => handleSelect(selectedStrategy.strategy_id)}
+                className="text-[10px] text-alert-amber hover:underline font-normal"
+              >
+                [ Clear Strategy Selection ]
+              </button>
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-[11px] font-mono text-left">
@@ -180,79 +202,81 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
       </div>
 
       {/* INLINE EXECUTABLE MOPNG EMERGENCY TENDER SPECIFICATION CARD */}
-      <div className={`p-5 rounded-xl border transition-colors ${
-        theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
-      }`}>
-        {/* Document Header */}
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-inherit">
-          <div>
-            <h3 className="font-bold text-sm">Ministry of Petroleum & Natural Gas (MoPNG) Emergency Tender</h3>
+      {selectedStrategy && (
+        <div className={`p-5 rounded-xl border transition-colors ${
+          theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
+        }`}>
+          {/* Document Header */}
+          <div className="flex items-center justify-between pb-3 mb-4 border-b border-inherit">
+            <div>
+              <h3 className="font-bold text-sm">Ministry of Petroleum & Natural Gas (MoPNG) Emergency Tender</h3>
+            </div>
+
+            <button
+              onClick={handleCopyJson}
+              className="p-1.5 rounded-lg border border-inherit text-slate-400 hover:text-white hover:bg-slate-700/30 transition"
+              title={copied ? "Copied!" : "Copy Spec JSON"}
+            >
+              {copied ? <Check className="w-4 h-4 text-alert-emerald" /> : <Copy className="w-4 h-4" />}
+            </button>
           </div>
 
-          <button
-            onClick={handleCopyJson}
-            className="p-1.5 rounded-lg border border-inherit text-slate-400 hover:text-white hover:bg-slate-700/30 transition"
-            title={copied ? "Copied!" : "Copy Spec JSON"}
-          >
-            {copied ? <Check className="w-4 h-4 text-alert-emerald" /> : <Copy className="w-4 h-4" />}
-          </button>
-        </div>
-
-        {/* Directive Summary Banner */}
-        <div className="p-3.5 rounded-lg border text-alert-amber border-alert-amber/30 bg-alert-amber/10 mb-4">
-          <p className="font-bold text-xs mb-1 font-mono uppercase tracking-wide">DIRECTIVE SUMMARY:</p>
-          <p className="text-xs leading-relaxed font-sans font-medium">
-            {selectedStrategy?.tender_summary_pdf_text || "EMERGENCY DIRECTIVE: Dispatch 3 VLCCs to Fujairah ADCOP terminal (UAE) and 2 VLCCs to Yanbu Red Sea terminal. Initiate 240,000 bpd drawdown from Padur & Mangalore ISPRL caverns immediately."}
-          </p>
-        </div>
-
-        {/* Key Specs Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono mb-4">
-          <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-            <span className="text-[10px] text-slate-500 block mb-1">TENDER ID & ISSUER</span>
-            <p className="font-bold text-xs text-alert-amber">{parsedJson?.tender_id || "MoPNG/EMERGENCY/STRAT-1"}</p>
-            <span className="text-[10px] text-slate-400 block mt-0.5">{parsedJson?.issuer || "MoPNG / IOCL"}</span>
-          </div>
-
-          <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-            <span className="text-[10px] text-slate-500 block mb-1">TOTAL REROUTED VOLUME</span>
-            <p className="font-bold text-xs text-alert-emerald">
-              {parsedJson?.total_volume_bpd ? (parsedJson.total_volume_bpd / 1000).toFixed(0) : '1,200'}k bpd
+          {/* Directive Summary Banner */}
+          <div className="p-3.5 rounded-lg border text-alert-amber border-alert-amber/30 bg-alert-amber/10 mb-4">
+            <p className="font-bold text-xs mb-1 font-mono uppercase tracking-wide">DIRECTIVE SUMMARY:</p>
+            <p className="text-xs leading-relaxed font-sans font-medium">
+              {selectedStrategy?.tender_summary_pdf_text || "EMERGENCY DIRECTIVE: Dispatch 3 VLCCs to Fujairah ADCOP terminal (UAE) and 2 VLCCs to Yanbu Red Sea terminal. Initiate 240,000 bpd drawdown from Padur & Mangalore ISPRL caverns immediately."}
             </p>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Crude Allocation</span>
           </div>
 
-          <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-card border-cream-border'}`}>
-            <span className="text-[10px] text-slate-500 block mb-1">EXECUTION LEAD TIME</span>
-            <p className="font-bold text-xs text-alert-cyan">
-              {parsedJson?.execution_lead_time_hours || 6} Hours
-            </p>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Emergency Dispatch</span>
-          </div>
-        </div>
+          {/* Key Specs Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono mb-4">
+            <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-1">TENDER ID & ISSUER</span>
+              <p className="font-bold text-xs text-alert-amber">{parsedJson?.tender_id || "MoPNG/EMERGENCY/STRAT-1"}</p>
+              <span className="text-[10px] text-slate-400 block mt-0.5">{parsedJson?.issuer || "MoPNG / IOCL"}</span>
+            </div>
 
-        {/* Target Delivery Ports */}
-        <div className={`p-3.5 rounded-lg border mb-4 ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
-          <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Target Delivery Terminals & Ports</span>
-          <div className="flex flex-wrap gap-2">
-            {(parsedJson?.target_delivery_ports || ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"]).map((port: string, idx: number) => (
-              <span key={idx} className="px-2.5 py-1 rounded bg-alert-cyan/10 text-alert-cyan border border-alert-cyan/30 text-xs font-semibold font-mono flex items-center gap-1.5">
-                <Anchor className="w-3.5 h-3.5 text-alert-cyan" />
-                <span>{port}</span>
-              </span>
-            ))}
-          </div>
-        </div>
+            <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-1">TOTAL REROUTED VOLUME</span>
+              <p className="font-bold text-xs text-alert-emerald">
+                {parsedJson?.total_volume_bpd ? (parsedJson.total_volume_bpd / 1000).toFixed(0) : '1,200'}k bpd
+              </p>
+              <span className="text-[10px] text-slate-400 block mt-0.5">Crude Allocation</span>
+            </div>
 
-        {/* Footer Guarantee */}
-        <div className="pt-2 border-t border-inherit flex items-center justify-between text-xs font-mono text-alert-emerald">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4" />
-            <span className="text-[11px] font-semibold">Verified 100% Compatible with Indian Refiner Slates</span>
+            <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+              <span className="text-[10px] text-slate-500 block mb-1">EXECUTION LEAD TIME</span>
+              <p className="font-bold text-xs text-alert-cyan">
+                {parsedJson?.execution_lead_time_hours || 6} Hours
+              </p>
+              <span className="text-[10px] text-slate-400 block mt-0.5">Emergency Dispatch</span>
+            </div>
           </div>
-          <span className="text-[10px] text-slate-500">Live Executive Spec Payload</span>
+
+          {/* Target Delivery Ports */}
+          <div className={`p-3.5 rounded-lg border mb-4 ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+            <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Target Delivery Terminals & Ports</span>
+            <div className="flex flex-wrap gap-2">
+              {(parsedJson?.target_delivery_ports || ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"]).map((port: string, idx: number) => (
+                <span key={idx} className="px-2.5 py-1 rounded bg-alert-cyan/10 text-alert-cyan border border-alert-cyan/30 text-xs font-semibold font-mono flex items-center gap-1.5">
+                  <Anchor className="w-3.5 h-3.5 text-alert-cyan" />
+                  <span>{port}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer Guarantee */}
+          <div className="pt-2 border-t border-inherit flex items-center justify-between text-xs font-mono text-alert-emerald">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4" />
+              <span className="text-[11px] font-semibold">Verified 100% Compatible with Indian Refiner Slates</span>
+            </div>
+            <span className="text-[10px] text-slate-500">Live Executive Spec Payload</span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
