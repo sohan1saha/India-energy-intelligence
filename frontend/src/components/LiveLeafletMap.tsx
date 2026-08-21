@@ -34,6 +34,36 @@ function MapFlyToHandler({
   return null;
 }
 
+// Function to generate smooth quadratic Bezier curved arc coordinates between waypoints
+function generateSmoothCurvedPath(waypoints: [number, number][], curveFactor: number = 0.2): [number, number][] {
+  if (waypoints.length < 2) return waypoints;
+  const smoothPoints: [number, number][] = [];
+
+  for (let i = 0; i < waypoints.length - 1; i++) {
+    const p0 = waypoints[i];
+    const p1 = waypoints[i + 1];
+
+    const midLat = (p0[0] + p1[0]) / 2;
+    const midLng = (p0[1] + p1[1]) / 2;
+
+    const dx = p1[1] - p0[1];
+    const dy = p1[0] - p0[0];
+
+    // Perpendicular control point offset for circular curve
+    const ctrlLat = midLat + curveFactor * (dx > 0 ? 1 : -1) * Math.min(Math.abs(dx) * 0.15, 5);
+    const ctrlLng = midLng - curveFactor * (dy > 0 ? 1 : -1) * Math.min(Math.abs(dy) * 0.15, 5);
+
+    const steps = 12;
+    for (let t = 0; t <= (i === waypoints.length - 2 ? 1 : 1 - 1 / steps); t += 1 / steps) {
+      const lat = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * ctrlLat + t * t * p1[0];
+      const lng = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * ctrlLng + t * t * p1[1];
+      smoothPoints.push([lat, lng]);
+    }
+  }
+
+  return smoothPoints;
+}
+
 // Custom Animated Leaflet HTML DivIcons
 const createRadarIcon = (color: string, label: string, isHighlighted: boolean = false, isAlert: boolean = false) => {
   const pulseHtml = (isAlert || isHighlighted)
@@ -327,34 +357,41 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
   const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
 
-  // Realistic Multi-Waypoint Oceanic Sea Routes (Curved around landmasses)
-  const strat1Routes: [number, number][][] = [
+  // Realistic Multi-Waypoint Smooth Circular Curved Sea Routes
+  const rawStrat1Routes: [number, number][][] = [
     [[25.18, 56.36], [deshLat, deshLng], [22.45, 69.66]], // Fujairah ADCOP -> Vadinar
-    [[24.08, 38.06], [18.00, 40.00], [12.58, 43.33], [12.00, 52.00], [swarnaLat, swarnaLng], [12.91, 74.85]] // Yanbu -> Red Sea -> Bab-el-Mandeb -> Arabian Sea -> Mangalore
+    [[24.08, 38.06], [18.00, 40.00], [12.58, 43.33], [12.00, 52.00], [swarnaLat, swarnaLng], [12.91, 74.85]] // Yanbu -> Red Sea -> Mangalore
   ];
 
-  const strat2Routes: [number, number][][] = [
-    // US Gulf Texas -> Florida Straits -> North Atlantic -> South Atlantic -> Cape of Good Hope -> Indian Ocean -> Paradip
+  const rawStrat2Routes: [number, number][][] = [
     [[28.95, -95.35], [24.00, -85.00], [23.00, -79.00], [18.00, -50.00], [0.00, -25.00], [-20.00, -10.00], [-34.35, 18.47], [-30.00, 45.00], [-10.00, 65.00], [ratnaLat, ratnaLng], [20.26, 86.67]],
-    // Kozmino -> Sea of Japan -> East China Sea -> South China Sea -> Malacca -> Bay of Bengal -> Paradip
     [[42.73, 133.08], [34.00, 128.00], [25.00, 122.00], [12.00, 112.00], [4.15, 100.50], [6.00, 93.00], [15.00, 88.00], [20.26, 86.67]]
   ];
 
-  const strat3Routes: [number, number][][] = [
-    // Kozmino & Sakhalin -> Pacific Sea Lanes -> Malacca Strait -> Visakhapatnam -> Paradip
+  const rawStrat3Routes: [number, number][][] = [
     [[42.73, 133.08], [34.00, 128.00], [22.00, 120.00], [12.00, 112.00], [4.15, 100.50], [8.00, 90.00], [17.68, 83.21], [20.26, 86.67]]
   ];
 
-  const strat4Routes: [number, number][][] = [
-    // Santos Basin Brazil -> South Atlantic Ocean (Curved offshore) -> Cape of Good Hope -> Indian Ocean -> Vadinar
+  const rawStrat4Routes: [number, number][][] = [
     [[-23.96, -46.33], [-28.00, -35.00], [-34.00, -10.00], [-34.35, 18.47], [-28.00, 45.00], [-10.00, 62.00], [12.00, 68.00], [22.45, 69.66]]
   ];
 
-  const strat5Routes: [number, number][][] = [
-    [[13.25, 74.78], [12.91, 74.85]], // Padur Cavern -> MRPL
-    [[17.68, 83.21], [20.26, 86.67]], // Visakh Cavern -> Paradip
-    [[19.42, 71.33], [20.50, 70.50], [22.45, 69.66]] // ONGC Mumbai High Offshore -> Vadinar
+  const rawStrat5Routes: [number, number][][] = [
+    [[13.25, 74.78], [12.91, 74.85]],
+    [[17.68, 83.21], [20.26, 86.67]],
+    [[19.42, 71.33], [20.50, 70.50], [22.45, 69.66]]
   ];
+
+  // Convert raw waypoints into smooth circular Bezier arcs
+  const strat1Routes = rawStrat1Routes.map(r => generateSmoothCurvedPath(r, 0.15));
+  const strat2Routes = rawStrat2Routes.map(r => generateSmoothCurvedPath(r, 0.25));
+  const strat3Routes = rawStrat3Routes.map(r => generateSmoothCurvedPath(r, 0.20));
+  const strat4Routes = rawStrat4Routes.map(r => generateSmoothCurvedPath(r, 0.30));
+  const strat5Routes = rawStrat5Routes.map(r => generateSmoothCurvedPath(r, 0.10));
+
+  const baselineHormuz = generateSmoothCurvedPath([[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]], 0.15);
+  const baselineAdcop = generateSmoothCurvedPath([[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]], 0.15);
+  const baselineEastCoast = generateSmoothCurvedPath([[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]], 0.15);
 
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
@@ -374,7 +411,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           url={tileUrl}
         />
 
-        {/* Dynamic Strategy Emergency Corridors Overlay */}
+        {/* Dynamic Strategy Smooth Circular Curved Emergency Corridors */}
         {selectedStrategyId === 'strat_bypass' && strat1Routes.map((r, i) => (
           <Polyline key={`s1-${i}`} positions={r} color="#D97706" weight={4.5} dashArray="6, 8" />
         ))}
@@ -398,9 +435,9 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         {/* Baseline Standard Corridors */}
         {!selectedStrategyId && (
           <>
-            <Polyline positions={[[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]]} color="#EF4444" weight={3} dashArray="8, 12" />
-            <Polyline positions={[[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]]} color="#0284C7" weight={3} dashArray="6, 10" />
-            <Polyline positions={[[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]]} color="#10B981" weight={2.5} dashArray="4, 8" />
+            <Polyline positions={baselineHormuz} color="#EF4444" weight={3} dashArray="8, 12" />
+            <Polyline positions={baselineAdcop} color="#0284C7" weight={3} dashArray="6, 10" />
+            <Polyline positions={baselineEastCoast} color="#10B981" weight={2.5} dashArray="4, 8" />
           </>
         )}
 
