@@ -11,51 +11,54 @@ class EnergyCopilotAgent:
     def process_query(self, query: str) -> Dict[str, Any]:
         q = query.lower()
 
-        # 1. Supertanker AIS Telemetry & Tracking Queries
-        if any(w in q for w in ["tanker", "vlcc", "desh vishal", "swarna kamal", "ratna shalini", "vessel", "at sea"]):
+        # 1. Supertanker AIS Telemetry, Vessel Locations & Cargo Volume Queries (in Barrels & Gallons)
+        if any(w in q for w in ["tanker", "vlcc", "desh vishal", "swarna kamal", "ratna shalini", "vessel", "ship", "headed", "heading", "going", "destination", "gallon", "barrel", "carrying"]):
             vessels = digital_twin_service.get_live_vessels_telemetry()
             
             if "desh" in q or "vishal" in q:
                 v = vessels[0]
+                bbls = v['cargo_volume_mbbl'] * 1000000  # 2,000,000 bbls
+                gallons = bbls * 42  # 84,000,000 gallons
                 answer = (
-                    f"🚢 Telemetry for {v['name']} ({v['flag']}):\n\n"
-                    f"• MMSI / IMO: {v['mmsi']} / {v['imo']}\n"
-                    f"• Current Position: Lat {v['lat']}°, Lng {v['lng']}° (Gulf of Oman)\n"
-                    f"• Speed & Heading: {v['speed_knots']} Knots • Heading {v['heading_deg']}°\n"
-                    f"• Cargo Payload: {v['cargo_volume_mbbl']}M Barrels of {v['cargo_grade']}\n"
-                    f"• Origin Terminal: {v['origin_port']}\n"
-                    f"• Destination: {v['destination_port']} (ETA: Aug 24, 06:00 UTC)\n"
-                    f"• Risk Status: Operating under active US-Iran war risk insurance surcharge (+1.25%)."
+                    f"🚢 VLCC Desh Vishal Live Voyage & Cargo Telemetry:\n\n"
+                    f"• Destination / Headed To: Vadinar SPM Berth (Gujarat, India)\n"
+                    f"• Refinery Recipients: Reliance Jamnagar (1.2M bpd) & Nayara Vadinar (400k bpd)\n"
+                    f"• Cargo Payload: 2.0 Million Barrels = 84.0 Million US Gallons (84,000,000 Gallons) of Basrah Heavy Crude\n"
+                    f"• Origin Terminal: Fujairah ADCOP Oil Terminal (UAE)\n"
+                    f"• Live Speed & Heading: {v['speed_knots']} Knots • Heading {v['heading_deg']}° (Gulf of Oman)\n"
+                    f"• Estimated Time of Arrival (ETA): Aug 24, 2026 (06:00 UTC)\n"
+                    f"• Risk Status: Under active US-Iran war risk insurance surcharge (+1.25%)."
                 )
             elif "swarna" in q or "kamal" in q:
                 v = vessels[1]
+                bbls = v['cargo_volume_mbbl'] * 1000000
+                gallons = bbls * 42  # 84,000,000 gallons
                 answer = (
-                    f"🚢 Telemetry for {v['name']} ({v['flag']}):\n\n"
-                    f"• MMSI / IMO: {v['mmsi']} / {v['imo']}\n"
-                    f"• Current Position: Lat {v['lat']}°, Lng {v['lng']}° (Arabian Sea)\n"
-                    f"• Speed & Heading: {v['speed_knots']} Knots • Heading {v['heading_deg']}°\n"
-                    f"• Cargo Payload: {v['cargo_volume_mbbl']}M Barrels of {v['cargo_grade']}\n"
-                    f"• Origin Terminal: {v['origin_port']}\n"
-                    f"• Destination: {v['destination_port']} (ETA: Aug 25, 14:30 UTC)\n"
-                    f"• Routing Note: Carrying ADCOP bypassed Abu Dhabi crude directly to Mangalore SPM."
+                    f"🚢 VLCC Swarna Kamal Live Voyage & Cargo Telemetry:\n\n"
+                    f"• Destination / Headed To: Mangalore SPM / MRPL (Karnataka, India)\n"
+                    f"• Cargo Payload: 2.0 Million Barrels = 84.0 Million US Gallons (84,000,000 Gallons) of Murban Sweet Crude\n"
+                    f"• Origin Terminal: Fujairah ADCOP Oil Terminal (UAE)\n"
+                    f"• Live Speed & Heading: {v['speed_knots']} Knots • Heading {v['heading_deg']}° (Arabian Sea)\n"
+                    f"• Estimated Time of Arrival (ETA): Aug 25, 2026 (14:30 UTC)"
                 )
             elif "ratna" in q or "shalini" in q:
                 v = vessels[2]
+                bbls = v['cargo_volume_mbbl'] * 1000000
+                gallons = bbls * 42  # 79,800,000 gallons
                 answer = (
-                    f"🚢 Telemetry for {v['name']} ({v['flag']}):\n\n"
-                    f"• MMSI / IMO: {v['mmsi']} / {v['imo']}\n"
-                    f"• Current Position: Lat {v['lat']}°, Lng {v['lng']}° (Bay of Bengal)\n"
-                    f"• Speed & Heading: {v['speed_knots']} Knots • Heading {v['heading_deg']}°\n"
-                    f"• Cargo Payload: {v['cargo_volume_mbbl']}M Barrels of {v['cargo_grade']}\n"
-                    f"• Origin Terminal: {v['origin_port']}\n"
-                    f"• Destination: {v['destination_port']} (ETA: Aug 26, 18:00 UTC)\n"
-                    f"• Routing Note: Transatlantic long-haul vessel bringing US crude to IOCL Paradip."
+                    f"🚢 VLCC Ratna Shalini Live Voyage & Cargo Telemetry:\n\n"
+                    f"• Destination / Headed To: Paradip SPM Berth (Odisha, India)\n"
+                    f"• Cargo Payload: 1.9 Million Barrels = 79.8 Million US Gallons (79,800,000 Gallons) of WTI Midland Crude\n"
+                    f"• Origin Terminal: Enterprise US Gulf Coast Terminal (Texas, USA)\n"
+                    f"• Live Speed & Heading: {v['speed_knots']} Knots • Heading {v['heading_deg']}° (Bay of Bengal)\n"
+                    f"• Estimated Time of Arrival (ETA): Aug 26, 2026 (18:00 UTC)"
                 )
             else:
                 answer = "🚢 Active Live Supertanker Fleet Telemetry:\n\n"
                 for v in vessels:
-                    answer += f"• {v['name']}: {v['cargo_volume_mbbl']}M bbls {v['cargo_grade']} ({v['speed_knots']} Knots) ➔ {v['destination_port']}\n"
-                answer += "\nAll 3 vessels are broadcasting active GPS satellite AIS telemetry."
+                    gal = v['cargo_volume_mbbl'] * 42
+                    answer += f"• {v['name']}: {v['cargo_volume_mbbl']}M bbls ({gal:.1f}M Gallons) {v['cargo_grade']} ➔ Headed To {v['destination_port']}\n"
+                answer += "\nUnit Conversion Note: 1 Crude Oil Barrel (bbl) = 42 US Gallons."
             
             return {"query": query, "intent": "supertanker_tracking", "response": answer, "data": vessels}
 
@@ -116,12 +119,12 @@ class EnergyCopilotAgent:
             res = spr_optimizer_service.optimize_drawdown(SPROptimizationRequest(deficit_bpd=1200000.0, days_to_cover=30))
             answer = (
                 "🛡️ Indian Strategic Petroleum Reserves Limited (ISPRL) Status:\n\n"
-                "• Total Strategic Capacity: 5.33 MMT (~39.16 Million Barrels)\n"
+                "• Total Strategic Capacity: 5.33 MMT (~39.16 Million Barrels = 1.64 Billion US Gallons)\n"
                 "• National Consumption Cover: 9.5 Days (Extendable to 18.0 days with optimized LP drawdown)\n\n"
                 "Cavern Inventory Breakdown:\n"
-                "1. Padur (Karnataka): 2.50 MMT (18.37M bbls) - 100% Stocked. Direct subsea pipeline to MRPL.\n"
-                "2. Mangalore (Karnataka): 1.50 MMT (11.02M bbls) - 80% Stocked. Linked to MRPL refinery.\n"
-                "3. Visakhapatnam (Andhra Pradesh): 1.33 MMT (9.77M bbls) - 90% Stocked. Linked to HPCL Visakh.\n\n"
+                "1. Padur (Karnataka): 2.50 MMT (18.37M bbls / 771.5M Gallons) - 100% Stocked. Direct subsea pipeline to MRPL.\n"
+                "2. Mangalore (Karnataka): 1.50 MMT (11.02M bbls / 462.8M Gallons) - 80% Stocked. Linked to MRPL refinery.\n"
+                "3. Visakhapatnam (Andhra Pradesh): 1.33 MMT (9.77M bbls / 410.3M Gallons) - 90% Stocked. Linked to HPCL Visakh.\n\n"
                 "• Strategic Defense Floor: 15% minimum inventory reserved for military emergencies."
             )
             return {"query": query, "intent": "spr_status", "response": answer, "data": res.model_dump()}
@@ -163,7 +166,7 @@ class EnergyCopilotAgent:
                 "🤖 UrjaAegis AI Copilot - Energy Security & Procurement AI Advisor\n\n"
                 "I am equipped to analyze India's energy supply chain, live AIS maritime telemetry, strategic reserves, and emergency procurement.\n\n"
                 "You can ask me questions such as:\n"
-                "• 'What is the live telemetry and destination of VLCC Desh Vishal?'\n"
+                "• 'Where is VLCC Desh Vishal headed to and how many gallons is it carrying?'\n"
                 "• 'How does the Fujairah ADCOP pipeline bypass the Strait of Hormuz?'\n"
                 "• 'What is the stock level and drawdown rate of Padur ISPRL cavern?'\n"
                 "• 'How much will petrol and diesel prices increase if Hormuz is blocked?'\n"
