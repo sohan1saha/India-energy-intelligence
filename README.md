@@ -1,4 +1,4 @@
-# 🇮🇳 India Energy Intelligence — UrjaAegis AI (`ऊα`)
+# India Energy Intelligence — UrjaAegis AI (ऊα)
 
 > **AI-Driven Energy Supply Chain Resilience Engine for Import-Dependent Economies**
 
@@ -11,7 +11,7 @@
 
 ---
 
-## 🌟 Brand Symbol & Etymology
+## Brand Symbol & Etymology
 
 - **Brand Symbol**: **`ऊα`**
   - **`ऊ` (Hindi Devanagari)**: Symbolizes **Urja (ऊर्जा)** — Vital Energy & National Crude Reserves.
@@ -21,7 +21,7 @@
 
 ---
 
-## 🎯 Problem Statement & National Context
+## Problem Statement & National Context
 
 - **Import Vulnerability**: India imports **~88% of its crude oil**, with **40–45% of total volume transiting the Strait of Hormuz**.
 - **Geopolitical Flashpoints**: US-Iran standoff, naval blockades, and attacks on Red Sea shipping lanes (forcing +16-day Cape of Good Hope detours).
@@ -30,7 +30,7 @@
 
 ---
 
-## 🏛️ System Architecture & Key Modules
+## System Architecture & Key Modules
 
 1. **Geopolitical Risk Intelligence Agent**: Computes dynamic threat scores (0–100) for *Strait of Hormuz*, *Red Sea / Bab-el-Mandeb*, *Malacca*, and *Cape of Good Hope* corridors.
 2. **Disruption Scenario Modeller**: Simulates Hormuz closures and Red Sea blockades, calculating daily crude deficit (bpd), stockout horizon (days), refinery throughput impact, import bill surge (₹ Cr / $ Bn), petrol/diesel pump price impact (₹/L), and macro GDP/inflation impact.
@@ -41,7 +41,7 @@
 
 ---
 
-## 🚀 Quick Start & Installation
+## Quick Start & Installation
 
 ### 1. Backend Setup (FastAPI)
 ```bash
@@ -67,7 +67,7 @@ Dashboard available at: `http://localhost:3000`
 
 ---
 
-## 📄 API Endpoints
+## API Endpoints
 
 - `GET  /api/risk/report` - Live Geopolitical Risk Report & Corridor Scores
 - `GET  /api/digital-twin/state` - Digital Twin Graph State & ISPRL Reserve Levels
@@ -78,6 +78,6 @@ Dashboard available at: `http://localhost:3000`
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for details.
