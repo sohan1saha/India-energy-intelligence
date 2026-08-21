@@ -6,7 +6,6 @@ class AdaptiveProcurementOrchestrator:
     def generate_rerouting_strategies(self, req: ProcurementReroutingRequest) -> ProcurementReroutingResult:
         deficit_bpd = req.deficit_bpd or 1200000.0
 
-        # Strategy 1: Emergency Chokepoint Bypass (ADCOP Fujairah & Yanbu Petroline)
         strat1_allocations = [
             SourcingAllocation(
                 source_country="UAE (ADCOP Pipeline Bypass)",
@@ -51,7 +50,7 @@ class AdaptiveProcurementOrchestrator:
             "issuer": "Ministry of Petroleum & Natural Gas / IOCL Chartering",
             "total_volume_bpd": deficit_bpd,
             "target_delivery_ports": ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"],
-            "allocations": [a.dict() for a in strat1_allocations],
+            "allocations": [a.model_dump() for a in strat1_allocations],
             "execution_lead_time_hours": 6
         }, indent=2)
 
@@ -68,7 +67,6 @@ class AdaptiveProcurementOrchestrator:
             tender_summary_pdf_text="EMERGENCY DIRECTIVE: Dispatch 3 VLCCs to Fujairah ADCOP terminal (UAE) and 2 VLCCs to Yanbu Red Sea terminal. Initiate 240,000 bpd drawdown from Padur & Mangalore ISPRL caverns immediately."
         )
 
-        # Strategy 2: Global Atlantic & Transatlantic Pivot (US WTI + Nigeria Bonny Light)
         strat2_allocations = [
             SourcingAllocation(
                 source_country="Nigeria",
@@ -113,7 +111,7 @@ class AdaptiveProcurementOrchestrator:
             "issuer": "Indian Oil Corporation / BPCL Joint Procurement",
             "total_volume_bpd": deficit_bpd,
             "target_delivery_ports": ["Paradip (Odisha)", "Vadinar (Gujarat)", "Kochi (Kerala)"],
-            "allocations": [a.dict() for a in strat2_allocations],
+            "allocations": [a.model_dump() for a in strat2_allocations],
             "execution_lead_time_hours": 12
         }, indent=2)
 
