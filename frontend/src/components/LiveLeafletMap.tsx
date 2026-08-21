@@ -5,16 +5,32 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Helper component to center and fly map to selected node coordinates or reset to wide view
-function MapFlyToHandler({ targetPos }: { targetPos: [number, number] | null }) {
+// Helper component to center and fly map to selected node coordinates, strategy focus, or reset to wide view
+function MapFlyToHandler({
+  targetPos,
+  selectedStrategyId
+}: {
+  targetPos: [number, number] | null;
+  selectedStrategyId: string | null;
+}) {
   const map = useMap();
   useEffect(() => {
     if (targetPos) {
       map.flyTo(targetPos, 6.5, { duration: 1.5 });
+    } else if (selectedStrategyId === 'strat_bypass') {
+      map.flyTo([21.0, 64.0], 5.5, { duration: 1.5 });
+    } else if (selectedStrategyId === 'strat_global_pivot') {
+      map.flyTo([10.0, 45.0], 3.8, { duration: 1.5 });
+    } else if (selectedStrategyId === 'strat_far_east') {
+      map.flyTo([15.0, 95.0], 4.2, { duration: 1.5 });
+    } else if (selectedStrategyId === 'strat_latam') {
+      map.flyTo([-10.0, 20.0], 3.2, { duration: 1.5 });
+    } else if (selectedStrategyId === 'strat_national_surge') {
+      map.flyTo([18.5, 76.0], 5.8, { duration: 1.5 });
     } else {
       map.flyTo([19.5, 67.5], 5, { duration: 1.5 });
     }
-  }, [targetPos, map]);
+  }, [targetPos, selectedStrategyId, map]);
   return null;
 }
 
@@ -47,9 +63,10 @@ const createRadarIcon = (color: string, label: string, isHighlighted: boolean = 
 interface LiveLeafletMapProps {
   theme: 'dark' | 'cream';
   selectedNodeId: string | null;
+  selectedStrategyId?: string | null;
 }
 
-export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMapProps) {
+export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategyId }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
@@ -270,9 +287,30 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
 
   const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
 
-  const hormuzCorridor: [number, number][] = [[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]];
-  const adcopBypassRoute: [number, number][] = [[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]];
-  const eastCoastLane: [number, number][] = [[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]];
+  // Strategy Specific Polylines
+  const strat1Routes: [number, number][][] = [
+    [[25.18, 56.36], [deshLat, deshLng], [22.45, 69.66]], // Fujairah ADCOP -> Vadinar
+    [[24.08, 38.06], [12.58, 43.33], [swarnaLat, swarnaLng], [12.91, 74.85]] // Yanbu Red Sea -> Mangalore
+  ];
+
+  const strat2Routes: [number, number][][] = [
+    [[-34.35, 18.47], [ratnaLat, ratnaLng], [20.26, 86.67]], // Transatlantic Cape -> Paradip
+    [[42.73, 133.08], [4.15, 100.50], [20.26, 86.67]] // Kozmino -> Malacca -> Paradip
+  ];
+
+  const strat3Routes: [number, number][][] = [
+    [[42.73, 133.08], [4.15, 100.50], [17.68, 83.21], [20.26, 86.67]] // Kozmino -> Malacca -> Visakh -> Paradip
+  ];
+
+  const strat4Routes: [number, number][][] = [
+    [[-23.96, -46.33], [-34.35, 18.47], [22.45, 69.66]] // Brazil Santos -> Cape -> Vadinar
+  ];
+
+  const strat5Routes: [number, number][][] = [
+    [[13.25, 74.78], [12.91, 74.85]], // Padur -> MRPL
+    [[17.68, 83.21], [20.26, 86.67]], // Visakh Cavern -> Paradip
+    [[19.42, 71.33], [22.45, 69.66]]  // ONGC Mumbai High -> Vadinar
+  ];
 
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
@@ -285,16 +323,42 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
-        <MapFlyToHandler targetPos={targetPos} />
+        <MapFlyToHandler targetPos={targetPos} selectedStrategyId={selectedStrategyId || null} />
 
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url={tileUrl}
         />
 
-        <Polyline positions={hormuzCorridor} color="#EF4444" weight={3} dashArray="8, 12" />
-        <Polyline positions={adcopBypassRoute} color="#0284C7" weight={3} dashArray="6, 10" />
-        <Polyline positions={eastCoastLane} color="#10B981" weight={2.5} dashArray="4, 8" />
+        {/* Dynamic Strategy Emergency Corridors Overlay */}
+        {selectedStrategyId === 'strat_bypass' && strat1Routes.map((r, i) => (
+          <Polyline key={`s1-${i}`} positions={r} color="#D97706" weight={4.5} dashArray="6, 8" />
+        ))}
+
+        {selectedStrategyId === 'strat_global_pivot' && strat2Routes.map((r, i) => (
+          <Polyline key={`s2-${i}`} positions={r} color="#0284C7" weight={4.5} dashArray="6, 8" />
+        ))}
+
+        {selectedStrategyId === 'strat_far_east' && strat3Routes.map((r, i) => (
+          <Polyline key={`s3-${i}`} positions={r} color="#10B981" weight={4.5} dashArray="6, 8" />
+        ))}
+
+        {selectedStrategyId === 'strat_latam' && strat4Routes.map((r, i) => (
+          <Polyline key={`s4-${i}`} positions={r} color="#8B5CF6" weight={4.5} dashArray="6, 8" />
+        ))}
+
+        {selectedStrategyId === 'strat_national_surge' && strat5Routes.map((r, i) => (
+          <Polyline key={`s5-${i}`} positions={r} color="#EC4899" weight={5} dashArray="4, 6" />
+        ))}
+
+        {/* Baseline Standard Corridors */}
+        {!selectedStrategyId && (
+          <>
+            <Polyline positions={[[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]]} color="#EF4444" weight={3} dashArray="8, 12" />
+            <Polyline positions={[[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]]} color="#0284C7" weight={3} dashArray="6, 10" />
+            <Polyline positions={[[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]]} color="#10B981" weight={2.5} dashArray="4, 8" />
+          </>
+        )}
 
         {locations.map((loc) => {
           const isSelected = selectedNodeId === loc.id;

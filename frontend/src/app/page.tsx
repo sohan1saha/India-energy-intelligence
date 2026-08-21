@@ -14,6 +14,7 @@ export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [selectedStrategyId, setSelectedStrategyId] = useState<string>('strat_bypass');
 
   const [corridors, setCorridors] = useState<any[]>([
     {
@@ -409,6 +410,7 @@ export default function Home() {
             daysOfCover={9.5}
             totalReserveMbbl={39.16}
             selectedNodeId={selectedNodeId}
+            selectedStrategyId={selectedStrategyId}
             onSelectNode={handleSelectNode}
           />
         </div>
@@ -442,6 +444,8 @@ export default function Home() {
           <ProcurementMatrix
             theme={theme}
             strategies={strategies}
+            selectedStrategyId={selectedStrategyId}
+            onSelectStrategy={(id) => setSelectedStrategyId(id)}
           />
         </div>
 

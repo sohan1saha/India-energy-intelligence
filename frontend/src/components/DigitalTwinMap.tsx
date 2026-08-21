@@ -37,6 +37,7 @@ interface DigitalTwinMapProps {
   daysOfCover: number;
   totalReserveMbbl: number;
   selectedNodeId: string | null;
+  selectedStrategyId?: string | null;
   onSelectNode: (codeId: string | null) => void;
 }
 
@@ -45,6 +46,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
   daysOfCover,
   totalReserveMbbl,
   selectedNodeId,
+  selectedStrategyId,
   onSelectNode
 }) => {
   const nodeDetails: Record<string, NodeDetail> = {
@@ -115,74 +117,6 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       logisticsConnectivity: 'Origin: Fujairah ADCOP Terminal (UAE) ➔ Destination: Vadinar SPM (Gujarat, India)',
       drawdownRateOrSpeed: 'Cruising Speed: 14.5 Knots (26.8 km/h)',
       bufferDays: 'Delivery Target: 2.0M bbls in 48 Hours'
-    },
-    hormuz: {
-      id: 'hormuz',
-      name: 'Strait of Hormuz (Critical Threat Zone)',
-      type: 'Strategic Maritime Chokepoint',
-      subtitle: 'Threat Score: 82.5/100 (HIGH_RISK)',
-      stock: '1.89M bpd Transit Volume',
-      status: 'Naval Patrols & GPS Spoofing Active',
-      colorClass: 'text-alert-red',
-      badgeBg: 'bg-alert-red/10 border-alert-red/30 text-alert-red',
-      badgeText: 'Critical Threat Zone',
-      refineryFeed: 'Primary corridor for 45% of India crude imports',
-      slateCompatibility: 'Arab Light, Basrah Heavy, Murban Sweet',
-      strategicRole: 'Elevated US-Iran standoff along Iranian coast. Rerouting via Fujairah ADCOP pipeline recommended.',
-      logisticsConnectivity: 'Transit delay +4.5 days, War risk insurance surcharge +1.25%',
-      drawdownRateOrSpeed: 'Transit Delay: +4.5 Days',
-      bufferDays: 'Action: Reroute via ADCOP Pipeline'
-    },
-    red_sea: {
-      id: 'red_sea',
-      name: 'Bab-el-Mandeb & Red Sea (Critical Threat Zone)',
-      type: 'Red Sea Anti-Ship Drone & Missile Attack Zone',
-      subtitle: 'Threat Score: 76.0/100 (HIGH_RISK)',
-      stock: '1.12M bpd Transit Volume',
-      status: 'Cape of Good Hope Diversion Active',
-      colorClass: 'text-alert-red',
-      badgeBg: 'bg-alert-red/10 border-alert-red/30 text-alert-red',
-      badgeText: 'Critical Threat Zone',
-      refineryFeed: 'Feeds Mediterranean & Suez imports to Indian refiners',
-      slateCompatibility: 'Suezmax & Aframax Tanker Fleets',
-      strategicRole: 'Continuous Houthi missile/drone attacks force major tankers into 16-day Cape of Good Hope detour.',
-      logisticsConnectivity: 'Transit delay +16.0 days, War risk insurance surcharge +1.50%',
-      drawdownRateOrSpeed: 'Transit Delay: +16.0 Days',
-      bufferDays: 'Action: Reroute via Yanbu Petroline'
-    },
-    malacca: {
-      id: 'malacca',
-      name: 'Strait of Malacca (Southeast Asia Corridor)',
-      type: 'High-Density Maritime Shipping Strait',
-      subtitle: 'Threat Score: 24.0/100 (NORMAL)',
-      stock: '85 Vessels / Day Transit',
-      status: 'Normal Operational Status',
-      colorClass: 'text-alert-emerald',
-      badgeBg: 'bg-alert-emerald/10 border-alert-emerald/30 text-alert-emerald',
-      badgeText: 'Normal Operational Status',
-      refineryFeed: 'Russian Far East (ESPO) & Asian Trade Corridor',
-      slateCompatibility: 'ESPO Blend & Far East Light Crude',
-      strategicRole: 'Dense maritime trade corridor; low geopolitical threat level; key route for Far East Russian crude.',
-      logisticsConnectivity: 'Singapore Bunkering Hub & Malacca Strait Traffic Control',
-      drawdownRateOrSpeed: 'Transit Delay: +0.5 Days',
-      bufferDays: 'Status: Clear Trade Transit'
-    },
-    cape_gh: {
-      id: 'cape_gh',
-      name: 'Cape of Good Hope (South Africa Bypass Route)',
-      type: 'Transoceanic Diversion Corridor',
-      subtitle: 'Threat Score: 35.0/100 (ELEVATED CONGESTION)',
-      stock: '60 Vessels / Day Transit',
-      status: 'Bunkering Port Congestion Active',
-      colorClass: 'text-alert-amber',
-      badgeBg: 'bg-alert-amber/10 border-alert-amber/30 text-alert-amber',
-      badgeText: 'Elevated Bunkering Delay',
-      refineryFeed: 'Atlantic & West African Bonny Light / US WTI Imports',
-      slateCompatibility: 'VLCC & Suezmax Long-Haul Fleets',
-      strategicRole: 'Congestion at South African bunkering ports (Port Louis, Durban) due to Red Sea diversions.',
-      logisticsConnectivity: 'Adds +15.0 days extra transit time around African continent',
-      drawdownRateOrSpeed: 'Transit Delay: +15.0 Days',
-      bufferDays: 'Status: Extended Transit Route'
     }
   };
 
@@ -235,7 +169,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
 
       {/* Live Interactive Leaflet GIS Map Container */}
       <div className="mb-3 flex-1">
-        <LiveLeafletMap theme={theme} selectedNodeId={selectedNodeId} />
+        <LiveLeafletMap theme={theme} selectedNodeId={selectedNodeId} selectedStrategyId={selectedStrategyId} />
       </div>
 
       {/* Node Selection Cards Grid */}

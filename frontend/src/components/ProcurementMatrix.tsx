@@ -32,16 +32,29 @@ interface ReroutingStrategy {
 interface ProcurementMatrixProps {
   theme: 'dark' | 'cream';
   strategies: ReroutingStrategy[];
+  selectedStrategyId?: string;
+  onSelectStrategy?: (strategyId: string) => void;
 }
 
 export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
   theme,
-  strategies
+  strategies,
+  selectedStrategyId: externalStrategyId,
+  onSelectStrategy
 }) => {
-  const [selectedStrategyId, setSelectedStrategyId] = useState<string>(strategies[0]?.strategy_id || 'strat_bypass');
+  const [internalStrategyId, setInternalStrategyId] = useState<string>(strategies[0]?.strategy_id || 'strat_bypass');
   const [copied, setCopied] = useState(false);
 
-  const selectedStrategy = strategies.find(s => s.strategy_id === selectedStrategyId) || strategies[0];
+  const activeStrategyId = externalStrategyId !== undefined ? externalStrategyId : internalStrategyId;
+
+  const handleSelect = (id: string) => {
+    setInternalStrategyId(id);
+    if (onSelectStrategy) {
+      onSelectStrategy(id);
+    }
+  };
+
+  const selectedStrategy = strategies.find(s => s.strategy_id === activeStrategyId) || strategies[0];
 
   let parsedJson: any = null;
   try {
@@ -74,6 +87,7 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider">Adaptive Procurement Orchestrator</h2>
+            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Click any emergency strategy card below to highlight its supply routes on the Live GIS Map</p>
           </div>
           <span className="px-2.5 py-1 text-xs font-semibold rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/30 font-mono">
             100% Slate Compatible
@@ -83,14 +97,14 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
         {/* Strategy Selection Cards Grid (3 Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-4 font-mono">
           {strategies.map((strat) => {
-            const isSelected = strat.strategy_id === selectedStrategyId;
+            const isSelected = strat.strategy_id === activeStrategyId;
             return (
               <div
                 key={strat.strategy_id}
-                onClick={() => setSelectedStrategyId(strat.strategy_id)}
+                onClick={() => handleSelect(strat.strategy_id)}
                 className={`p-4 rounded-lg border cursor-pointer transition flex flex-col justify-between ${
                   isSelected
-                    ? 'border-alert-amber bg-alert-amber/5 ring-1 ring-alert-amber/40 shadow-md'
+                    ? 'border-alert-amber bg-alert-amber/5 ring-2 ring-alert-amber/50 shadow-lg scale-[1.01]'
                     : theme === 'dark'
                     ? 'bg-dark-bg border-dark-border hover:border-slate-600'
                     : 'bg-cream-bg border-cream-border hover:border-slate-400'
@@ -208,7 +222,7 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
             <span className="text-[10px] text-slate-400 block mt-0.5">Crude Allocation</span>
           </div>
 
-          <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+          <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">EXECUTION LEAD TIME</span>
             <p className="font-bold text-xs text-alert-cyan">
               {parsedJson?.execution_lead_time_hours || 6} Hours
