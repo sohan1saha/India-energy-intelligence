@@ -6,6 +6,7 @@ class AdaptiveProcurementOrchestrator:
     def generate_rerouting_strategies(self, req: ProcurementReroutingRequest) -> ProcurementReroutingResult:
         deficit_bpd = req.deficit_bpd or 1200000.0
 
+        # Strategy 1: Emergency Pipeline & SPR Bypass
         strat1_allocations = [
             SourcingAllocation(
                 source_country="UAE (ADCOP Pipeline Bypass)",
@@ -67,6 +68,7 @@ class AdaptiveProcurementOrchestrator:
             tender_summary_pdf_text="EMERGENCY DIRECTIVE: Dispatch 3 VLCCs to Fujairah ADCOP terminal (UAE) and 2 VLCCs to Yanbu Red Sea terminal. Initiate 240,000 bpd drawdown from Padur & Mangalore ISPRL caverns immediately."
         )
 
+        # Strategy 2: Global Atlantic & Transatlantic Pivot
         strat2_allocations = [
             SourcingAllocation(
                 source_country="Nigeria",
@@ -128,9 +130,71 @@ class AdaptiveProcurementOrchestrator:
             tender_summary_pdf_text="GLOBAL TENDER: Issue spot purchase orders for 480k bpd West African Bonny Light, 420k bpd US WTI Midland, and 300k bpd Russian ESPO via Kozmino port."
         )
 
+        # Strategy 3: Far East & Russian ESPO Strategic Corridor
+        strat3_allocations = [
+            SourcingAllocation(
+                source_country="Russia (Pacific Kozmino)",
+                supplier_name="Rosneft / Gazprom Neft",
+                crude_grade="ESPO Blend",
+                api_gravity=35.6,
+                sulfur_pct=0.52,
+                volume_bpd=round(deficit_bpd * 0.50, 0),
+                transport_mode="Aframax Fleet via Kozmino -> Malacca -> Paradip / Visakh",
+                transit_days=12.0,
+                landed_cost_usd_bbl=80.50,
+                refinery_fit_score=0.94
+            ),
+            SourcingAllocation(
+                source_country="Russia (Sakhalin Island)",
+                supplier_name="Sakhalin Energy",
+                crude_grade="Sokol Light",
+                api_gravity=37.9,
+                sulfur_pct=0.23,
+                volume_bpd=round(deficit_bpd * 0.30, 0),
+                transport_mode="Shuttle Tankers via Sea of Japan -> Bay of Bengal",
+                transit_days=14.0,
+                landed_cost_usd_bbl=82.00,
+                refinery_fit_score=0.91
+            ),
+            SourcingAllocation(
+                source_country="ISPRL Visakhapatnam Cavern",
+                supplier_name="ISPRL East Coast",
+                crude_grade="Visakh Light Blend",
+                api_gravity=34.0,
+                sulfur_pct=1.80,
+                volume_bpd=round(deficit_bpd * 0.20, 0),
+                transport_mode="Direct Pipeline to HPCL Visakh Refinery",
+                transit_days=0.5,
+                landed_cost_usd_bbl=79.00,
+                refinery_fit_score=0.98
+            )
+        ]
+
+        tender3_json = json.dumps({
+            "tender_id": "MoPNG/FAR-EAST/2026-08/STRAT-3",
+            "issuer": "HPCL / IOCL Joint Far East Chartering",
+            "total_volume_bpd": deficit_bpd,
+            "target_delivery_ports": ["Paradip (Odisha)", "Visakhapatnam (Andhra Pradesh)", "Haldia (West Bengal)"],
+            "allocations": [a.model_dump() for a in strat3_allocations],
+            "execution_lead_time_hours": 8
+        }, indent=2)
+
+        strat3 = ReroutingStrategy(
+            strategy_id="strat_far_east",
+            name="Far East & Russian ESPO Strategic Corridor (Kozmino + Sokol + Visakh)",
+            tagline="Fast Pacific & Malacca corridor utilizing Rupee-Ruble settlement and Russian Far East terminals.",
+            landed_cost_usd_bbl=81.50,
+            cost_delta_vs_baseline_usd=3.00,
+            avg_transit_days=11.5,
+            overall_refinery_fit=0.94,
+            allocations=strat3_allocations,
+            executable_tender_json=tender3_json,
+            tender_summary_pdf_text="FAR EAST DIRECTIVE: Charter 6 Aframax vessels for Kozmino & De-Kastri terminals. Activate Visakhapatnam ISPRL cavern drawdown for East Coast refiners."
+        )
+
         return ProcurementReroutingResult(
             deficit_bpd=deficit_bpd,
-            strategies=[strat1, strat2],
+            strategies=[strat1, strat2, strat3],
             recommended_strategy_id="strat_bypass"
         )
 

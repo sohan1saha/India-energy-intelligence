@@ -80,31 +80,33 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
           </span>
         </div>
 
-        {/* Strategy Selection Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-4 font-mono">
+        {/* Strategy Selection Cards Grid (3 Columns) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-4 font-mono">
           {strategies.map((strat) => {
             const isSelected = strat.strategy_id === selectedStrategyId;
             return (
               <div
                 key={strat.strategy_id}
                 onClick={() => setSelectedStrategyId(strat.strategy_id)}
-                className={`p-4 rounded-lg border cursor-pointer transition ${
+                className={`p-4 rounded-lg border cursor-pointer transition flex flex-col justify-between ${
                   isSelected
-                    ? 'border-alert-amber bg-alert-amber/5'
+                    ? 'border-alert-amber bg-alert-amber/5 ring-1 ring-alert-amber/40 shadow-md'
                     : theme === 'dark'
                     ? 'bg-dark-bg border-dark-border hover:border-slate-600'
                     : 'bg-cream-bg border-cream-border hover:border-slate-400'
                 }`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-xs">{strat.name}</span>
-                  {isSelected && <CheckCircle2 className="w-4 h-4 text-alert-amber" />}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-xs">{strat.name}</span>
+                    {isSelected && <CheckCircle2 className="w-4 h-4 text-alert-amber flex-shrink-0" />}
+                  </div>
+                  <p className={`text-[11px] font-sans mb-3 line-clamp-2 ${
+                    theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'
+                  }`}>
+                    {strat.tagline}
+                  </p>
                 </div>
-                <p className={`text-[11px] font-sans mb-3 line-clamp-2 ${
-                  theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'
-                }`}>
-                  {strat.tagline}
-                </p>
 
                 <div className="grid grid-cols-3 gap-2 text-[10px] pt-2 border-t border-inherit">
                   <div>

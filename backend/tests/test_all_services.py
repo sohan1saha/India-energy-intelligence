@@ -67,7 +67,7 @@ class TestUrjaAegisBackend(unittest.TestCase):
         """Test Direction 3: Adaptive Procurement Orchestrator"""
         req = ProcurementReroutingRequest(deficit_bpd=1200000.0)
         res = procurement_orchestrator_service.generate_rerouting_strategies(req)
-        self.assertEqual(len(res.strategies), 2)
+        self.assertGreaterEqual(len(res.strategies), 3)
         best = res.strategies[0]
         self.assertEqual(best.strategy_id, "strat_bypass")
         self.assertGreater(best.overall_refinery_fit, 0.90)
