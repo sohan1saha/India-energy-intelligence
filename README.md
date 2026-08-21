@@ -29,7 +29,7 @@ India imports **~88% of its crude oil demand (~4.5M bpd)**, with over **45% tran
 
 With India's **Strategic Petroleum Reserves (ISPRL)** covering only **~9.5 days of national consumption**, manual procurement decision-making is too slow to mitigate systemic shocks. 
 
-**UrjaAegis AI (ऊα)** is an autonomous, full-stack energy security intelligence platform. It continuously ingests live AIS satellite vessel telemetry and geopolitical threat feeds, models macroeconomic price & pump shocks across India, solves multi-objective Linear Programming (LP) reserve drawdowns while enforcing a strict 15% military floor, and generates executable MoPNG emergency rerouting tender specifications within seconds.
+**UrjaAegis AI (ऊα)** is a full-stack AI/ML decision-support platform. It continuously ingests live AIS satellite vessel telemetry and geopolitical threat feeds, models macroeconomic price & pump shocks across India, solves multi-objective Linear Programming (LP) reserve drawdowns while enforcing a strict 15% military floor, and generates executable MoPNG emergency rerouting tender specifications within seconds.
 
 ---
 
