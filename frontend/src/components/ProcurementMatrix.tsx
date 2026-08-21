@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Compass, CheckCircle2, FileText, Download, Check, ShieldCheck, Anchor } from 'lucide-react';
+import { Compass, CheckCircle2, FileText, Download, Check, ShieldCheck } from 'lucide-react';
 
 interface SourcingAllocation {
   source_country: string;
@@ -66,7 +66,7 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
 
   return (
     <div className="space-y-5">
-      {/* Direction 3 Header & Strategy Selection */}
+      {/* Header & Strategy Selection */}
       <div className={`p-5 rounded-xl border transition-colors ${
         theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
       }`}>
@@ -75,7 +75,7 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
           <div className="flex items-center gap-2">
             <Compass className="w-5 h-5 text-alert-amber" />
             <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider">Direction 3: Adaptive Procurement Orchestrator</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider">Adaptive Procurement Orchestrator</h2>
               <p className={`text-[11px] ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
                 Ranks alternative crude sources & transit lanes matched to refinery crude slate compatibility
               </p>

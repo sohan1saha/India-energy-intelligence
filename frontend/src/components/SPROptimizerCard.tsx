@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Database, ShieldCheck, ArrowDownRight, Layers } from 'lucide-react';
+import { Database, ShieldCheck } from 'lucide-react';
 
 interface SPROptimizerCardProps {
   theme: 'dark' | 'cream';
@@ -17,16 +17,15 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
         <div className="flex items-center gap-2">
           <Database className="w-5 h-5 text-alert-emerald" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Direction 4: Strategic Reserve (ISPRL) Optimisation Agent</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider">Strategic Reserve (ISPRL) Optimisation Agent</h2>
         </div>
-        <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-emerald/10 text-alert-emerald border border-alert-emerald/20">
+        <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-emerald/10 text-alert-emerald border border-alert-emerald/20 font-mono">
           LP Drawdown Active
         </span>
       </div>
 
       {/* Cavern Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 font-mono">
-        {/* Padur Cavern */}
         <div className={`p-3.5 rounded-lg border ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
         }`}>
@@ -45,7 +44,6 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
           </div>
         </div>
 
-        {/* Mangalore Cavern */}
         <div className={`p-3.5 rounded-lg border ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
         }`}>
@@ -64,7 +62,6 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
           </div>
         </div>
 
-        {/* Visakhapatnam Cavern */}
         <div className={`p-3.5 rounded-lg border ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
         }`}>

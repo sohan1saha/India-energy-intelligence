@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sliders, TrendingUp, AlertCircle, DollarSign, Fuel, Zap } from 'lucide-react';
+import { Sliders } from 'lucide-react';
 
 interface EconomicImpactMetrics {
   baseline_crude_price_usd: number;
@@ -58,9 +58,9 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
         <div className="flex items-center gap-2">
           <Sliders className="w-5 h-5 text-alert-red" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Direction 2: Disruption Scenario Modeller</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider">Disruption Scenario Modeller</h2>
         </div>
-        <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-red/10 text-alert-red border border-alert-red/20">
+        <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-red/10 text-alert-red border border-alert-red/20 font-mono">
           Macro Stress Testing
         </span>
       </div>
@@ -68,13 +68,13 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left Column: Interactive Controls */}
         <div className="lg:col-span-5 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500">Geopolitical Shock Triggers</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500 font-mono">Geopolitical Shock Triggers</h3>
 
           {/* Hormuz Slider */}
           <div>
             <div className="flex justify-between text-xs mb-1 font-semibold">
               <span>Strait of Hormuz Blockade</span>
-              <span className="text-alert-red">{hormuz}%</span>
+              <span className="text-alert-red font-mono">{hormuz}%</span>
             </div>
             <input
               type="range"
@@ -90,7 +90,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
           <div>
             <div className="flex justify-between text-xs mb-1 font-semibold">
               <span>Red Sea / Suez Suspension</span>
-              <span className="text-alert-amber">{redSea}%</span>
+              <span className="text-alert-amber font-mono">{redSea}%</span>
             </div>
             <input
               type="range"
@@ -106,7 +106,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
           <div>
             <div className="flex justify-between text-xs mb-1 font-semibold">
               <span>Russian Shadow Fleet Sanctions</span>
-              <span className="text-alert-cyan">{russian}%</span>
+              <span className="text-alert-cyan font-mono">{russian}%</span>
             </div>
             <input
               type="range"
@@ -137,7 +137,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
 
         {/* Right Column: Real-Time Economic Metrics */}
         <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono">
-          {/* Deficit Card */}
           <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">Daily Crude Deficit</span>
             <p className="text-lg font-bold text-alert-red">
@@ -146,7 +145,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
             <span className="text-[10px] text-slate-400">Total: {simulationResult?.total_shortfall_mbbl}M bbls</span>
           </div>
 
-          {/* Stockout Horizon */}
           <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">Stockout Horizon</span>
             <p className="text-lg font-bold text-alert-amber">
@@ -155,7 +153,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
             <span className="text-[10px] text-slate-400">Without Rerouting</span>
           </div>
 
-          {/* Import Bill Surge */}
           <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">Import Bill Surge</span>
             <p className="text-lg font-bold text-alert-red">
@@ -164,7 +161,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
             <span className="text-[10px] text-slate-400">+${econ?.import_bill_surge_usd_billion}B USD</span>
           </div>
 
-          {/* Fuel Pump Price */}
           <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">Petrol Pump Hike</span>
             <p className="text-lg font-bold text-alert-amber">
@@ -173,7 +169,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
             <span className="text-[10px] text-slate-400">Diesel: +₹{econ?.diesel_pump_price_impact_inr_l || 16.5}/L</span>
           </div>
 
-          {/* Landed Crude Price */}
           <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">Landed Crude Price</span>
             <p className="text-lg font-bold">
@@ -182,7 +177,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
             <span className="text-[10px] text-alert-red">+{econ?.price_increase_pct || 36}% surge</span>
           </div>
 
-          {/* Macro CAD & Inflation */}
           <div className={`p-3 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1">CAD & CPI Inflation</span>
             <p className="text-lg font-bold text-alert-red">

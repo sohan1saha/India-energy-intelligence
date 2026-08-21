@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { AlertTriangle, Globe, Shield, Anchor } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 interface CorridorRisk {
-  id: str;
+  id: string;
   name: string;
   code: string;
   risk_score: number;
@@ -29,9 +29,9 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({ theme, corridors }) => {
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
         <div className="flex items-center gap-2">
           <Globe className="w-5 h-5 text-alert-amber" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Direction 1: Geopolitical Risk Intelligence Agent</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider">Geopolitical Risk Intelligence Agent</h2>
         </div>
-        <span className="px-2 py-0.5 text-xs font-medium rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/20">
+        <span className="px-2 py-0.5 text-xs font-medium rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/20 font-mono">
           Live Threat Index
         </span>
       </div>
@@ -57,7 +57,7 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({ theme, corridors }) => {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold text-xs truncate">{c.name}</span>
-                <span className={`px-2 py-0.5 text-[10px] font-bold rounded border ${statusBadge}`}>
+                <span className={`px-2 py-0.5 text-[10px] font-bold rounded border font-mono ${statusBadge}`}>
                   {c.risk_score}/100
                 </span>
               </div>

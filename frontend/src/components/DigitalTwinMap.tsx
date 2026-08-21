@@ -7,8 +7,8 @@ import { Navigation, Database, Factory, Anchor } from 'lucide-react';
 const LiveLeafletMap = dynamic(() => import('./LiveLeafletMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[320px] bg-slate-900 rounded-lg flex items-center justify-center text-xs text-slate-400 font-mono">
-      Loading Live GIS Maritime Map...
+    <div className="w-full h-[480px] bg-slate-900 rounded-lg flex items-center justify-center text-xs text-slate-400 font-mono">
+      Loading Full-Width Live GIS Maritime Map...
     </div>
   )
 });
@@ -45,7 +45,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-inherit">
         <div className="flex items-center gap-2">
           <Navigation className="w-5 h-5 text-alert-cyan" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Direction 5: Supply Chain Digital Twin</h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider">Supply Chain Digital Twin</h2>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono">
           <span className="text-alert-emerald font-bold">ISPRL Buffer: {daysOfCover} Days ({totalReserveMbbl}M bbls)</span>
