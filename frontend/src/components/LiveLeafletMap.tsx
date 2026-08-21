@@ -315,16 +315,20 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
               }}
             >
               <Popup className={popupClass}>
-                <div className={`font-mono text-xs p-1 max-w-[270px] space-y-1.5 ${
+                <div className={`font-mono text-xs p-1 max-w-[275px] space-y-1.5 ${
                   theme === 'dark' ? 'text-slate-100' : 'text-stone-900'
                 }`}>
                   {/* Header Title */}
-                  <div className="flex items-center justify-between border-b pb-1 border-slate-700/60">
+                  <div className="flex items-center justify-between border-b pb-1 border-slate-500/30">
                     <strong className={`font-bold text-xs ${
                       theme === 'dark' ? 'text-white' : 'text-stone-900'
                     }`}>{loc.name}</strong>
                     {loc.threatScore && (
-                      <span className="px-1.5 py-0.5 rounded bg-red-500/20 border border-red-500/40 text-red-400 text-[10px] font-bold">
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                        theme === 'dark'
+                          ? 'bg-red-500/20 border border-red-500/40 text-red-400'
+                          : 'bg-red-100 border border-red-300 text-red-700'
+                      }`}>
                         {loc.threatScore}
                       </span>
                     )}
@@ -334,39 +338,63 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
                     theme === 'dark' ? 'text-slate-300' : 'text-stone-700'
                   }`}>{loc.desc}</p>
 
-                  {/* Sleek High-Contrast Route Badges */}
+                  {/* Route Badges with Perfect Light & Dark Theme Contrast */}
                   {loc.origin && (
-                    <div className="text-[10px] font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 p-1.5 rounded flex items-start gap-1">
-                      <span className="font-bold text-emerald-400">ORIGIN:</span>
+                    <div className={`text-[10px] font-bold p-1.5 rounded flex items-start gap-1 ${
+                      theme === 'dark'
+                        ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40'
+                        : 'bg-emerald-100 text-emerald-950 border border-emerald-300'
+                    }`}>
+                      <span className={theme === 'dark' ? 'text-emerald-400 font-extrabold' : 'text-emerald-900 font-extrabold'}>ORIGIN:</span>
                       <span className="truncate">{loc.origin}</span>
                     </div>
                   )}
 
                   {loc.destination && (
-                    <div className="text-[10px] font-bold bg-sky-950/80 text-sky-300 border border-sky-500/40 p-1.5 rounded flex items-start gap-1">
-                      <span className="font-bold text-sky-400">DESTINATION:</span>
+                    <div className={`text-[10px] font-bold p-1.5 rounded flex items-start gap-1 ${
+                      theme === 'dark'
+                        ? 'bg-sky-950/80 text-sky-300 border border-sky-500/40'
+                        : 'bg-sky-100 text-sky-950 border border-sky-300'
+                    }`}>
+                      <span className={theme === 'dark' ? 'text-sky-400 font-extrabold' : 'text-sky-900 font-extrabold'}>DESTINATION:</span>
                       <span className="truncate">{loc.destination}</span>
                     </div>
                   )}
 
                   {loc.status && (
-                    <div className="text-[10px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-500/40 p-1 rounded">
+                    <div className={`text-[10px] font-bold p-1 rounded ${
+                      theme === 'dark'
+                        ? 'bg-amber-950/80 text-amber-300 border border-amber-500/40'
+                        : 'bg-amber-100 text-amber-950 border border-amber-300'
+                    }`}>
                       STATUS: {loc.status}
                     </div>
                   )}
                   
                   {loc.capacity && (
-                    <div className="text-[10px] font-semibold bg-slate-800/80 text-slate-200 border border-slate-700 p-1 rounded">
+                    <div className={`text-[10px] font-bold p-1 rounded ${
+                      theme === 'dark'
+                        ? 'bg-slate-800/80 text-slate-200 border border-slate-700'
+                        : 'bg-stone-100 text-stone-900 border border-stone-300'
+                    }`}>
                       CAPACITY: {loc.capacity}
                     </div>
                   )}
                   {loc.cargo && (
-                    <div className="text-[10px] font-semibold bg-slate-800/90 text-amber-300 border border-slate-700 p-1 rounded">
+                    <div className={`text-[10px] font-bold p-1 rounded ${
+                      theme === 'dark'
+                        ? 'bg-slate-800/90 text-amber-300 border border-slate-700'
+                        : 'bg-amber-100 text-amber-950 border border-amber-300'
+                    }`}>
                       CARGO: {loc.cargo}
                     </div>
                   )}
                   {loc.action && (
-                    <div className="text-[10px] font-bold text-sky-400 bg-sky-950/40 border border-sky-800/50 p-1 rounded">
+                    <div className={`text-[10px] font-bold p-1.5 rounded ${
+                      theme === 'dark'
+                        ? 'text-sky-300 bg-sky-950/80 border border-sky-500/40'
+                        : 'text-blue-950 bg-blue-100 border border-blue-300'
+                    }`}>
                       ACTION: {loc.action}
                     </div>
                   )}
