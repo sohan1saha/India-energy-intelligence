@@ -1,15 +1,14 @@
 'use client';
 
 import React from 'react';
-import { ShieldAlert, Sun, Moon, FileText, Activity } from 'lucide-react';
+import { ShieldAlert, Sun, Moon, Activity } from 'lucide-react';
 
 interface HeaderProps {
   theme: 'dark' | 'cream';
   toggleTheme: () => void;
-  onOpenTenderModal: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, onOpenTenderModal }) => {
+export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   return (
     <header className={`border-b p-4 px-6 transition-colors duration-200 ${
       theme === 'dark'
@@ -35,26 +34,15 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, onOpenTender
           </div>
         </div>
 
-        {/* Action Controls */}
+        {/* Status Indicator & Theme Toggle */}
         <div className="flex items-center gap-3">
-          {/* Status Indicator */}
-          <div className={`hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium ${
+          <div className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-xs font-medium ${
             theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
           }`}>
             <Activity className="w-4 h-4 text-alert-amber animate-pulse" />
             <span>ISPRL Buffer: <strong>9.5 Days</strong></span>
           </div>
 
-          {/* Emergency Tender Export */}
-          <button
-            onClick={onOpenTenderModal}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-alert-amber text-white text-xs font-semibold hover:bg-amber-700 transition"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Generate Tender Spec</span>
-          </button>
-
-          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
             className={`p-2 rounded-lg border transition ${
