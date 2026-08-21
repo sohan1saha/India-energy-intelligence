@@ -77,6 +77,10 @@ def update_corridor_risk(req: RiskUpdateRequest):
 def get_digital_twin_state():
     return digital_twin_service.get_current_twin_state()
 
+@app.get("/api/digital-twin/vessels/live")
+def get_live_vessels():
+    return digital_twin_service.get_live_vessels_telemetry()
+
 # 3. Disruption Scenario Simulation
 @app.post("/api/scenarios/simulate", response_model=DisruptionScenarioResult)
 def simulate_disruption_scenario(req: DisruptionScenarioRequest):
