@@ -34,34 +34,44 @@ function MapFlyToHandler({
   return null;
 }
 
-// Function to generate smooth quadratic Bezier curved arc coordinates between waypoints
-function generateSmoothCurvedPath(waypoints: [number, number][], curveFactor: number = 0.2): [number, number][] {
-  if (waypoints.length < 2) return waypoints;
-  const smoothPoints: [number, number][] = [];
+// Function to generate sweeping, magnetic-field-style elliptical circular arcs between waypoints
+function generateMagneticFieldArc(start: [number, number], end: [number, number], arcOffset: number = 0.35): [number, number][] {
+  const points: [number, number][] = [];
+  const steps = 30;
 
-  for (let i = 0; i < waypoints.length - 1; i++) {
-    const p0 = waypoints[i];
-    const p1 = waypoints[i + 1];
+  const midLat = (start[0] + end[0]) / 2;
+  const midLng = (start[1] + end[1]) / 2;
 
-    const midLat = (p0[0] + p1[0]) / 2;
-    const midLng = (p0[1] + p1[1]) / 2;
+  const dx = end[1] - start[1];
+  const dy = end[0] - start[0];
+  const dist = Math.sqrt(dx * dx + dy * dy);
 
-    const dx = p1[1] - p0[1];
-    const dy = p1[0] - p0[0];
+  // Perpendicular magnetic field line vector offset
+  const perpLat = -dx / (dist || 1) * dist * arcOffset;
+  const perpLng = dy / (dist || 1) * dist * arcOffset;
 
-    // Perpendicular control point offset for circular curve
-    const ctrlLat = midLat + curveFactor * (dx > 0 ? 1 : -1) * Math.min(Math.abs(dx) * 0.15, 5);
-    const ctrlLng = midLng - curveFactor * (dy > 0 ? 1 : -1) * Math.min(Math.abs(dy) * 0.15, 5);
+  const ctrlLat = midLat + perpLat;
+  const ctrlLng = midLng + perpLng;
 
-    const steps = 12;
-    for (let t = 0; t <= (i === waypoints.length - 2 ? 1 : 1 - 1 / steps); t += 1 / steps) {
-      const lat = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * ctrlLat + t * t * p1[0];
-      const lng = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * ctrlLng + t * t * p1[1];
-      smoothPoints.push([lat, lng]);
-    }
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const lat = (1 - t) * (1 - t) * start[0] + 2 * (1 - t) * t * ctrlLat + t * t * end[0];
+    const lng = (1 - t) * (1 - t) * start[1] + 2 * (1 - t) * t * ctrlLng + t * t * end[1];
+    points.push([lat, lng]);
   }
+  return points;
+}
 
-  return smoothPoints;
+// Function to convert multi-waypoint routes into magnetic field arcs
+function generateMagneticRoute(waypoints: [number, number][], arcOffset: number = 0.35): [number, number][] {
+  if (waypoints.length < 2) return waypoints;
+  let fullPath: [number, number][] = [];
+  for (let i = 0; i < waypoints.length - 1; i++) {
+    const segmentArc = generateMagneticFieldArc(waypoints[i], waypoints[i + 1], arcOffset);
+    if (i > 0) segmentArc.shift();
+    fullPath = fullPath.concat(segmentArc);
+  }
+  return fullPath;
 }
 
 // Custom Animated Leaflet HTML DivIcons
@@ -357,41 +367,39 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
   const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
 
-  // Realistic Multi-Waypoint Smooth Circular Curved Sea Routes
-  const rawStrat1Routes: [number, number][][] = [
-    [[25.18, 56.36], [deshLat, deshLng], [22.45, 69.66]], // Fujairah ADCOP -> Vadinar
-    [[24.08, 38.06], [18.00, 40.00], [12.58, 43.33], [12.00, 52.00], [swarnaLat, swarnaLng], [12.91, 74.85]] // Yanbu -> Red Sea -> Mangalore
+  // Magnetic Field Lines Style Arc Arrays (Sweeping outward magnetic field loops)
+  const strat1Routes = [
+    generateMagneticFieldArc([25.18, 56.36], [22.45, 69.66], 0.30),
+    generateMagneticFieldArc([25.18, 56.36], [22.45, 69.66], -0.30), // Outer magnetic loop
+    generateMagneticRoute([[24.08, 38.06], [18.00, 40.00], [12.58, 43.33], [12.00, 52.00], [12.91, 74.85]], 0.35)
   ];
 
-  const rawStrat2Routes: [number, number][][] = [
-    [[28.95, -95.35], [24.00, -85.00], [23.00, -79.00], [18.00, -50.00], [0.00, -25.00], [-20.00, -10.00], [-34.35, 18.47], [-30.00, 45.00], [-10.00, 65.00], [ratnaLat, ratnaLng], [20.26, 86.67]],
-    [[42.73, 133.08], [34.00, 128.00], [25.00, 122.00], [12.00, 112.00], [4.15, 100.50], [6.00, 93.00], [15.00, 88.00], [20.26, 86.67]]
+  const strat2Routes = [
+    generateMagneticRoute([[28.95, -95.35], [24.00, -85.00], [23.00, -79.00], [18.00, -50.00], [0.00, -25.00], [-20.00, -10.00], [-34.35, 18.47], [-30.00, 45.00], [-10.00, 65.00], [20.26, 86.67]], 0.40),
+    generateMagneticRoute([[42.73, 133.08], [34.00, 128.00], [25.00, 122.00], [12.00, 112.00], [4.15, 100.50], [6.00, 93.00], [15.00, 88.00], [20.26, 86.67]], 0.35)
   ];
 
-  const rawStrat3Routes: [number, number][][] = [
-    [[42.73, 133.08], [34.00, 128.00], [22.00, 120.00], [12.00, 112.00], [4.15, 100.50], [8.00, 90.00], [17.68, 83.21], [20.26, 86.67]]
+  const strat3Routes = [
+    generateMagneticRoute([[42.73, 133.08], [34.00, 128.00], [22.00, 120.00], [12.00, 112.00], [4.15, 100.50], [8.00, 90.00], [17.68, 83.21], [20.26, 86.67]], 0.35),
+    generateMagneticFieldArc([42.73, 133.08], [20.26, 86.67], -0.50) // Wide outer magnetic field loop
   ];
 
-  const rawStrat4Routes: [number, number][][] = [
-    [[-23.96, -46.33], [-28.00, -35.00], [-34.00, -10.00], [-34.35, 18.47], [-28.00, 45.00], [-10.00, 62.00], [12.00, 68.00], [22.45, 69.66]]
+  const strat4Routes = [
+    generateMagneticRoute([[-23.96, -46.33], [-28.00, -35.00], [-34.00, -10.00], [-34.35, 18.47], [-28.00, 45.00], [-10.00, 62.00], [12.00, 68.00], [22.45, 69.66]], 0.45),
+    generateMagneticFieldArc([-23.96, -46.33], [22.45, 69.66], -0.60) // Direct outward magnetic field arc
   ];
 
-  const rawStrat5Routes: [number, number][][] = [
-    [[13.25, 74.78], [12.91, 74.85]],
-    [[17.68, 83.21], [20.26, 86.67]],
-    [[19.42, 71.33], [20.50, 70.50], [22.45, 69.66]]
+  const strat5Routes = [
+    generateMagneticFieldArc([13.25, 74.78], [12.91, 74.85], 0.25),
+    generateMagneticFieldArc([17.68, 83.21], [20.26, 86.67], 0.25),
+    generateMagneticFieldArc([19.42, 71.33], [22.45, 69.66], 0.30),
+    generateMagneticFieldArc([19.42, 71.33], [22.45, 69.66], -0.30)
   ];
 
-  // Convert raw waypoints into smooth circular Bezier arcs
-  const strat1Routes = rawStrat1Routes.map(r => generateSmoothCurvedPath(r, 0.15));
-  const strat2Routes = rawStrat2Routes.map(r => generateSmoothCurvedPath(r, 0.25));
-  const strat3Routes = rawStrat3Routes.map(r => generateSmoothCurvedPath(r, 0.20));
-  const strat4Routes = rawStrat4Routes.map(r => generateSmoothCurvedPath(r, 0.30));
-  const strat5Routes = rawStrat5Routes.map(r => generateSmoothCurvedPath(r, 0.10));
-
-  const baselineHormuz = generateSmoothCurvedPath([[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]], 0.15);
-  const baselineAdcop = generateSmoothCurvedPath([[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]], 0.15);
-  const baselineEastCoast = generateSmoothCurvedPath([[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]], 0.15);
+  const baselineHormuz = generateMagneticFieldArc([26.56, 56.25], [22.45, 69.66], 0.25);
+  const baselineHormuzOuter = generateMagneticFieldArc([26.56, 56.25], [22.45, 69.66], -0.25);
+  const baselineAdcop = generateMagneticFieldArc([25.18, 56.36], [12.91, 74.85], 0.25);
+  const baselineEastCoast = generateMagneticFieldArc([84.20, 11.50], [20.26, 86.67], 0.25);
 
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
@@ -411,7 +419,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           url={tileUrl}
         />
 
-        {/* Dynamic Strategy Smooth Circular Curved Emergency Corridors */}
+        {/* Dynamic Strategy Magnetic Field Style Sweeping Arcs Overlay */}
         {selectedStrategyId === 'strat_bypass' && strat1Routes.map((r, i) => (
           <Polyline key={`s1-${i}`} positions={r} color="#D97706" weight={4.5} dashArray="6, 8" />
         ))}
@@ -432,10 +440,11 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           <Polyline key={`s5-${i}`} positions={r} color="#EC4899" weight={5} dashArray="4, 6" />
         ))}
 
-        {/* Baseline Standard Corridors */}
+        {/* Baseline Standard Corridors with Dual Magnetic Field Loops */}
         {!selectedStrategyId && (
           <>
             <Polyline positions={baselineHormuz} color="#EF4444" weight={3} dashArray="8, 12" />
+            <Polyline positions={baselineHormuzOuter} color="#EF4444" weight={2} dashArray="4, 8" />
             <Polyline positions={baselineAdcop} color="#0284C7" weight={3} dashArray="6, 10" />
             <Polyline positions={baselineEastCoast} color="#10B981" weight={2.5} dashArray="4, 8" />
           </>
