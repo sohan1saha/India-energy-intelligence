@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MapPin, Radio, ExternalLink } from 'lucide-react';
+import { Radio, ExternalLink } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -24,8 +24,7 @@ interface GeopoliticalNewsFeedProps {
 }
 
 export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
-  theme,
-  onSelectLocation
+  theme
 }) => {
   const newsItems: NewsItem[] = [
     {
@@ -194,7 +193,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </a>
               </div>
 
-              {/* Card Footer: Impact & Map Trigger */}
+              {/* Card Footer: Impact Badge */}
               <div className="pt-2.5 border-t border-inherit flex items-center justify-between text-xs font-mono">
                 <span className={`text-[10px] font-bold ${
                   isHigh
@@ -205,17 +204,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 }`}>
                   {news.impactBadge}
                 </span>
-
-                {onSelectLocation && (
-                  <button
-                    onClick={() => onSelectLocation(news.locationId)}
-                    className="flex items-center gap-1 text-[10px] font-bold text-slate-400 hover:text-alert-amber transition"
-                    title={`Focus map on ${news.locationName}`}
-                  >
-                    <MapPin className="w-3 h-3 text-alert-amber" />
-                    <span>View on Map 📍</span>
-                  </button>
-                )}
+                <span className="text-[10px] text-slate-500 font-mono">Live Bulletin</span>
               </div>
             </div>
           );
