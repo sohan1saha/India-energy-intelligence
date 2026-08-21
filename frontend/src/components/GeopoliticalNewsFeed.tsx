@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Newspaper, ExternalLink, MapPin, Radio, ShieldAlert, Anchor, Database } from 'lucide-react';
+import React from 'react';
+import { MapPin, Radio } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -25,8 +25,6 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
   theme,
   onSelectLocation
 }) => {
-  const [filter, setFilter] = useState<'all' | 'chokepoint' | 'fleet' | 'pipeline'>('all');
-
   const newsItems: NewsItem[] = [
     {
       id: 'news_1',
@@ -102,14 +100,12 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
     }
   ];
 
-  const filteredNews = filter === 'all' ? newsItems : newsItems.filter(item => item.category === filter);
-
   return (
     <div className={`p-5 rounded-xl border transition-colors ${
       theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
+      <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
         <div className="flex items-center gap-2.5">
           <div className="p-1.5 rounded bg-alert-amber/10 border border-alert-amber/30 text-alert-amber">
             <Radio className="w-4 h-4 animate-pulse" />
@@ -119,63 +115,11 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
             <p className="text-[11px] text-slate-500 font-sans mt-0.5">Real-time intelligence bulletins affecting Indian crude supply corridors & supertankers</p>
           </div>
         </div>
-
-        {/* Category Filters */}
-        <div className="flex items-center gap-1.5 font-mono text-[10px]">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-2.5 py-1 rounded border transition ${
-              filter === 'all'
-                ? 'bg-alert-amber text-slate-950 font-bold border-alert-amber'
-                : theme === 'dark'
-                ? 'bg-dark-bg border-dark-border text-slate-400 hover:text-white'
-                : 'bg-cream-bg border-cream-border text-slate-700 hover:text-slate-900 font-semibold'
-            }`}
-          >
-            All Bulletins
-          </button>
-          <button
-            onClick={() => setFilter('chokepoint')}
-            className={`px-2.5 py-1 rounded border transition ${
-              filter === 'chokepoint'
-                ? 'bg-alert-red text-white font-bold border-alert-red'
-                : theme === 'dark'
-                ? 'bg-dark-bg border-dark-border text-slate-400 hover:text-white'
-                : 'bg-cream-bg border-cream-border text-slate-700 hover:text-slate-900 font-semibold'
-            }`}
-          >
-            Chokepoints
-          </button>
-          <button
-            onClick={() => setFilter('fleet')}
-            className={`px-2.5 py-1 rounded border transition ${
-              filter === 'fleet'
-                ? 'bg-alert-cyan text-slate-950 font-bold border-alert-cyan'
-                : theme === 'dark'
-                ? 'bg-dark-bg border-dark-border text-slate-400 hover:text-white'
-                : 'bg-cream-bg border-cream-border text-slate-700 hover:text-slate-900 font-semibold'
-            }`}
-          >
-            Tanker Fleet
-          </button>
-          <button
-            onClick={() => setFilter('pipeline')}
-            className={`px-2.5 py-1 rounded border transition ${
-              filter === 'pipeline'
-                ? 'bg-alert-emerald text-slate-950 font-bold border-alert-emerald'
-                : theme === 'dark'
-                ? 'bg-dark-bg border-dark-border text-slate-400 hover:text-white'
-                : 'bg-cream-bg border-cream-border text-slate-700 hover:text-slate-900 font-semibold'
-            }`}
-          >
-            SPR & Pipelines
-          </button>
-        </div>
       </div>
 
       {/* News Items Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {filteredNews.map((news) => {
+        {newsItems.map((news) => {
           const isHigh = news.impactType === 'high';
           const isPositive = news.impactType === 'positive';
 
