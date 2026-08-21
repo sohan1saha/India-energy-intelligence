@@ -111,7 +111,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider">Live Geopolitical & Maritime News Wire</h2>
-            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Click any news card or button to read the full report on official news sites</p>
+            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Hover on any news card to reveal its direct article link</p>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
               rel="noopener noreferrer"
               className={`p-4 rounded-lg border transition-all duration-200 flex flex-col justify-between group cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-dark-bg border-dark-border hover:border-amber-500/60 hover:shadow-lg'
+                  ? 'bg-dark-bg border-dark-border hover:border-slate-500 hover:shadow-lg'
                   : 'bg-cream-bg border-cream-border hover:border-slate-500 hover:shadow-lg'
               }`}
             >
@@ -150,14 +150,14 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </div>
 
                 {/* News Title */}
-                <h3 className={`text-xs font-bold leading-snug mb-1 font-sans group-hover:text-alert-amber transition ${
+                <h3 className={`text-xs font-bold leading-snug mb-1 font-sans group-hover:text-amber-500 transition ${
                   theme === 'dark' ? 'text-white' : 'text-slate-950'
                 }`}>
                   {news.title}
                 </h3>
 
                 {/* Source Publication Tag */}
-                <p className="text-[10px] text-alert-amber font-mono font-bold mb-2 flex items-center gap-1">
+                <p className="text-[10px] text-slate-500 font-mono font-bold mb-2 flex items-center gap-1">
                   <span>SOURCE: {news.sourceName}</span>
                 </p>
 
@@ -169,11 +169,15 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </p>
               </div>
 
-              {/* Action Button */}
-              <div className="mb-2">
-                <div className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded bg-alert-amber group-hover:bg-amber-500 text-slate-950 font-bold text-xs font-mono transition shadow">
+              {/* Hover-Only Toned-Down Action Button */}
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-2">
+                <div className={`flex items-center justify-center gap-1.5 w-full py-1.5 rounded text-xs font-mono font-bold transition border ${
+                  theme === 'dark'
+                    ? 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700 hover:text-white'
+                    : 'bg-slate-200 text-slate-950 border-slate-400 hover:bg-slate-300'
+                }`}>
                   <span>Read Full Article on {news.sourceName}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
+                  <ExternalLink className="w-3.5 h-3.5 text-amber-500" />
                 </div>
               </div>
 
@@ -188,9 +192,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 }`}>
                   {news.impactBadge}
                 </span>
-                <span className="text-[10px] text-alert-amber font-mono flex items-center gap-1 font-semibold group-hover:underline">
-                  <span>Open Report ↗</span>
-                </span>
+                <span className="text-[10px] text-slate-500 font-mono group-hover:text-amber-500 transition">Open Report ↗</span>
               </div>
             </a>
           );
