@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Compass, CheckCircle2, FileText, Download, Check, ShieldCheck } from 'lucide-react';
+import { Compass, CheckCircle2, FileText, Download, Check, ShieldCheck, Anchor } from 'lucide-react';
 
 interface SourcingAllocation {
   source_country: string;
@@ -232,8 +232,9 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
           <span className="text-[10px] text-slate-500 block mb-2 font-mono uppercase tracking-wide">Target Delivery Terminals & Ports</span>
           <div className="flex flex-wrap gap-2">
             {(parsedJson?.target_delivery_ports || ["Vadinar (Gujarat)", "Mundra (Gujarat)", "Mangalore (Karnataka)"]).map((port: string, idx: number) => (
-              <span key={idx} className="px-2.5 py-1 rounded bg-alert-cyan/10 text-alert-cyan border border-alert-cyan/30 text-xs font-semibold font-mono">
-                ⚓ {port}
+              <span key={idx} className="px-2.5 py-1 rounded bg-alert-cyan/10 text-alert-cyan border border-alert-cyan/30 text-xs font-semibold font-mono flex items-center gap-1.5">
+                <Anchor className="w-3.5 h-3.5 text-alert-cyan" />
+                <span>{port}</span>
               </span>
             ))}
           </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Bot, Send, X, Sparkles, AlertCircle } from 'lucide-react';
+import { Bot, Send, X } from 'lucide-react';
 
 interface AICopilotDrawerProps {
   theme: 'dark' | 'cream';
@@ -24,7 +24,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     {
       id: '1',
       sender: 'ai',
-      text: "👋 **I am UrjaAegis AI Copilot**, India's Energy Security & Procurement AI Advisor.\n\nYou can ask me to:\n1. *Check live geopolitical risk scores across Strait of Hormuz and Red Sea*\n2. *Simulate an 80% Hormuz closure shock and its impact on refining & GDP*\n3. *Optimize ISPRL Strategic Petroleum Reserve (Padur/Mangalore/Visakhapatnam) drawdown*\n4. *Generate executable crude procurement rerouting strategies & emergency tenders*"
+      text: "I am UrjaAegis AI Copilot, India's Energy Security & Procurement AI Advisor.\n\nYou can ask me to:\n1. Check live geopolitical risk scores across Strait of Hormuz and Red Sea\n2. Simulate an 80% Hormuz closure shock and its impact on refining & GDP\n3. Optimize ISPRL Strategic Petroleum Reserve (Padur/Mangalore/Visakhapatnam) drawdown\n4. Generate executable crude procurement rerouting strategies & emergency tenders"
     }
   ]);
   const [input, setInput] = useState('');
@@ -58,7 +58,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: "🛡️ **UrjaAegis AI Response**:\n\n• **Strait of Hormuz Risk**: 82.5/100 (HIGH_RISK). US-Iran standoff.\n• **Red Sea Risk**: 76.0/100 (HIGH_RISK). Cape detour (+16 days).\n• **ISPRL Reserve Buffer**: 39.1M bbls (~9.5 days).\n\n*Action*: Emergency Fujairah ADCOP bypass routing recommended."
+        text: "UrjaAegis AI Response:\n\n• Strait of Hormuz Risk: 82.5/100 (HIGH_RISK). US-Iran standoff.\n• Red Sea Risk: 76.0/100 (HIGH_RISK). Cape detour (+16 days).\n• ISPRL Reserve Buffer: 39.16M bbls (~9.5 days).\n\nAction: Emergency Fujairah ADCOP bypass routing recommended."
       };
       setMessages(prev => [...prev, aiMsg]);
     } finally {

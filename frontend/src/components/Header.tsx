@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold tracking-tight">UrjaAegis AI</h1>
               <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-red/10 text-alert-red border border-alert-red/30">
-                🇮🇳 India National Energy Command
+                India National Energy Command
               </span>
             </div>
             <p className={`text-xs ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
