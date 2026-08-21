@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ShieldAlert, Sun, Moon, Activity } from 'lucide-react';
+import { Sun, Moon, Activity } from 'lucide-react';
 
 interface HeaderProps {
   theme: 'dark' | 'cream';
@@ -16,22 +16,12 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Title & Badge */}
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-alert-amber/10 border border-alert-amber/30 text-alert-amber">
-            <ShieldAlert className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold tracking-tight">UrjaAegis AI</h1>
-              <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-red/10 text-alert-red border border-alert-red/30">
-                India National Energy Command
-              </span>
-            </div>
-            <p className={`text-xs ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
-              AI-Driven Energy Supply Chain Resilience & Procurement Rerouting Engine
-            </p>
-          </div>
+        {/* Title */}
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">UrjaAegis AI</h1>
+          <p className={`text-xs ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
+            AI-Driven Energy Supply Chain Resilience & Procurement Rerouting Engine
+          </p>
         </div>
 
         {/* Status Indicator & Theme Toggle */}

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Navigation, Database, Factory, Anchor } from 'lucide-react';
+import { Database, Factory, Anchor, Navigation } from 'lucide-react';
 
 const LiveLeafletMap = dynamic(() => import('./LiveLeafletMap'), {
   ssr: false,
@@ -43,10 +43,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
     }`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3 pb-2.5 border-b border-inherit">
-        <div className="flex items-center gap-2">
-          <Navigation className="w-5 h-5 text-alert-cyan" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Supply Chain Digital Twin</h2>
-        </div>
+        <h2 className="text-sm font-bold uppercase tracking-wider">Supply Chain Digital Twin</h2>
         <div className="flex items-center gap-2 text-xs font-mono">
           <span className="text-alert-emerald font-bold">ISPRL Buffer: {daysOfCover} Days ({totalReserveMbbl}M bbls)</span>
         </div>

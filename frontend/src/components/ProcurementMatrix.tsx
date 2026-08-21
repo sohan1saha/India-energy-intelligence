@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Compass, CheckCircle2, FileText, Download, Check, ShieldCheck, Anchor } from 'lucide-react';
+import { CheckCircle2, Download, Check, ShieldCheck, Anchor } from 'lucide-react';
 
 interface SourcingAllocation {
   source_country: string;
@@ -72,14 +72,11 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
       }`}>
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
-          <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-alert-amber" />
-            <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider">Adaptive Procurement Orchestrator</h2>
-              <p className={`text-[11px] ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
-                Ranks alternative crude sources & transit lanes matched to refinery crude slate compatibility
-              </p>
-            </div>
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-wider">Adaptive Procurement Orchestrator</h2>
+            <p className={`text-[11px] ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
+              Ranks alternative crude sources & transit lanes matched to refinery crude slate compatibility
+            </p>
           </div>
           <span className="px-2.5 py-1 text-xs font-semibold rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/30 font-mono">
             100% Slate Compatible
@@ -175,14 +172,9 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
       }`}>
         {/* Document Header */}
         <div className="flex items-center justify-between pb-3 mb-4 border-b border-inherit">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-alert-amber/10 border border-alert-amber/20 text-alert-amber">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm">Ministry of Petroleum & Natural Gas (MoPNG) Emergency Tender</h3>
-              <p className="text-[11px] text-slate-500">Official Crude Rerouting & Procurement Specification Document</p>
-            </div>
+          <div>
+            <h3 className="font-bold text-sm">Ministry of Petroleum & Natural Gas (MoPNG) Emergency Tender</h3>
+            <p className="text-[11px] text-slate-500">Official Crude Rerouting & Procurement Specification Document</p>
           </div>
 
           <button

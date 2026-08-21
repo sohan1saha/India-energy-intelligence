@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sliders } from 'lucide-react';
 
 interface EconomicImpactMetrics {
   baseline_crude_price_usd: number;
@@ -56,10 +55,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
     }`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
-        <div className="flex items-center gap-2">
-          <Sliders className="w-5 h-5 text-alert-red" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Disruption Scenario Modeller</h2>
-        </div>
+        <h2 className="text-sm font-bold uppercase tracking-wider">Disruption Scenario Modeller</h2>
         <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-red/10 text-alert-red border border-alert-red/20 font-mono">
           Macro Stress Testing
         </span>

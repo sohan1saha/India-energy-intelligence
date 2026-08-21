@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Database, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 interface SPROptimizerCardProps {
   theme: 'dark' | 'cream';
@@ -15,10 +15,7 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
     }`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
-        <div className="flex items-center gap-2">
-          <Database className="w-5 h-5 text-alert-emerald" />
-          <h2 className="text-sm font-bold uppercase tracking-wider">Strategic Reserve (ISPRL) Optimisation Agent</h2>
-        </div>
+        <h2 className="text-sm font-bold uppercase tracking-wider">Strategic Reserve (ISPRL) Optimisation Agent</h2>
         <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-emerald/10 text-alert-emerald border border-alert-emerald/20 font-mono">
           LP Drawdown Active
         </span>
