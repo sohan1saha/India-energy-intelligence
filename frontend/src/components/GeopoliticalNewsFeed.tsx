@@ -12,8 +12,6 @@ interface NewsItem {
   title: string;
   summary: string;
   timestamp: string;
-  locationId: string;
-  locationName: string;
   impactBadge: string;
   impactType: 'high' | 'medium' | 'positive';
 }
@@ -32,12 +30,10 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'chokepoint',
       categoryLabel: 'CHOKEPOINT ALERT',
       sourceName: 'Reuters Energy',
-      articleUrl: 'https://www.reuters.com/business/energy/',
+      articleUrl: 'https://www.reuters.com/markets/commodities/',
       title: 'Strait of Hormuz Naval Patrols Intensify; GPS Spoofing Reported Off Qeshm Island',
       summary: 'Iranian Revolutionary Guard Corps (IRGC) fast patrol boats deployed near the narrowest transit corridor. US-Iran standoff has raised war risk insurance surcharges by +1.25%.',
       timestamp: '12 MINS AGO',
-      locationId: 'hormuz',
-      locationName: 'Strait of Hormuz',
       impactBadge: 'Risk Index: 82.5 (High Risk)',
       impactType: 'high'
     },
@@ -46,12 +42,10 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'pipeline',
       categoryLabel: 'PIPELINE & TERMINAL',
       sourceName: 'S&P Global Commodity Insights',
-      articleUrl: 'https://www.spglobal.com/commodityinsights/en',
+      articleUrl: 'https://www.spglobal.com/commodityinsights/en/market-insights/latest-news/oil',
       title: 'ADNOC Increases Fujairah ADCOP Deepwater Terminal Offloading Throughput to 540k bpd',
       summary: 'Abu Dhabi Crude Oil Pipeline (ADCOP) bypasses Strait of Hormuz to Fujairah terminal on the Gulf of Oman, ensuring uninterrupted Murban crude loading for Indian VLCCs.',
       timestamp: '28 MINS AGO',
-      locationId: 'fujairah',
-      locationName: 'Fujairah ADCOP Terminal',
       impactBadge: 'Bypass Throughput: 540k bpd',
       impactType: 'positive'
     },
@@ -60,12 +54,10 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'fleet',
       categoryLabel: 'FLEET TELEMETRY',
       sourceName: 'Maritime Executive',
-      articleUrl: 'https://maritime-executive.com/',
+      articleUrl: 'https://www.maritime-executive.com/',
       title: 'VLCC Desh Vishal Enters Gulf of Oman Corridor Under Active AIS Surveillance',
       summary: 'Shipping Corporation of India (SCI) supertanker carrying 2.0M bbls Basrah Heavy crude maintaining 14.5 knots course toward Vadinar SPM Berth (Gujarat).',
       timestamp: '45 MINS AGO',
-      locationId: 'desh_vishal',
-      locationName: 'VLCC Desh Vishal',
       impactBadge: 'ETA Vadinar: 48 Hours',
       impactType: 'medium'
     },
@@ -74,12 +66,10 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       category: 'directive',
       categoryLabel: 'GOVT DIRECTIVE',
       sourceName: 'Economic Times Energy',
-      articleUrl: 'https://energy.economictimes.indiatimes.com/',
+      articleUrl: 'https://energy.economictimes.indiatimes.com/news/oil-and-gas',
       title: 'MoPNG Authorizes 240,000 bpd Emergency Drawdown from Padur Strategic Cavern',
       summary: 'Ministry of Petroleum & Natural Gas activates subsea pipeline discharge from ISPRL Padur cavern to Mangalore Refinery (MRPL) to offset Middle East import delays.',
       timestamp: '1 HOUR AGO',
-      locationId: 'padur',
-      locationName: 'Padur ISPRL Cavern',
       impactBadge: '+18 Days Buffer Added',
       impactType: 'positive'
     },
@@ -87,13 +77,11 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_5',
       category: 'chokepoint',
       categoryLabel: 'CHOKEPOINT ALERT',
-      sourceName: 'Financial Times Maritime',
-      articleUrl: 'https://www.ft.com/stream/040a4cfc-4613-43f1-b9fb-13c5905d4750',
+      sourceName: 'Bloomberg Energy',
+      articleUrl: 'https://www.bloomberg.com/energy',
       title: 'Red Sea Transit Rerouting Forces Tankers into 16-Day Cape of Good Hope Detour',
       summary: 'Houthi anti-ship missile threats off Bab-el-Mandeb force major tankers around South Africa. Durban and Port Louis bunkering hubs report severe berth congestion.',
       timestamp: '2 HOURS AGO',
-      locationId: 'cape_gh',
-      locationName: 'Cape of Good Hope',
       impactBadge: 'Transit Delay: +16 Days',
       impactType: 'high'
     },
@@ -106,8 +94,6 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       title: 'VLCC Ratna Shalini Approaching East Coast via Transatlantic Cape Route',
       summary: 'Great Eastern Shipping tanker carrying 1.9M bbls US WTI Midland crude navigating Indian Ocean corridor toward Paradip SPM Berth (Odisha).',
       timestamp: '3 HOURS AGO',
-      locationId: 'ratna_shalini',
-      locationName: 'VLCC Ratna Shalini',
       impactBadge: 'ETA Paradip: 96 Hours',
       impactType: 'medium'
     }
@@ -125,7 +111,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider">Live Geopolitical & Maritime News Wire</h2>
-            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Hover on any news card to launch its full article on real newspaper sources</p>
+            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Click any news card or button to read the full report on official news sites</p>
           </div>
         </div>
       </div>
@@ -143,12 +129,15 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
             : 'bg-amber-500/10 text-amber-500 border-amber-500/30';
 
           return (
-            <div
+            <a
               key={news.id}
-              className={`p-4 rounded-lg border transition-all duration-200 flex flex-col justify-between group relative overflow-hidden ${
+              href={news.articleUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`p-4 rounded-lg border transition-all duration-200 flex flex-col justify-between group cursor-pointer ${
                 theme === 'dark'
-                  ? 'bg-dark-bg border-dark-border hover:border-amber-500/50 shadow-md'
-                  : 'bg-cream-bg border-cream-border hover:border-slate-500 shadow-md'
+                  ? 'bg-dark-bg border-dark-border hover:border-amber-500/60 hover:shadow-lg'
+                  : 'bg-cream-bg border-cream-border hover:border-slate-500 hover:shadow-lg'
               }`}
             >
               <div>
@@ -161,7 +150,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </div>
 
                 {/* News Title */}
-                <h3 className={`text-xs font-bold leading-snug mb-1 font-sans ${
+                <h3 className={`text-xs font-bold leading-snug mb-1 font-sans group-hover:text-alert-amber transition ${
                   theme === 'dark' ? 'text-white' : 'text-slate-950'
                 }`}>
                   {news.title}
@@ -180,17 +169,12 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </p>
               </div>
 
-              {/* Hover Action Overlay Bar */}
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mb-2">
-                <a
-                  href={news.articleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded bg-alert-amber hover:bg-amber-600 text-slate-950 font-bold text-xs font-mono transition shadow-lg"
-                >
+              {/* Action Button */}
+              <div className="mb-2">
+                <div className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded bg-alert-amber group-hover:bg-amber-500 text-slate-950 font-bold text-xs font-mono transition shadow">
                   <span>Read Full Article on {news.sourceName}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+                </div>
               </div>
 
               {/* Card Footer: Impact Badge */}
@@ -204,9 +188,11 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 }`}>
                   {news.impactBadge}
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">Live Bulletin</span>
+                <span className="text-[10px] text-alert-amber font-mono flex items-center gap-1 font-semibold group-hover:underline">
+                  <span>Open Report ↗</span>
+                </span>
               </div>
-            </div>
+            </a>
           );
         })}
       </div>
