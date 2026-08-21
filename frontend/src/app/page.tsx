@@ -7,6 +7,7 @@ import { DigitalTwinMap } from '@/components/DigitalTwinMap';
 import { ScenarioSandbox } from '@/components/ScenarioSandbox';
 import { SPROptimizerCard } from '@/components/SPROptimizerCard';
 import { ProcurementMatrix } from '@/components/ProcurementMatrix';
+import { GeopoliticalNewsFeed } from '@/components/GeopoliticalNewsFeed';
 import { AICopilotDrawer } from '@/components/AICopilotDrawer';
 import { ShieldAlert, Database, Navigation, Activity, Bot } from 'lucide-react';
 
@@ -422,6 +423,14 @@ export default function Home() {
             corridors={corridors}
             selectedNodeId={selectedNodeId}
             onSelectCorridor={(codeId) => handleSelectNode(selectedNodeId === codeId ? null : codeId)}
+          />
+        </div>
+
+        {/* TIER 3.5: LIVE GEOPOLITICAL & MARITIME NEWS INTELLIGENCE WIRE */}
+        <div className="w-full">
+          <GeopoliticalNewsFeed
+            theme={theme}
+            onSelectLocation={handleSelectNode}
           />
         </div>
 
