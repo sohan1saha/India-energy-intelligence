@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CheckCircle2, Copy, Check, ShieldCheck, Anchor, Maximize2 } from 'lucide-react';
+import { CheckCircle2, Copy, Check, ShieldCheck, Anchor } from 'lucide-react';
 
 interface SourcingAllocation {
   source_country: string;
@@ -88,18 +88,8 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
       }`}>
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
-          <div className="flex items-center gap-3">
+          <div>
             <h2 className="text-sm font-bold uppercase tracking-wider">Adaptive Procurement Orchestrator</h2>
-            {activeStrategyId && (
-              <button
-                onClick={() => handleSelect(activeStrategyId)}
-                className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-mono transition border border-slate-700"
-                title="Deselect strategy and reset map view"
-              >
-                <Maximize2 className="w-3 h-3 text-alert-amber" />
-                <span>Deselect Strategy (Show All Routes)</span>
-              </button>
-            )}
           </div>
           <span className="px-2.5 py-1 text-xs font-semibold rounded bg-alert-amber/10 text-alert-amber border border-alert-amber/30 font-mono">
             100% Slate Compatible
@@ -123,7 +113,7 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
                     ? 'border-alert-amber bg-alert-amber/10 ring-2 ring-alert-amber/50 shadow-lg scale-[1.01]'
                     : theme === 'dark'
                     ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-                    : 'bg-cream-bg border-cream-border hover:border-slate-400'
+                    : 'bg-cream-bg border-cream-border hover:border-slate-500'
                 }`}
               >
                 <div>
