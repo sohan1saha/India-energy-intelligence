@@ -20,7 +20,7 @@ function MapFlyToHandler({
     } else if (selectedStrategyId === 'strat_bypass') {
       map.flyTo([21.0, 64.0], 5.2, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_global_pivot') {
-      map.flyTo([10.0, 35.0], 3.2, { duration: 1.5 });
+      map.flyTo([5.0, 35.0], 3.2, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_far_east') {
       map.flyTo([18.0, 105.0], 4.0, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_latam') {
@@ -36,7 +36,7 @@ function MapFlyToHandler({
 
 // Custom Shipping Network Base Port Ring Marker (Matching Wallenius Wilhelmsen shipping map style)
 const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean = false) => {
-  const size = isMajor ? 'w-3 h-3' : 'w-2 h-2';
+  const size = isMajor ? 'w-3.5 h-3.5' : 'w-2 h-2';
   const color = isAlert ? 'bg-red-500 ring-red-400' : 'bg-white ring-cyan-400';
   const labelColor = isAlert ? 'text-red-400 font-extrabold' : 'text-slate-100 font-bold';
 
@@ -44,14 +44,15 @@ const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean
     className: 'custom-leaflet-port-marker',
     html: `
       <div class="relative flex items-center justify-center cursor-pointer group">
-        <div class="${size} rounded-full ${color} ring-2 shadow-lg transition-transform group-hover:scale-150"></div>
-        <div class="absolute left-3.5 top-[-4px] text-[9px] font-mono tracking-wider ${labelColor} whitespace-nowrap uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] select-none">
+        ${isAlert ? '<span class="absolute -inset-2 rounded-full bg-red-500/40 animate-ping"></span>' : ''}
+        <div class="${size} rounded-full ${color} ring-2 shadow-lg transition-transform group-hover:scale-150 relative z-10"></div>
+        <div class="absolute left-4 top-[-4px] text-[9px] font-mono tracking-wider ${labelColor} whitespace-nowrap uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] select-none z-20">
           ${name}
         </div>
       </div>
     `,
-    iconSize: [12, 12],
-    iconAnchor: [6, 6]
+    iconSize: [14, 14],
+    iconAnchor: [7, 7]
   });
 };
 
@@ -99,7 +100,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Global Maritime Shipping Network Base Ports
+  // Global Maritime Shipping Network Base Ports & Risk Corridors
   const ports = [
     // Indian Gateways & Terminals
     { id: "vadinar", name: "VADINAR", pos: [22.45, 69.66] as [number, number], isMajor: true },
@@ -122,14 +123,14 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "jeddah", name: "JEDDAH", pos: [21.48, 39.19] as [number, number], isMajor: false },
     { id: "yanbu", name: "YANBU PETROLINE", pos: [24.08, 38.06] as [number, number], isMajor: true },
 
-    // Chokepoints (Alert Pins)
-    { id: "hormuz", name: "HORMUZ (ALERT)", pos: [26.56, 56.25] as [number, number], isMajor: true, isAlert: true },
-    { id: "red_sea", name: "RED SEA (ALERT)", pos: [12.58, 43.33] as [number, number], isMajor: true, isAlert: true },
-    { id: "malacca", name: "MALACCA STRAIT", pos: [4.15, 100.50] as [number, number], isMajor: true },
+    // Geopolitical Risk Corridors & Chokepoints (Matching RiskRadar IDs)
+    { id: "hormuz", name: "STRAIT OF HORMUZ (82.5/100)", pos: [26.56, 56.25] as [number, number], isMajor: true, isAlert: true },
+    { id: "red_sea", name: "BAB-EL-MANDEB & RED SEA (76/100)", pos: [12.58, 43.33] as [number, number], isMajor: true, isAlert: true },
+    { id: "malacca", name: "STRAIT OF MALACCA (24/100)", pos: [4.15, 100.50] as [number, number], isMajor: true },
+    { id: "cape_gh", name: "CAPE OF GOOD HOPE (35/100)", pos: [-34.35, 18.47] as [number, number], isMajor: true, isAlert: true },
 
     // International Overseas Hubs
     { id: "durban", name: "DURBAN", pos: [-29.85, 31.02] as [number, number], isMajor: false },
-    { id: "cape_town", name: "CAPE TOWN", pos: [-33.92, 18.42] as [number, number], isMajor: true },
     { id: "singapore", name: "SINGAPORE", pos: [1.35, 103.81] as [number, number], isMajor: true },
     { id: "klang", name: "PORT KLANG", pos: [3.00, 101.40] as [number, number], isMajor: false },
     { id: "jakarta", name: "JAKARTA", pos: [-6.20, 106.84] as [number, number], isMajor: false },
@@ -138,7 +139,12 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "kozmino", name: "KOZMINO RUSSIA", pos: [42.73, 133.08] as [number, number], isMajor: true },
     { id: "yokohama", name: "YOKOHAMA", pos: [35.44, 139.63] as [number, number], isMajor: false },
     { id: "santos", name: "SANTOS BRAZIL", pos: [-23.96, -46.33] as [number, number], isMajor: true },
-    { id: "houston", name: "HOUSTON US GULF", pos: [28.95, -95.35] as [number, number], isMajor: true }
+    { id: "houston", name: "HOUSTON US GULF", pos: [28.95, -95.35] as [number, number], isMajor: true },
+
+    // Supertankers at Sea
+    { id: "desh_vishal", name: "VLCC DESH VISHAL (AT SEA)", pos: [deshLat, deshLng] as [number, number], isMajor: true },
+    { id: "swarna_kamal", name: "VLCC SWARNA KAMAL (AT SEA)", pos: [swarnaLat, swarnaLng] as [number, number], isMajor: true },
+    { id: "ratna_shalini", name: "VLCC RATNA SHALINI (AT SEA)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true }
   ];
 
   // Selected Target FlyTo Position
@@ -149,7 +155,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
-  // Wallenius Wilhelmsen Style Oceanic Corridors (Only displayed when corresponding strategy is clicked)
+  // Oceanic Corridors (Only displayed when corresponding strategy is clicked)
   const middleEastBypassCorridor: [number, number][] = [
     [29.37, 47.97], [26.43, 50.10], [25.01, 51.61], [25.00, 55.06], [26.56, 56.25], [25.18, 56.36], [24.36, 56.73], [deshLat, deshLng], [22.45, 69.66]
   ];
@@ -163,7 +169,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   ];
 
   const atlanticCapeCorridor: [number, number][] = [
-    [28.95, -95.35], [24.00, -85.00], [-23.96, -46.33], [-29.85, 31.02], [-33.92, 18.42], [-30.00, 45.00], [ratnaLat, ratnaLng], [20.26, 86.67]
+    [28.95, -95.35], [24.00, -85.00], [-23.96, -46.33], [-29.85, 31.02], [-34.35, 18.47], [-30.00, 45.00], [ratnaLat, ratnaLng], [20.26, 86.67]
   ];
 
   const domesticSurgeCorridor: [number, number][] = [
@@ -212,7 +218,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           <Polyline positions={domesticSurgeCorridor} color="#EC4899" weight={4} opacity={0.95} dashArray="3, 5" />
         )}
 
-        {/* ALL BASE PORTS & TERMINALS */}
+        {/* ALL BASE PORTS, RISK CHOKEPOINTS & TANKERS */}
         {ports.map((port) => (
           <Marker
             key={port.id}
@@ -221,8 +227,8 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           >
             <Popup className={theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup'}>
               <div className="font-mono text-xs p-1">
-                <strong className="text-white block font-bold">{port.name} PORT HUB</strong>
-                <span className="text-[10px] text-slate-300">Base Port & Maritime Intake Terminal</span>
+                <strong className="text-white block font-bold">{port.name}</strong>
+                <span className="text-[10px] text-slate-300">Base Port & Maritime Intelligence Node</span>
               </div>
             </Popup>
           </Marker>
