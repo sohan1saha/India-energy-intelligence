@@ -37,12 +37,23 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Title & Pure Crisp Alphabetical Monogram (No Shapes Covering the Letters) */}
-        <div className="flex items-center gap-1.5 font-mono select-none">
-          <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-amber-400 via-yellow-200 to-cyan-400 bg-clip-text text-transparent drop-shadow">
-            UA
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse mr-2" />
+        {/* Title & Combination Hindi + Greek Monogram Symbol (Solid Colors, No Gradients) */}
+        <div className="flex items-center gap-2 select-none">
+          <div className="flex items-center text-2xl font-bold tracking-tight">
+            {/* Hindi Devanagari Character 'ऊ' (Urja / Energy) */}
+            <span className={`font-serif leading-none ${
+              theme === 'dark' ? 'text-amber-400' : 'text-amber-800'
+            }`}>
+              ऊ
+            </span>
+            {/* Greek Character 'α' (Alpha / Aegis Shield) */}
+            <span className={`font-mono text-xl font-bold leading-none -ml-0.5 ${
+              theme === 'dark' ? 'text-cyan-400' : 'text-cyan-800'
+            }`}>
+              α
+            </span>
+          </div>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse mr-1" />
           <h1 className="text-xl font-bold tracking-tight font-sans">UrjaAegis AI</h1>
         </div>
 
