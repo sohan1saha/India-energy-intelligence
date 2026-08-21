@@ -76,31 +76,44 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
 
   return (
     <div className={`fixed inset-y-0 right-0 w-full sm:w-[440px] shadow-2xl border-l z-50 flex flex-col transition-colors ${
-      theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
+      theme === 'dark'
+        ? 'bg-[#0D111A] border-slate-700/80 text-slate-100'
+        : 'bg-[#FAF8F5] border-stone-300 text-stone-900'
     }`}>
-      {/* Header */}
-      <div className="p-4 border-b border-inherit flex items-center justify-between">
+      {/* Header with Distinct Accent Border */}
+      <div className={`p-4 border-b flex items-center justify-between ${
+        theme === 'dark' ? 'border-amber-500/30 bg-[#121724]' : 'border-amber-500/20 bg-[#F4EFE6]'
+      }`}>
         <div className="flex items-center gap-2">
           <Bot className="w-5 h-5 text-alert-amber" />
-          <h3 className="font-bold text-sm">Streaming AI Energy Security Copilot</h3>
+          <div>
+            <h3 className="font-bold text-sm">AI Energy Security Copilot</h3>
+            <span className="text-[10px] text-slate-400 font-mono block">Live Intelligence Advisor</span>
+          </div>
         </div>
-        <button onClick={onClose} className="p-1 rounded hover:bg-slate-700/20">
-          <X className="w-5 h-5" />
+        <button onClick={onClose} className="p-1 rounded hover:bg-slate-700/30">
+          <X className="w-5 h-5 text-slate-400" />
         </button>
       </div>
 
-      {/* Suggestion Chips */}
-      <div className="p-3 border-b border-inherit bg-slate-900/20">
-        <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">
-          <Sparkles className="w-3 h-3 text-alert-amber" />
-          <span>Suggested Queries</span>
+      {/* Suggestion Chips Box */}
+      <div className={`p-3 border-b ${
+        theme === 'dark' ? 'border-slate-800 bg-[#101522]' : 'border-stone-200 bg-[#F2ECE1]'
+      }`}>
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-alert-amber uppercase tracking-wide mb-2">
+          <Sparkles className="w-3 h-3" />
+          <span>Suggested Intelligence Queries</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
           {sampleQuestions.map((q, idx) => (
             <button
               key={idx}
               onClick={() => sendMessage(q)}
-              className="px-2.5 py-1 rounded bg-slate-800/60 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] font-mono border border-slate-700 transition text-left line-clamp-1"
+              className={`px-2.5 py-1 rounded text-[10px] font-mono border transition text-left line-clamp-1 ${
+                theme === 'dark'
+                  ? 'bg-[#182030] hover:bg-[#202B40] text-slate-200 border-slate-700'
+                  : 'bg-white hover:bg-stone-100 text-stone-800 border-stone-300'
+              }`}
             >
               {q}
             </button>
@@ -113,19 +126,19 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
         {messages.map(msg => (
           <div
             key={msg.id}
-            className={`p-3.5 rounded-xl max-w-[90%] whitespace-pre-wrap leading-relaxed shadow-sm ${
+            className={`p-3.5 rounded-xl max-w-[90%] whitespace-pre-wrap leading-relaxed shadow-md ${
               msg.sender === 'user'
                 ? 'bg-alert-amber text-white ml-auto font-sans font-medium'
                 : theme === 'dark'
-                ? 'bg-dark-bg border border-dark-border text-dark-text'
-                : 'bg-cream-bg border border-cream-border text-cream-text'
+                ? 'bg-[#151C2C] border border-slate-700/60 text-slate-100'
+                : 'bg-white border border-stone-200 text-stone-900'
             }`}
           >
             {msg.text}
           </div>
         ))}
         {loading && (
-          <div className="p-3 rounded-lg bg-slate-800/20 text-alert-amber text-xs animate-pulse font-mono flex items-center gap-2">
+          <div className="p-3 rounded-lg bg-alert-amber/10 text-alert-amber text-xs animate-pulse font-mono flex items-center gap-2 border border-alert-amber/20">
             <Bot className="w-4 h-4 animate-spin" />
             <span>UrjaAegis AI reasoning over live GIS digital twin & reserve graphs...</span>
           </div>
@@ -133,22 +146,24 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
       </div>
 
       {/* Input Bar */}
-      <div className="p-3 border-t border-inherit flex items-center gap-2">
+      <div className={`p-3 border-t flex items-center gap-2 ${
+        theme === 'dark' ? 'border-slate-800 bg-[#101522]' : 'border-stone-200 bg-[#F2ECE1]'
+      }`}>
         <input
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage(input)}
-          placeholder="Ask AI Copilot any question about vessels, pipelines, SPR, or crude prices..."
-          className={`flex-1 px-3 py-2.5 rounded-lg text-xs border outline-none font-sans ${
+          placeholder="Ask AI Copilot about vessels, pipelines, SPR, or crude prices..."
+          className={`flex-1 px-3.5 py-2.5 rounded-lg text-xs border outline-none font-sans ${
             theme === 'dark'
-              ? 'bg-dark-bg border-dark-border text-dark-text placeholder-slate-500'
-              : 'bg-cream-bg border-cream-border text-cream-text placeholder-stone-500'
+              ? 'bg-[#182030] border-slate-700 text-slate-100 placeholder-slate-400 focus:border-alert-amber'
+              : 'bg-white border-stone-300 text-stone-900 placeholder-stone-400 focus:border-alert-amber'
           }`}
         />
         <button
           onClick={() => sendMessage(input)}
-          className="p-2.5 rounded-lg bg-alert-amber text-white hover:bg-amber-700 transition"
+          className="p-2.5 rounded-lg bg-alert-amber text-white hover:bg-amber-700 transition shadow-md"
         >
           <Send className="w-4 h-4" />
         </button>
