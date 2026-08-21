@@ -238,7 +238,7 @@ export default function Home() {
       />
 
       {/* Main Command Center Container */}
-      <main className="p-4 md:p-6 space-y-6 max-w-[1680px] mx-auto">
+      <main className="p-4 md:p-6 space-y-6 max-w-[1720px] mx-auto">
         
         {/* TIER 1: TOP HERO KPI BANNER */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
@@ -293,22 +293,22 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 2: PRIMARY SPLIT GRID (60% Map / 40% Threats) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          <div className="lg:col-span-7 flex flex-col">
-            <DigitalTwinMap
-              theme={theme}
-              nodes={[]}
-              daysOfCover={9.5}
-              totalReserveMbbl={39.16}
-            />
-          </div>
-          <div className="lg:col-span-5 flex flex-col">
-            <RiskRadar theme={theme} corridors={corridors} />
-          </div>
+        {/* TIER 2: FULL-WIDTH SUPPLY CHAIN DIGITAL TWIN GIS MAP (The Visual Centerpiece - 100% Width) */}
+        <div className="w-full">
+          <DigitalTwinMap
+            theme={theme}
+            nodes={[]}
+            daysOfCover={9.5}
+            totalReserveMbbl={39.16}
+          />
         </div>
 
-        {/* TIER 3: SECONDARY SPLIT GRID (60% Scenario Sandbox / 40% ISPRL Optimizer) */}
+        {/* TIER 3: GEOPOLITICAL RISK INTELLIGENCE AGENT (Full Width 4-Corridor Grid) */}
+        <div className="w-full">
+          <RiskRadar theme={theme} corridors={corridors} />
+        </div>
+
+        {/* TIER 4: SECONDARY SPLIT GRID (60% Scenario Sandbox / 40% ISPRL Optimizer) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           <div className="lg:col-span-7 flex flex-col">
             <ScenarioSandbox
@@ -322,7 +322,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 4: FULL-WIDTH ACTION COMMAND SECTION (Inline MoPNG Emergency Tender Specs & Rerouting) */}
+        {/* TIER 5: FULL-WIDTH ACTION COMMAND SECTION (Adaptive Procurement Orchestrator & Inline MoPNG Spec) */}
         <div className="w-full">
           <ProcurementMatrix
             theme={theme}

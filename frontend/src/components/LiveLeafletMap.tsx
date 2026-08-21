@@ -29,8 +29,8 @@ export default function LiveLeafletMap() {
 
   if (!isMounted) {
     return (
-      <div className="w-full h-[320px] bg-slate-900 rounded-lg flex items-center justify-center text-xs text-slate-400 font-mono">
-        Loading Live GIS Maritime Map...
+      <div className="w-full h-[480px] bg-slate-900 rounded-lg flex items-center justify-center text-xs text-slate-400 font-mono">
+        Loading Full-Width Live GIS Maritime Map...
       </div>
     );
   }
@@ -55,10 +55,10 @@ export default function LiveLeafletMap() {
   const fujairahToMangalore: [number, number][] = [[25.18, 56.36], [15.10, 71.40], [12.91, 74.85]];
 
   return (
-    <div className="w-full h-[320px] rounded-lg overflow-hidden border border-slate-700/50 shadow-inner relative z-0">
+    <div className="w-full h-[480px] rounded-lg overflow-hidden border border-slate-700/50 shadow-inner relative z-0">
       <MapContainer
         center={[18.0, 68.0]}
-        zoom={4}
+        zoom={5}
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
@@ -69,8 +69,8 @@ export default function LiveLeafletMap() {
         />
 
         {/* Shipping Route Lines */}
-        <Polyline positions={hormuzToVadinar} color="#EF4444" weight={2} dashArray="5, 10" />
-        <Polyline positions={fujairahToMangalore} color="#0284C7" weight={2} dashArray="5, 10" />
+        <Polyline positions={hormuzToVadinar} color="#EF4444" weight={2.5} dashArray="6, 12" />
+        <Polyline positions={fujairahToMangalore} color="#0284C7" weight={2.5} dashArray="6, 12" />
 
         {/* Map Markers */}
         {locations.map((loc, idx) => {
