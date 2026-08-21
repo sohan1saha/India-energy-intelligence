@@ -119,7 +119,7 @@ export default function Home() {
         },
         {
           source_country: "ISPRL Strategic Reserves",
-          supplier_name="ISPRL (Padur & Mangalore)",
+          supplier_name: "ISPRL (Padur & Mangalore)",
           crude_grade: "Arab / Basrah Sour Blend",
           api_gravity: 32.0,
           sulfur_pct: 2.10,
@@ -162,8 +162,8 @@ export default function Home() {
         },
         {
           source_country: "United States (Gulf Coast)",
-          supplier_name="Enterprise / Chevron",
-          crude_grade="WTI Midland",
+          supplier_name: "Enterprise / Chevron",
+          crude_grade: "WTI Midland",
           api_gravity: 40.5,
           sulfur_pct: 0.20,
           volume_bpd: 420000,
