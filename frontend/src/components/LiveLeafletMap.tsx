@@ -38,6 +38,11 @@ export default function LiveLeafletMap() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Reset stale Leaflet instance IDs on React hot-reload
+    const container = L.DomUtil.get('leaflet-map-root');
+    if (container !== null) {
+      (container as any)._leaflet_id = null;
+    }
     setIsMounted(true);
   }, []);
 
@@ -151,8 +156,9 @@ export default function LiveLeafletMap() {
   const eastCoastLane: [number, number][] = [[20.26, 86.67], [17.68, 83.21]];
 
   return (
-    <div className="w-full h-[520px] rounded-xl overflow-hidden border border-slate-700/60 shadow-2xl relative z-0">
+    <div id="leaflet-map-root" className="w-full h-[520px] rounded-xl overflow-hidden border border-slate-700/60 shadow-2xl relative z-0">
       <MapContainer
+        key="leaflet-map-instance"
         center={[19.5, 67.5]}
         zoom={5}
         scrollWheelZoom={false}
