@@ -316,26 +316,6 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         </div>
       )}
 
-      {/* CHOKEPOINT DISRUPTION TELEMETRY CARD */}
-      {selectedNodeId && ['hormuz', 'red_sea', 'malacca', 'cape_gh'].includes(selectedNodeId) && (
-        <div className={`absolute bottom-4 left-4 p-3.5 rounded-lg border shadow-xl z-20 font-mono text-[11px] max-w-sm ${
-          theme === 'dark' ? 'bg-slate-900/95 border-fuchsia-500/60 text-slate-100' : 'bg-[#D4DCEC] border-fuchsia-600 text-slate-950'
-        }`}>
-          <div className="flex items-center justify-between border-b pb-1.5 mb-2 border-inherit">
-            <span className="font-bold text-fuchsia-500 uppercase tracking-wide">
-              CHOKEPOINT DISRUPTION HIGHLIGHT
-            </span>
-            <span className="w-2.5 h-2.5 rounded-full bg-fuchsia-500 animate-ping"></span>
-          </div>
-          <p className="text-[10px] font-bold text-fuchsia-600 mb-1 uppercase">
-            {selectedNodeId === 'hormuz' ? 'STRAIT OF HORMUZ DISRUPTION ZONE' : selectedNodeId === 'red_sea' ? 'BAB-EL-MANDEB & RED SEA DISRUPTION' : selectedNodeId === 'malacca' ? 'STRAIT OF MALACCA CORRIDOR' : 'CAPE OF GOOD HOPE ROUTE'}
-          </p>
-          <p className="text-[10px] text-fuchsia-500 font-bold">
-            ACTIVE CHOKEPOINT HAZARD ZONE HIGHLIGHTED IN NEON FUCHSIA 📍
-          </p>
-        </div>
-      )}
-
       {/* MARITIME LOGISTICS LEGEND CARD */}
       {selectedStrategyId && (
         <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
