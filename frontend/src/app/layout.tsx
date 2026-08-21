@@ -4,6 +4,11 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'UrjaAegis AI - India Energy Intelligence Command Center',
   description: 'AI-Driven Energy Supply Chain Resilience & Procurement Rerouting Engine for Import-Dependent Economies.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
