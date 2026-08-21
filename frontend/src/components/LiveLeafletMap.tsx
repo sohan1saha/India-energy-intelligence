@@ -20,11 +20,11 @@ function MapFlyToHandler({
     } else if (selectedStrategyId === 'strat_bypass') {
       map.flyTo([21.0, 64.0], 5.5, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_global_pivot') {
-      map.flyTo([10.0, 45.0], 3.8, { duration: 1.5 });
+      map.flyTo([5.0, 30.0], 3.2, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_far_east') {
-      map.flyTo([15.0, 95.0], 4.2, { duration: 1.5 });
+      map.flyTo([18.0, 105.0], 4.0, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_latam') {
-      map.flyTo([-10.0, 20.0], 3.2, { duration: 1.5 });
+      map.flyTo([-15.0, 10.0], 3.0, { duration: 1.5 });
     } else if (selectedStrategyId === 'strat_national_surge') {
       map.flyTo([18.5, 76.0], 5.8, { duration: 1.5 });
     } else {
@@ -104,7 +104,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Key GIS Locations
+  // Key GIS Locations (Including International Terminal Pins)
   const locations = [
     {
       id: "hormuz",
@@ -167,6 +167,56 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       action: "540,000 bpd Rerouted to India"
     },
     {
+      id: "yanbu",
+      name: "Yanbu Petroline Red Sea Terminal (Saudi Arabia)",
+      pos: [24.08, 38.06] as [number, number],
+      type: "port",
+      color: "#0284C7",
+      label: "YANBU PETROLINE TERMINAL",
+      desc: "Saudi Aramco East-West pipeline terminal on Red Sea coast.",
+      action: "420,000 bpd Rerouted via Red Sea"
+    },
+    {
+      id: "santos",
+      name: "Santos Basin Offshore Terminal (Brazil)",
+      pos: [-23.96, -46.33] as [number, number],
+      type: "port",
+      color: "#8B5CF6",
+      label: "BRAZIL PETROBRAS TUPI TERMINAL",
+      desc: "Deepwater Santos Basin offshore loading terminal for Tupi & Lula medium crude.",
+      action: "480,000 bpd Transatlantic Sourcing"
+    },
+    {
+      id: "kozmino",
+      name: "Kozmino Pacific Oil Terminal (Russia)",
+      pos: [42.73, 133.08] as [number, number],
+      type: "port",
+      color: "#10B981",
+      label: "KOZMINO ESPO PACIFIC TERMINAL",
+      desc: "ESPO crude Pacific pipeline export terminal near Nakhodka.",
+      action: "600,000 bpd Pacific Corridor Sourcing"
+    },
+    {
+      id: "us_gulf",
+      name: "Enterprise Offshore US Gulf Terminal (Texas, USA)",
+      pos: [28.95, -95.35] as [number, number],
+      type: "port",
+      color: "#0284C7",
+      label: "US GULF WTI EXPORT HUB",
+      desc: "Deepwater Freeport offshore VLCC terminal exporting WTI Midland crude.",
+      action: "420,000 bpd Transatlantic Sourcing"
+    },
+    {
+      id: "ongc_mumbai",
+      name: "ONGC Mumbai High Offshore Platform (India)",
+      pos: [19.42, 71.33] as [number, number],
+      type: "spr",
+      color: "#EC4899",
+      label: "ONGC MUMBAI HIGH PLATFORM",
+      desc: "India's largest domestic offshore crude production complex.",
+      action: "360,000 bpd Production Surge"
+    },
+    {
       id: "vadinar",
       name: "Vadinar SPM Berth (Gujarat)",
       pos: [22.45, 69.66] as [number, number],
@@ -185,16 +235,6 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       label: "MUNDRA CRUDE TERMINAL",
       capacity: "Mundra-Panipat Pipeline Origin",
       desc: "Key import terminal feeding IOCL Panipat refinery complex."
-    },
-    {
-      id: "jnpt",
-      name: "JNPT / Nhava Sheva (Mumbai)",
-      pos: [18.95, 72.95] as [number, number],
-      type: "port",
-      color: "#0284C7",
-      label: "WEST COAST FREIGHT HUB",
-      capacity: "BPCL & HPCL Mumbai Intake",
-      desc: "BPCL Mumbai & HPCL Mumbai refinery crude intake terminal."
     },
     {
       id: "padur",
@@ -287,29 +327,33 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
   const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
 
-  // Strategy Specific Polylines
+  // Realistic Multi-Waypoint Oceanic Sea Routes (Curved around landmasses)
   const strat1Routes: [number, number][][] = [
     [[25.18, 56.36], [deshLat, deshLng], [22.45, 69.66]], // Fujairah ADCOP -> Vadinar
-    [[24.08, 38.06], [12.58, 43.33], [swarnaLat, swarnaLng], [12.91, 74.85]] // Yanbu Red Sea -> Mangalore
+    [[24.08, 38.06], [18.00, 40.00], [12.58, 43.33], [12.00, 52.00], [swarnaLat, swarnaLng], [12.91, 74.85]] // Yanbu -> Red Sea -> Bab-el-Mandeb -> Arabian Sea -> Mangalore
   ];
 
   const strat2Routes: [number, number][][] = [
-    [[-34.35, 18.47], [ratnaLat, ratnaLng], [20.26, 86.67]], // Transatlantic Cape -> Paradip
-    [[42.73, 133.08], [4.15, 100.50], [20.26, 86.67]] // Kozmino -> Malacca -> Paradip
+    // US Gulf Texas -> Florida Straits -> North Atlantic -> South Atlantic -> Cape of Good Hope -> Indian Ocean -> Paradip
+    [[28.95, -95.35], [24.00, -85.00], [23.00, -79.00], [18.00, -50.00], [0.00, -25.00], [-20.00, -10.00], [-34.35, 18.47], [-30.00, 45.00], [-10.00, 65.00], [ratnaLat, ratnaLng], [20.26, 86.67]],
+    // Kozmino -> Sea of Japan -> East China Sea -> South China Sea -> Malacca -> Bay of Bengal -> Paradip
+    [[42.73, 133.08], [34.00, 128.00], [25.00, 122.00], [12.00, 112.00], [4.15, 100.50], [6.00, 93.00], [15.00, 88.00], [20.26, 86.67]]
   ];
 
   const strat3Routes: [number, number][][] = [
-    [[42.73, 133.08], [4.15, 100.50], [17.68, 83.21], [20.26, 86.67]] // Kozmino -> Malacca -> Visakh -> Paradip
+    // Kozmino & Sakhalin -> Pacific Sea Lanes -> Malacca Strait -> Visakhapatnam -> Paradip
+    [[42.73, 133.08], [34.00, 128.00], [22.00, 120.00], [12.00, 112.00], [4.15, 100.50], [8.00, 90.00], [17.68, 83.21], [20.26, 86.67]]
   ];
 
   const strat4Routes: [number, number][][] = [
-    [[-23.96, -46.33], [-34.35, 18.47], [22.45, 69.66]] // Brazil Santos -> Cape -> Vadinar
+    // Santos Basin Brazil -> South Atlantic Ocean (Curved offshore) -> Cape of Good Hope -> Indian Ocean -> Vadinar
+    [[-23.96, -46.33], [-28.00, -35.00], [-34.00, -10.00], [-34.35, 18.47], [-28.00, 45.00], [-10.00, 62.00], [12.00, 68.00], [22.45, 69.66]]
   ];
 
   const strat5Routes: [number, number][][] = [
-    [[13.25, 74.78], [12.91, 74.85]], // Padur -> MRPL
+    [[13.25, 74.78], [12.91, 74.85]], // Padur Cavern -> MRPL
     [[17.68, 83.21], [20.26, 86.67]], // Visakh Cavern -> Paradip
-    [[19.42, 71.33], [22.45, 69.66]]  // ONGC Mumbai High -> Vadinar
+    [[19.42, 71.33], [20.50, 70.50], [22.45, 69.66]] // ONGC Mumbai High Offshore -> Vadinar
   ];
 
   return (
