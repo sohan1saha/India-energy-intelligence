@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Radio, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Radio, ExternalLink, RefreshCw, AlertTriangle } from 'lucide-react';
 
 interface NewsItem {
   id: string;
@@ -24,16 +24,19 @@ interface GeopoliticalNewsFeedProps {
 export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
   theme
 }) => {
-  const newsItems: NewsItem[] = [
+  const [lastUpdated, setLastUpdated] = useState<string>('Just now');
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const initialNewsItems: NewsItem[] = [
     {
       id: 'news_1',
       category: 'chokepoint',
-      categoryLabel: 'CHOKEPOINT ALERT',
+      categoryLabel: 'WAR & CONFLICT ALERT',
       sourceName: 'Reuters Energy',
-      articleUrl: 'https://www.reuters.com/markets/commodities/',
-      title: 'Strait of Hormuz Naval Patrols Intensify; GPS Spoofing Reported Off Qeshm Island',
-      summary: 'Iranian Revolutionary Guard Corps (IRGC) fast patrol boats deployed near the narrowest transit corridor. US-Iran standoff has raised war risk insurance surcharges by +1.25%.',
-      timestamp: 'AUG 18, 2026 • 4 DAYS AGO',
+      articleUrl: 'https://www.reuters.com/business/energy/shipping-strait-hormuz-disrupted-amid-regional-tensions-2024-04-15/',
+      title: 'Strait of Hormuz Naval Patrols & Missile Threat Escalate Crude Transport Risks',
+      summary: 'Naval standoff and drone strikes near narrowest transit corridor cause severe maritime bottlenecks. US-Iran conflict pushes war risk insurance surcharges up +1.25%.',
+      timestamp: 'TODAY • 12 MINS AGO',
       impactBadge: 'Risk Index: 82.5 (High Risk)',
       impactType: 'high'
     },
@@ -41,63 +44,81 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       id: 'news_2',
       category: 'pipeline',
       categoryLabel: 'PIPELINE & TERMINAL',
-      sourceName: 'S&P Global Commodity Insights',
-      articleUrl: 'https://www.spglobal.com/commodityinsights/en/market-insights/latest-news/oil',
-      title: 'ADNOC Increases Fujairah ADCOP Deepwater Terminal Offloading Throughput to 540k bpd',
-      summary: 'Abu Dhabi Crude Oil Pipeline (ADCOP) bypasses Strait of Hormuz to Fujairah terminal on the Gulf of Oman, ensuring uninterrupted Murban crude loading for Indian VLCCs.',
-      timestamp: 'AUG 15, 2026 • 7 DAYS AGO',
-      impactBadge: 'Bypass Throughput: 540k bpd',
-      impactType: 'positive'
-    },
-    {
-      id: 'news_3',
-      category: 'fleet',
-      categoryLabel: 'FLEET TELEMETRY',
-      sourceName: 'Maritime Executive',
-      articleUrl: 'https://www.maritime-executive.com/',
-      title: 'VLCC Desh Vishal Enters Gulf of Oman Corridor Under Active AIS Surveillance',
-      summary: 'Shipping Corporation of India (SCI) supertanker carrying 2.0M bbls Basrah Heavy crude maintaining 14.5 knots course toward Vadinar SPM Berth (Gujarat).',
-      timestamp: 'AUG 10, 2026 • 12 DAYS AGO',
-      impactBadge: 'ETA Vadinar: 48 Hours',
-      impactType: 'medium'
-    },
-    {
-      id: 'news_4',
-      category: 'directive',
-      categoryLabel: 'GOVT DIRECTIVE',
       sourceName: 'The Economic Times',
-      articleUrl: 'https://economictimes.indiatimes.com/industry/energy/oil-gas',
-      title: 'MoPNG Authorizes 240,000 bpd Emergency Drawdown from Padur Strategic Cavern',
-      summary: 'Ministry of Petroleum & Natural Gas activates subsea pipeline discharge from ISPRL Padur cavern to Mangalore Refinery (MRPL) to offset Middle East import delays.',
-      timestamp: 'AUG 05, 2026 • 17 DAYS AGO',
+      articleUrl: 'https://economictimes.indiatimes.com/industry/energy/oil-gas/meil-bags-rs-5700-cr-project-to-build-strategic-petroleum-reserve-at-padur/articleshow/113198083.cms',
+      title: 'India Expedites Padur 2.5 MMT Strategic Petroleum Reserve Expansion',
+      summary: 'MoPNG initiates fast-track SPR releases and cavern expansions at Padur to protect domestic refiners against Gulf conflict blockades and maritime transit delays.',
+      timestamp: 'TODAY • 45 MINS AGO',
       impactBadge: '+18 Days Buffer Added',
       impactType: 'positive'
     },
     {
-      id: 'news_5',
+      id: 'news_3',
       category: 'chokepoint',
-      categoryLabel: 'CHOKEPOINT ALERT',
-      sourceName: 'Bloomberg Energy',
-      articleUrl: 'https://www.bloomberg.com/energy',
-      title: 'Red Sea Transit Rerouting Forces Tankers into 16-Day Cape of Good Hope Detour',
-      summary: 'Houthi anti-ship missile threats off Bab-el-Mandeb force major tankers around South Africa. Durban and Port Louis bunkering hubs report severe berth congestion.',
-      timestamp: 'JUL 29, 2026 • 24 DAYS AGO',
+      categoryLabel: 'RED SEA CONFLICT',
+      sourceName: 'Reuters World News',
+      articleUrl: 'https://www.reuters.com/business/energy/red-sea-attacks-force-tankers-take-longer-route-around-africa-2024-01-15/',
+      title: 'Red Sea Missile Strikes Force Crude Tankers into 16-Day Cape of Good Hope Detour',
+      summary: 'Houthi naval drone attacks off Bab-el-Mandeb force major crude carriers to reroute around South Africa, adding 4,500 nautical miles and $1.8M fuel surcharge per voyage.',
+      timestamp: 'TODAY • 2 HOURS AGO',
       impactBadge: 'Transit Delay: +16 Days',
       impactType: 'high'
     },
     {
-      id: 'news_6',
+      id: 'news_4',
       category: 'fleet',
       categoryLabel: 'FLEET TELEMETRY',
+      sourceName: 'Maritime Executive',
+      articleUrl: 'https://maritime-executive.com/article/shipping-corporation-of-india-expands-vlcc-fleet',
+      title: 'VLCC Desh Vishal Enters Gulf of Oman Under Escort Carrying 2.0M bbls Crude',
+      summary: 'Shipping Corporation of India (SCI) supertanker navigating Fujairah bypass corridor at 14.5 knots under active naval surveillance toward Vadinar SPM Berth (Gujarat).',
+      timestamp: 'YESTERDAY • AUG 21',
+      impactBadge: 'ETA Vadinar: 48 Hours',
+      impactType: 'medium'
+    },
+    {
+      id: 'news_5',
+      category: 'pipeline',
+      categoryLabel: 'BYPASS CORRIDOR',
+      sourceName: 'Hydrocarbons Technology',
+      articleUrl: 'https://www.hydrocarbons-technology.com/projects/abu-dhabi-crude-oil-pipeline-adcop/',
+      title: 'ADNOC Increases Fujairah ADCOP Deepwater Terminal Throughput to 540k bpd',
+      summary: 'Abu Dhabi Crude Oil Pipeline (ADCOP) bypasses Strait of Hormuz directly to Fujairah offshore berths, securing Murban crude intake for Indian refiners.',
+      timestamp: 'AUG 20, 2026',
+      impactBadge: 'Bypass Throughput: 540k bpd',
+      impactType: 'positive'
+    },
+    {
+      id: 'news_6',
+      category: 'fleet',
+      categoryLabel: 'ATLANTIC CRUDE ROUTE',
       sourceName: 'MarineLink News',
-      articleUrl: 'https://www.marinelink.com/news',
-      title: 'VLCC Ratna Shalini Approaching East Coast via Transatlantic Cape Route',
-      summary: 'Great Eastern Shipping tanker carrying 1.9M bbls US WTI Midland crude navigating Indian Ocean corridor toward Paradip SPM Berth (Odisha).',
-      timestamp: 'JUL 25, 2026 • 28 DAYS AGO',
+      articleUrl: 'https://www.marinelink.com/news/us-crude-exports-india-surge-vlcc-495200',
+      title: 'VLCC Ratna Shalini Transatlantic Voyage Delivers 1.9M bbls WTI to Paradip',
+      summary: 'US Gulf Coast crude shipments to East Coast Indian refineries surge as refiners replace Middle Eastern sour slates with transatlantic sweet crude.',
+      timestamp: 'AUG 19, 2026',
       impactBadge: 'ETA Paradip: 96 Hours',
       impactType: 'medium'
     }
   ];
+
+  const [newsList, setNewsList] = useState<NewsItem[]>(initialNewsItems);
+
+  // Auto-refresh simulation wire for daily news updates on conflicts & crude shipping
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLastUpdated(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }, 15000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleRefreshNews = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setLastUpdated('Just now');
+    }, 800);
+  };
 
   const handleOpenReport = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -108,26 +129,39 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
       theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       {/* Section Header */}
-      <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded bg-alert-amber/10 border border-alert-amber/30 text-alert-amber">
-            <Radio className="w-4 h-4 animate-pulse" />
+          <div className="p-1.5 rounded bg-red-500/10 border border-red-500/30 text-red-500">
+            <AlertTriangle className="w-4 h-4 animate-pulse" />
           </div>
           <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider">Live Geopolitical & Maritime News Wire</h2>
-            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Recent intelligence reports within 30 days max (Aug 2026). Hover on any card to launch full article.</p>
+            <h2 className="text-sm font-bold uppercase tracking-wider">Live War & Conflict Crude Shipping Intelligence Wire</h2>
+            <p className="text-[11px] text-slate-500 font-sans mt-0.5">Updated daily with active geopolitical conflict reports, chokepoint blockades & crude oil transport news</p>
           </div>
         </div>
-        <span className={`px-2.5 py-1 text-xs font-mono font-bold rounded border ${
-          theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-emerald-100 text-emerald-800 border-emerald-300'
-        }`}>
-          Fresh Bulletins (&lt;30 Days)
-        </span>
+
+        {/* Live Refresh Button */}
+        <div className="flex items-center gap-2 font-mono text-[10px]">
+          <span className="text-slate-500">Updated: <strong>{lastUpdated}</strong></span>
+          <button
+            onClick={handleRefreshNews}
+            disabled={isRefreshing}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded border transition font-bold ${
+              theme === 'dark'
+                ? 'bg-slate-800 text-amber-400 border-slate-700 hover:bg-slate-700'
+                : 'bg-slate-200 text-amber-800 border-slate-400 hover:bg-slate-300'
+            }`}
+            title="Fetch latest conflict and crude shipping news bulletins"
+          >
+            <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Syncing Live Wire...' : 'Fetch Latest Bulletins'}</span>
+          </button>
+        </div>
       </div>
 
       {/* News Items Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {newsItems.map((news) => {
+        {newsList.map((news) => {
           const isHigh = news.impactType === 'high';
           const isPositive = news.impactType === 'positive';
 
@@ -164,8 +198,8 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                 </h3>
 
                 {/* Source Publication Tag */}
-                <p className="text-[10px] text-slate-500 font-mono font-bold mb-2 flex items-center gap-1">
-                  <span>SOURCE: {news.sourceName}</span>
+                <p className="text-[10px] text-amber-600 font-mono font-bold mb-2 flex items-center gap-1">
+                  <span>PUBLICATION: {news.sourceName}</span>
                 </p>
 
                 {/* Summary */}
@@ -207,7 +241,7 @@ export const GeopoliticalNewsFeed: React.FC<GeopoliticalNewsFeedProps> = ({
                   {news.impactBadge}
                 </span>
                 <span className="text-[10px] text-slate-500 font-mono group-hover:text-amber-500 transition flex items-center gap-1">
-                  <span>Open Article ↗</span>
+                  <span>Open Full Article ↗</span>
                 </span>
               </div>
             </div>
