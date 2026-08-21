@@ -178,6 +178,96 @@ export default function Home() {
         execution_lead_time_hours: 12
       }, null, 2),
       tender_summary_pdf_text: "GLOBAL TENDER: Issue spot purchase orders for 480k bpd West African Bonny Light, 420k bpd US WTI Midland, and 300k bpd Russian ESPO via Kozmino port."
+    },
+    {
+      strategy_id: "strat_far_east",
+      name: "Far East & Russian ESPO Strategic Corridor (Kozmino + Sakhalin + Visakh)",
+      tagline: "Fast Pacific & Malacca corridor utilizing Rupee-Ruble settlement and Russian Far East terminals.",
+      landed_cost_usd_bbl: 81.50,
+      cost_delta_vs_baseline_usd: 3.00,
+      avg_transit_days: 11.5,
+      overall_refinery_fit: 0.94,
+      allocations: [
+        {
+          source_country: "Russia (Pacific Kozmino)",
+          supplier_name: "Rosneft",
+          crude_grade: "ESPO Blend",
+          api_gravity: 35.6,
+          sulfur_pct: 0.52,
+          volume_bpd: 600000,
+          transport_mode: "Aframax Fleet via Kozmino -> Malacca -> Paradip",
+          transit_days: 12.0,
+          landed_cost_usd_bbl: 80.50,
+          refinery_fit_score: 0.94
+        }
+      ],
+      executable_tender_json: JSON.stringify({
+        tender_id: "MoPNG/FAR-EAST/2026-08/STRAT-3",
+        issuer: "HPCL / IOCL Joint Far East Chartering",
+        total_volume_bpd: 1200000,
+        execution_lead_time_hours: 8
+      }, null, 2),
+      tender_summary_pdf_text: "FAR EAST DIRECTIVE: Charter 6 Aframax vessels for Kozmino & De-Kastri terminals. Activate Visakhapatnam ISPRL cavern drawdown for East Coast refiners."
+    },
+    {
+      strategy_id: "strat_latam",
+      name: "Latin American Heavy-Sweet Blend (Brazil Tupi + Guyana Liza + Vasconia)",
+      tagline: "Transatlantic South American route bypassing Middle Eastern geopolitical risk corridors completely.",
+      landed_cost_usd_bbl: 85.90,
+      cost_delta_vs_baseline_usd: 7.40,
+      avg_transit_days: 28.0,
+      overall_refinery_fit: 0.91,
+      allocations: [
+        {
+          source_country: "Brazil (Santos Basin)",
+          supplier_name: "Petrobras",
+          crude_grade: "Lula / Tupi Medium",
+          api_gravity: 29.8,
+          sulfur_pct: 0.37,
+          volume_bpd: 480000,
+          transport_mode: "VLCC Transatlantic via South Atlantic -> Cape",
+          transit_days: 26.0,
+          landed_cost_usd_bbl: 85.20,
+          refinery_fit_score: 0.92
+        }
+      ],
+      executable_tender_json: JSON.stringify({
+        tender_id: "MoPNG/LATAM-PIVOT/2026-08/STRAT-4",
+        issuer: "Reliance Jamnagar & Nayara Joint Sourcing",
+        total_volume_bpd: 1200000,
+        execution_lead_time_hours: 16
+      }, null, 2),
+      tender_summary_pdf_text: "LATAM DIRECTIVE: Issue long-term term-contracts for Petrobras Tupi and Guyanese Liza crude. Dispatch 4 VLCCs via South Atlantic route."
+    },
+    {
+      strategy_id: "strat_national_surge",
+      name: "National Reserve Drawdown & Domestic Surge (ISPRL 100% + ONGC Offshore)",
+      tagline: "Immediate domestic defense response activating 100% ISPRL cavern release + ONGC Mumbai High surge.",
+      landed_cost_usd_bbl: 77.20,
+      cost_delta_vs_baseline_usd: -1.30,
+      avg_transit_days: 0.8,
+      overall_refinery_fit: 0.99,
+      allocations: [
+        {
+          source_country: "ISPRL National Caverns",
+          supplier_name: "ISPRL Ministry of Petroleum",
+          crude_grade="National Strategic Reserve Blend",
+          api_gravity: 32.5,
+          sulfur_pct: 1.85,
+          volume_bpd: 840000,
+          transport_mode: "Subsea Pipelines to MRPL/Visakh & Coastal Barges to Jamnagar",
+          transit_days: 0.5,
+          landed_cost_usd_bbl: 76.50,
+          refinery_fit_score: 1.00
+        }
+      ],
+      executable_tender_json: JSON.stringify({
+        tender_id: "MoPNG/NATIONAL-DEFENSE/2026-08/STRAT-5",
+        issuer: "Cabinet Committee on Economic Affairs (CCEA) Emergency Order",
+        total_volume_bpd: 1200000,
+        execution_lead_time_hours: 2
+      }, null, 2),
+      tender_summary_pdf_text: "NATIONAL DEFENSE ORDER: CCEA authorizes maximum 840,000 bpd drawdown across all ISPRL rock caverns and 360,000 bpd ONGC Mumbai High production surge."
     }
   ]);
 
@@ -186,6 +276,19 @@ export default function Home() {
       .then(res => res.json())
       .then(data => {
         if (data.corridors) setCorridors(data.corridors);
+      })
+      .catch(() => {});
+
+    fetch('http://localhost:8000/api/procurement/reroute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deficit_bpd: 1200000.0 })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.strategies && data.strategies.length > 0) {
+          setStrategies(data.strategies);
+        }
       })
       .catch(() => {});
   }, []);
