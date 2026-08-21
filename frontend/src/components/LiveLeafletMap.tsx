@@ -301,7 +301,16 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
           const icon = createRadarIcon(loc.color, loc.label, isSelected, loc.isAlert);
 
           return (
-            <Marker key={loc.id} position={loc.pos} icon={icon}>
+            <Marker
+              key={loc.id}
+              position={loc.pos}
+              icon={icon}
+              eventHandlers={{
+                mouseover: (e) => {
+                  e.target.openPopup();
+                }
+              }}
+            >
               <Popup className={popupClass}>
                 <div className={`font-mono text-xs p-1 max-w-[270px] space-y-1.5 ${
                   theme === 'dark' ? 'text-slate-100' : 'text-stone-900'
