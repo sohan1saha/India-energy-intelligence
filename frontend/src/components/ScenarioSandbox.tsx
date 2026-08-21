@@ -49,12 +49,12 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
 
   const econ = simulationResult?.economic_impact;
 
-  // Track gradient fill styling helper
-  const getTrackStyle = (val: number, max: number, activeColor: string) => {
+  // Minimalist track styling
+  const getTrackStyle = (val: number, max: number, color: string) => {
     const pct = (val / max) * 100;
-    const bgTrack = theme === 'dark' ? '#1E293B' : '#7E8C9F';
+    const bgTrack = theme === 'dark' ? '#1E293B' : '#C5CBD3';
     return {
-      background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${pct}%, ${bgTrack} ${pct}%, ${bgTrack} 100%)`
+      background: `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, ${bgTrack} ${pct}%, ${bgTrack} 100%)`
     };
   };
 
@@ -63,32 +63,28 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
       theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
+      <div className="flex items-center justify-between mb-5 pb-3 border-b border-inherit">
         <div>
           <h2 className="text-sm font-bold uppercase tracking-wider">Disruption Scenario Modeller</h2>
-          <p className="text-[11px] text-slate-500 font-sans mt-0.5">Drag sliders or tap preset chips to simulate geopolitical crude import shocks</p>
+          <p className="text-[11px] text-slate-500 font-sans mt-0.5">Adjust shock levers to model real-time crude deficit and macroeconomic impact</p>
         </div>
         <span className={`px-2.5 py-1 text-xs font-semibold rounded font-mono border ${
           theme === 'dark'
             ? 'bg-red-500/10 text-red-400 border-red-500/30'
-            : 'bg-red-100 text-red-800 border-red-300'
+            : 'bg-red-100 text-red-800 border-red-300 font-bold'
         }`}>
           Macro Stress Testing
         </span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Left Column: Interactive Controls */}
-        <div className="lg:col-span-5 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-slate-500 font-mono">Geopolitical Shock Triggers</h3>
-
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        {/* Left Column: Minimalist Sleek Controls */}
+        <div className="lg:col-span-5 space-y-4 font-mono">
           {/* Hormuz Slider */}
-          <div className="p-3 rounded-lg border border-inherit bg-slate-800/10">
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="font-bold">Strait of Hormuz Blockade</span>
-              <span className={`px-2 py-0.5 text-xs font-mono font-extrabold rounded border ${
-                theme === 'dark' ? 'bg-red-500/20 text-red-400 border-red-500/40' : 'bg-red-100 text-red-900 border-red-400'
-              }`}>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-sans font-semibold">Strait of Hormuz Blockade</span>
+              <span className={`font-bold ${theme === 'dark' ? 'text-red-400' : 'text-red-700'}`}>
                 {hormuz}%
               </span>
             </div>
@@ -99,34 +95,15 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               value={hormuz}
               style={getTrackStyle(hormuz, 100, '#EF4444')}
               onChange={(e) => handleSliderChange(Number(e.target.value), redSea, russian, duration)}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-red-600 focus:outline-none transition-all shadow-inner"
+              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-red-500 focus:outline-none transition"
             />
-            {/* Quick Preset Chips */}
-            <div className="flex items-center gap-1.5 mt-2 font-mono text-[9px]">
-              <span className="text-slate-500">Presets:</span>
-              {[0, 25, 50, 75, 100].map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() => handleSliderChange(preset, redSea, russian, duration)}
-                  className={`px-1.5 py-0.5 rounded border transition ${
-                    hormuz === preset
-                      ? 'bg-red-600 text-white border-red-500 font-bold'
-                      : 'bg-slate-800/40 text-slate-400 border-slate-700 hover:text-white'
-                  }`}
-                >
-                  {preset}%
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Red Sea Slider */}
-          <div className="p-3 rounded-lg border border-inherit bg-slate-800/10">
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="font-bold">Red Sea / Suez Suspension</span>
-              <span className={`px-2 py-0.5 text-xs font-mono font-extrabold rounded border ${
-                theme === 'dark' ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-amber-100 text-amber-900 border-amber-400'
-              }`}>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-sans font-semibold">Red Sea / Suez Suspension</span>
+              <span className={`font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>
                 {redSea}%
               </span>
             </div>
@@ -137,34 +114,15 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               value={redSea}
               style={getTrackStyle(redSea, 100, '#F59E0B')}
               onChange={(e) => handleSliderChange(hormuz, Number(e.target.value), russian, duration)}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-amber-600 focus:outline-none transition-all shadow-inner"
+              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none transition"
             />
-            {/* Quick Preset Chips */}
-            <div className="flex items-center gap-1.5 mt-2 font-mono text-[9px]">
-              <span className="text-slate-500">Presets:</span>
-              {[0, 25, 50, 75, 100].map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() => handleSliderChange(hormuz, preset, russian, duration)}
-                  className={`px-1.5 py-0.5 rounded border transition ${
-                    redSea === preset
-                      ? 'bg-amber-600 text-white border-amber-500 font-bold'
-                      : 'bg-slate-800/40 text-slate-400 border-slate-700 hover:text-white'
-                  }`}
-                >
-                  {preset}%
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Russian Sanctions Slider */}
-          <div className="p-3 rounded-lg border border-inherit bg-slate-800/10">
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="font-bold">Russian Shadow Fleet Sanctions</span>
-              <span className={`px-2 py-0.5 text-xs font-mono font-extrabold rounded border ${
-                theme === 'dark' ? 'bg-sky-500/20 text-sky-400 border-sky-500/40' : 'bg-sky-100 text-sky-900 border-sky-400'
-              }`}>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-sans font-semibold">Russian Shadow Fleet Sanctions</span>
+              <span className={`font-bold ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>
                 {russian}%
               </span>
             </div>
@@ -175,34 +133,15 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               value={russian}
               style={getTrackStyle(russian, 100, '#06B6D4')}
               onChange={(e) => handleSliderChange(hormuz, redSea, Number(e.target.value), duration)}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-sky-600 focus:outline-none transition-all shadow-inner"
+              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-sky-500 focus:outline-none transition"
             />
-            {/* Quick Preset Chips */}
-            <div className="flex items-center gap-1.5 mt-2 font-mono text-[9px]">
-              <span className="text-slate-500">Presets:</span>
-              {[0, 25, 50, 75, 100].map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() => handleSliderChange(hormuz, redSea, preset, duration)}
-                  className={`px-1.5 py-0.5 rounded border transition ${
-                    russian === preset
-                      ? 'bg-sky-600 text-white border-sky-500 font-bold'
-                      : 'bg-slate-800/40 text-slate-400 border-slate-700 hover:text-white'
-                  }`}
-                >
-                  {preset}%
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Duration Slider */}
-          <div className="p-3 rounded-lg border border-inherit bg-slate-800/10">
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="font-bold">Crisis Duration (Days)</span>
-              <span className={`px-2 py-0.5 text-xs font-mono font-extrabold rounded border ${
-                theme === 'dark' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-emerald-100 text-emerald-900 border-emerald-400'
-              }`}>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-sans font-semibold">Crisis Duration</span>
+              <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>
                 {duration} Days
               </span>
             </div>
@@ -213,25 +152,8 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               value={duration}
               style={getTrackStyle(duration, 90, '#10B981')}
               onChange={(e) => handleSliderChange(hormuz, redSea, russian, Number(e.target.value))}
-              className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-emerald-600 focus:outline-none transition-all shadow-inner"
+              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none transition"
             />
-            {/* Quick Preset Chips */}
-            <div className="flex items-center gap-1.5 mt-2 font-mono text-[9px]">
-              <span className="text-slate-500">Presets:</span>
-              {[7, 14, 30, 60, 90].map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() => handleSliderChange(hormuz, redSea, russian, preset)}
-                  className={`px-1.5 py-0.5 rounded border transition ${
-                    duration === preset
-                      ? 'bg-emerald-600 text-white border-emerald-500 font-bold'
-                      : 'bg-slate-800/40 text-slate-400 border-slate-700 hover:text-white'
-                  }`}
-                >
-                  {preset}d
-                </button>
-              ))}
-            </div>
           </div>
         </div>
 
