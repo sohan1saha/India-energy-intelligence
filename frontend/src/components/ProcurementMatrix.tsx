@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CheckCircle2, Download, Check, ShieldCheck, Anchor } from 'lucide-react';
+import { CheckCircle2, Copy, Check, ShieldCheck, Anchor } from 'lucide-react';
 
 interface SourcingAllocation {
   source_country: string;
@@ -179,10 +179,10 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
 
           <button
             onClick={handleCopyJson}
-            className="flex items-center gap-1 text-alert-amber hover:underline text-[11px] font-semibold font-mono"
+            className="p-1.5 rounded-lg border border-inherit text-slate-400 hover:text-white hover:bg-slate-700/30 transition"
+            title={copied ? "Copied!" : "Copy Spec JSON"}
           >
-            {copied ? <Check className="w-3.5 h-3.5" /> : <Download className="w-3.5 h-3.5" />}
-            <span>{copied ? 'Copied Payload!' : 'Copy Spec JSON'}</span>
+            {copied ? <Check className="w-4 h-4 text-alert-emerald" /> : <Copy className="w-4 h-4" />}
           </button>
         </div>
 
