@@ -109,10 +109,10 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       colorClass: 'text-alert-red',
       badgeBg: 'bg-alert-red/10 border-alert-red/30 text-alert-red',
       badgeText: 'Live AIS Telemetry Active',
-      refineryFeed: 'Destination: Vadinar SPM (Gujarat) • ETA: Aug 24, 2026 (06:00 UTC)',
+      refineryFeed: 'ORIGIN: Fujairah ADCOP Terminal (UAE) ➔ DESTINATION: Vadinar SPM (ETA Aug 24)',
       slateCompatibility: 'Basrah Heavy Crude (API 24.0°, Sulfur 3.8%) for Reliance Jamnagar',
-      strategicRole: 'Navigating Gulf of Oman corridor under active US-Iran war risk insurance surcharge (1.25%).',
-      logisticsConnectivity: 'Live GPS Satellite Telemetry • Origin: Fujairah ADCOP Terminal (UAE)',
+      strategicRole: 'Origin: Fujairah ADCOP Terminal (UAE). Destination: Vadinar SPM Berth (Gujarat). Navigating Gulf of Oman corridor under active US-Iran war risk insurance surcharge (1.25%).',
+      logisticsConnectivity: 'Origin: Fujairah ADCOP Terminal (UAE) ➔ Destination: Vadinar SPM (Gujarat, India)',
       drawdownRateOrSpeed: 'Cruising Speed: 14.5 Knots (26.8 km/h)',
       bufferDays: 'Delivery Target: 2.0M bbls in 48 Hours'
     },
@@ -324,7 +324,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
             </div>
             {selectedNodeId === 'desh_vishal' && <span className="w-2 h-2 rounded-full bg-alert-red animate-pulse" />}
           </div>
-          <p className="text-[10px] text-slate-500">Basrah Crude in Transit</p>
+          <p className="text-[10px] text-slate-500">Fujairah ➔ Vadinar SPM</p>
           <p className="font-bold text-[11px] mt-0.5 text-alert-red">2.0M bbls (At Sea)</p>
         </div>
       </div>
@@ -364,9 +364,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
             </div>
 
             <div className={`p-2.5 rounded border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
-              <span className="text-[10px] text-slate-500 block mb-1">REFINERY FEED DESTINATION</span>
+              <span className="text-[10px] text-slate-500 block mb-1">ROUTE TELEMETRY (ORIGIN ➔ DEST)</span>
               <p className="font-bold text-xs text-alert-amber line-clamp-1">{activeNode.refineryFeed}</p>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Direct Offtake Hub</span>
+              <span className="text-[10px] text-slate-400 block mt-0.5">Offtake & Delivery Gateway</span>
             </div>
 
             <div className={`p-2.5 rounded border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>

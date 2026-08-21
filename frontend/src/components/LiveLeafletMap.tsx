@@ -228,8 +228,9 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       label: "VLCC DESH VISHAL (2.0M bbls)",
       status: "14.5 Knots • Heading 124°",
       cargo: "2.0M bbls Basrah Heavy",
-      desc: "MMSI 419001234 • Indian Flag (SCI) • Live GPS Telemetry Active.",
-      action: "Destination: Vadinar SPM (ETA Aug 24)"
+      origin: "Fujairah ADCOP Terminal (UAE)",
+      destination: "Vadinar SPM (Gujarat) [ETA Aug 24]",
+      desc: "MMSI 419001234 • Indian Flag (SCI) • Live GPS Telemetry Active."
     },
     {
       id: "swarna_kamal",
@@ -240,8 +241,9 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       label: "VLCC SWARNA KAMAL (2.0M bbls)",
       status: "13.8 Knots • Heading 142°",
       cargo: "2.0M bbls Murban Sweet",
-      desc: "MMSI 419005678 • SCI Fleet • ADCOP Bypassed Cargo in Transit.",
-      action: "Destination: Mangalore SPM (ETA Aug 25)"
+      origin: "Fujairah ADCOP Terminal (UAE)",
+      destination: "Mangalore SPM (MRPL) [ETA Aug 25]",
+      desc: "MMSI 419005678 • SCI Fleet • ADCOP Bypassed Cargo in Transit."
     },
     {
       id: "ratna_shalini",
@@ -252,8 +254,9 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       label: "VLCC RATNA SHALINI (1.9M bbls)",
       status: "15.1 Knots • Heading 022°",
       cargo: "1.9M bbls WTI Midland",
-      desc: "MMSI 419009876 • Great Eastern Fleet • Transatlantic Sourcing Route.",
-      action: "Destination: Paradip SPM (ETA Aug 26)"
+      origin: "Enterprise US Gulf Terminal (Texas, USA)",
+      destination: "Paradip SPM (Odisha) [ETA Aug 26]",
+      desc: "MMSI 419009876 • Great Eastern Fleet • Transatlantic Sourcing Route."
     }
   ];
 
@@ -300,7 +303,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
           return (
             <Marker key={loc.id} position={loc.pos} icon={icon}>
               <Popup className={popupClass}>
-                <div className="font-mono text-xs p-1 max-w-[250px] space-y-1.5">
+                <div className="font-mono text-xs p-1 max-w-[260px] space-y-1.5">
                   <div className="flex items-center justify-between border-b pb-1 border-slate-200">
                     <strong className="text-slate-900 font-bold text-xs">{loc.name}</strong>
                     {loc.threatScore && (
@@ -311,6 +314,18 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
                   </div>
                   
                   <p className="text-[11px] text-slate-700 font-sans leading-tight">{loc.desc}</p>
+
+                  {loc.origin && (
+                    <div className="text-[10px] text-slate-900 font-semibold bg-emerald-100 p-1 rounded">
+                      Origin: {loc.origin}
+                    </div>
+                  )}
+
+                  {loc.destination && (
+                    <div className="text-[10px] text-blue-900 font-bold bg-blue-100 p-1 rounded">
+                      Destination: {loc.destination}
+                    </div>
+                  )}
 
                   {loc.status && (
                     <div className="text-[10px] text-amber-900 font-semibold bg-amber-100 p-1 rounded">
