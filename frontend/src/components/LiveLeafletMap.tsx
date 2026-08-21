@@ -54,7 +54,7 @@ export default function LiveLeafletMap() {
     );
   }
 
-  // Key GIS Locations
+  // Key GIS Locations (12 total: 2 Chokepoints, 3 Tankers, 3 Caverns, 4 SPM Ports)
   const locations = [
     {
       name: "Strait of Hormuz (Chokepoint)",
@@ -147,13 +147,21 @@ export default function LiveLeafletMap() {
       status: "IN TRANSIT",
       cargo: "2.0M bbls Murban Sweet",
       desc: "SCI VLCC carrying ADCOP bypassed crude towards Mangalore SPM."
+    },
+    {
+      name: "VLCC Ratna Shalini (Supertanker)",
+      pos: [11.50, 84.20],
+      type: "tanker",
+      status: "IN TRANSIT",
+      cargo: "1.9M bbls WTI Midland",
+      desc: "Transatlantic VLCC transiting Bay of Bengal bound for Paradip SPM."
     }
   ];
 
   // Primary & Alternative Routes
   const hormuzCorridor: [number, number][] = [[26.56, 56.25], [24.50, 58.20], [22.45, 69.66]];
   const adcopBypassRoute: [number, number][] = [[25.18, 56.36], [20.00, 64.00], [15.10, 71.40], [12.91, 74.85]];
-  const eastCoastLane: [number, number][] = [[20.26, 86.67], [17.68, 83.21]];
+  const eastCoastLane: [number, number][] = [[11.50, 84.20], [17.68, 83.21], [20.26, 86.67]];
 
   return (
     <div id="leaflet-map-root" className="w-full h-[520px] rounded-xl overflow-hidden border border-slate-700/60 shadow-2xl relative z-0">

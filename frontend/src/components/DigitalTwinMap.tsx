@@ -2,7 +2,7 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { Database, Factory, Anchor, Navigation, Activity } from 'lucide-react';
+import { Database, Factory, Anchor, Navigation } from 'lucide-react';
 
 const LiveLeafletMap = dynamic(() => import('./LiveLeafletMap'), {
   ssr: false,
@@ -47,23 +47,23 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <h2 className="text-sm font-bold uppercase tracking-wider">Supply Chain Digital Twin</h2>
         </div>
         
-        {/* Interactive GIS Legend Bar */}
+        {/* Interactive GIS Legend Bar with Exact Pin Color Indicators */}
         <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-alert-red animate-ping" />
-            <span className="text-[11px]">Chokepoints (2)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+            <span className="text-[11px] text-red-400 font-semibold">Chokepoints (2)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-alert-amber" />
-            <span className="text-[11px]">VLCCs at Sea (3)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+            <span className="text-[11px] text-amber-400 font-semibold">VLCCs at Sea (3)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-alert-emerald" />
-            <span className="text-[11px]">ISPRL Caverns (3)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span className="text-[11px] text-emerald-400 font-semibold">ISPRL Caverns (3)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-alert-cyan" />
-            <span className="text-[11px]">SPM Berths (4)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
+            <span className="text-[11px] text-sky-400 font-semibold">SPM Berths (4)</span>
           </div>
         </div>
       </div>
