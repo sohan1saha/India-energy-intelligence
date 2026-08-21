@@ -35,16 +35,24 @@ function MapFlyToHandler({
 }
 
 // Custom Shipping Network Base Port Ring Marker (Matching Wallenius Wilhelmsen shipping map style)
-const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean = false) => {
-  const size = isMajor ? 'w-3.5 h-3.5' : 'w-2 h-2';
-  const color = isAlert ? 'bg-red-500 ring-red-400' : 'bg-white ring-cyan-400';
-  const labelColor = isAlert ? 'text-red-400 font-extrabold' : 'text-slate-100 font-bold';
+const createPortIcon = (name: string, isMajor: boolean = false, isAlert: boolean = false, isSelected: boolean = false) => {
+  const size = isMajor ? (isSelected ? 'w-4 h-4' : 'w-3 h-3') : 'w-2 h-2';
+  const color = isAlert
+    ? 'bg-red-500 ring-red-400'
+    : isSelected
+    ? 'bg-amber-400 ring-amber-300'
+    : 'bg-white ring-cyan-400';
+  const labelColor = isAlert
+    ? 'text-red-400 font-extrabold'
+    : isSelected
+    ? 'text-amber-300 font-extrabold scale-110'
+    : 'text-slate-100 font-bold';
 
   return L.divIcon({
     className: 'custom-leaflet-port-marker',
     html: `
       <div class="relative flex items-center justify-center cursor-pointer group">
-        ${isAlert ? '<span class="absolute -inset-2 rounded-full bg-red-500/40 animate-ping"></span>' : ''}
+        ${(isAlert || isSelected) ? `<span class="absolute -inset-2.5 rounded-full ${isSelected ? 'bg-amber-400/50' : 'bg-red-500/40'} animate-ping"></span>` : ''}
         <div class="${size} rounded-full ${color} ring-2 shadow-lg transition-transform group-hover:scale-150 relative z-10"></div>
         <div class="absolute left-4 top-[-4px] text-[9px] font-mono tracking-wider ${labelColor} whitespace-nowrap uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] select-none z-20">
           ${name}
@@ -123,7 +131,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "jeddah", name: "JEDDAH", pos: [21.48, 39.19] as [number, number], isMajor: false },
     { id: "yanbu", name: "YANBU PETROLINE", pos: [24.08, 38.06] as [number, number], isMajor: true },
 
-    // Geopolitical Risk Corridors & Chokepoints (Matching RiskRadar IDs)
+    // Geopolitical Risk Corridors & Chokepoints
     { id: "hormuz", name: "STRAIT OF HORMUZ (82.5/100)", pos: [26.56, 56.25] as [number, number], isMajor: true, isAlert: true },
     { id: "red_sea", name: "BAB-EL-MANDEB & RED SEA (76/100)", pos: [12.58, 43.33] as [number, number], isMajor: true, isAlert: true },
     { id: "malacca", name: "STRAIT OF MALACCA (24/100)", pos: [4.15, 100.50] as [number, number], isMajor: true },
@@ -141,10 +149,10 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "santos", name: "SANTOS BRAZIL", pos: [-23.96, -46.33] as [number, number], isMajor: true },
     { id: "houston", name: "HOUSTON US GULF", pos: [28.95, -95.35] as [number, number], isMajor: true },
 
-    // Supertankers at Sea
-    { id: "desh_vishal", name: "VLCC DESH VISHAL (AT SEA)", pos: [deshLat, deshLng] as [number, number], isMajor: true },
-    { id: "swarna_kamal", name: "VLCC SWARNA KAMAL (AT SEA)", pos: [swarnaLat, swarnaLng] as [number, number], isMajor: true },
-    { id: "ratna_shalini", name: "VLCC RATNA SHALINI (AT SEA)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true }
+    // Supertankers at Sea (Matching Node IDs)
+    { id: "desh_vishal", name: "VLCC DESH VISHAL (2.0M bbls)", pos: [deshLat, deshLng] as [number, number], isMajor: true, cargo: "2.0M bbls Basrah Heavy", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Vadinar SPM (Gujarat)" },
+    { id: "swarna_kamal", name: "VLCC SWARNA KAMAL (2.0M bbls)", pos: [swarnaLat, swarnaLng] as [number, number], isMajor: true, cargo: "2.0M bbls Murban Sweet", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Mangalore SPM (MRPL)" },
+    { id: "ratna_shalini", name: "VLCC RATNA SHALINI (1.9M bbls)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true, cargo: "1.9M bbls WTI Midland", origin: "Enterprise US Gulf Terminal (Texas, USA)", destination: "Paradip SPM (Odisha)" }
   ];
 
   // Selected Target FlyTo Position
@@ -176,6 +184,19 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     [13.25, 74.78], [12.91, 74.85], [17.68, 83.21], [20.26, 86.67], [19.42, 71.33], [22.45, 69.66]
   ];
 
+  // Specific Vessel Live AIS Voyage Polylines (Rendered when a ship is clicked)
+  const deshVishalVoyage: [number, number][] = [
+    [25.18, 56.36], [24.80, 57.50], [deshLat, deshLng], [23.50, 64.00], [22.45, 69.66]
+  ];
+
+  const swarnaKamalVoyage: [number, number][] = [
+    [25.18, 56.36], [23.00, 59.00], [18.00, 65.00], [swarnaLat, swarnaLng], [12.91, 74.85]
+  ];
+
+  const ratnaShaliniVoyage: [number, number][] = [
+    [28.95, -95.35], [24.00, -85.00], [-34.35, 18.47], [-20.00, 55.00], [ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]
+  ];
+
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
       theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17]' : 'border-stone-300 bg-[#FAF8F5]'
@@ -194,7 +215,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           url={tileUrl}
         />
 
-        {/* DYNAMIC STRATEGY CORRIDORS - ONLY SHOWN WHEN SPECIFIC STRATEGY CARD IS CLICKED */}
+        {/* DYNAMIC STRATEGY CORRIDORS - SHOWN WHEN STRATEGY CARD IS CLICKED */}
         {selectedStrategyId === 'strat_bypass' && (
           <>
             <Polyline positions={middleEastBypassCorridor} color="#00F0FF" weight={3.5} opacity={0.9} />
@@ -218,22 +239,63 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           <Polyline positions={domesticSurgeCorridor} color="#EC4899" weight={4} opacity={0.95} dashArray="3, 5" />
         )}
 
+        {/* DYNAMIC SHIP VOYAGE ROUTE POLYLINES - SHOWN WHEN A SPECIFIC SHIP IS CLICKED */}
+        {selectedNodeId === 'desh_vishal' && (
+          <Polyline positions={deshVishalVoyage} color="#F59E0B" weight={4.5} opacity={0.95} dashArray="6, 8" />
+        )}
+
+        {selectedNodeId === 'swarna_kamal' && (
+          <Polyline positions={swarnaKamalVoyage} color="#00F0FF" weight={4.5} opacity={0.95} dashArray="6, 8" />
+        )}
+
+        {selectedNodeId === 'ratna_shalini' && (
+          <Polyline positions={ratnaShaliniVoyage} color="#10B981" weight={4.5} opacity={0.95} dashArray="6, 8" />
+        )}
+
         {/* ALL BASE PORTS, RISK CHOKEPOINTS & TANKERS */}
-        {ports.map((port) => (
-          <Marker
-            key={port.id}
-            position={port.pos}
-            icon={createPortIcon(port.name, port.isMajor, port.isAlert)}
-          >
-            <Popup className={theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup'}>
-              <div className="font-mono text-xs p-1">
-                <strong className="text-white block font-bold">{port.name}</strong>
-                <span className="text-[10px] text-slate-300">Base Port & Maritime Intelligence Node</span>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        {ports.map((port) => {
+          const isSelected = selectedNodeId === port.id;
+          return (
+            <Marker
+              key={port.id}
+              position={port.pos}
+              icon={createPortIcon(port.name, port.isMajor, port.isAlert, isSelected)}
+            >
+              <Popup className={theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup'}>
+                <div className="font-mono text-xs p-1 space-y-1">
+                  <strong className="text-white block font-bold">{port.name}</strong>
+                  {port.origin && <p className="text-[10px] text-emerald-400 font-semibold">ORIGIN: {port.origin}</p>}
+                  {port.destination && <p className="text-[10px] text-sky-400 font-semibold">DESTINATION: {port.destination}</p>}
+                  {port.cargo && <p className="text-[10px] text-amber-300 font-bold">CARGO: {port.cargo}</p>}
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
+
+      {/* SHIP VOYAGE ROUTE CARD - SHOWN WHEN A SHIP IS SELECTED */}
+      {selectedNodeId && ['desh_vishal', 'swarna_kamal', 'ratna_shalini'].includes(selectedNodeId) && (
+        <div className={`absolute bottom-4 left-4 p-3.5 rounded-lg border shadow-xl z-20 font-mono text-[11px] max-w-sm ${
+          theme === 'dark' ? 'bg-slate-900/95 border-amber-500/50 text-slate-100' : 'bg-white/95 border-amber-500 text-stone-900'
+        }`}>
+          <div className="flex items-center justify-between border-b pb-1.5 mb-2 border-inherit">
+            <span className="font-bold text-amber-400 uppercase tracking-wide">
+              {selectedNodeId === 'desh_vishal' ? 'VLCC DESH VISHAL TELEMETRY' : selectedNodeId === 'swarna_kamal' ? 'VLCC SWARNA KAMAL TELEMETRY' : 'VLCC RATNA SHALINI TELEMETRY'}
+            </span>
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+          </div>
+          <p className="text-[10px] text-slate-300 mb-1">
+            <strong>ORIGIN:</strong> {selectedNodeId === 'desh_vishal' ? 'Fujairah ADCOP Terminal (UAE)' : selectedNodeId === 'swarna_kamal' ? 'Fujairah ADCOP Terminal (UAE)' : 'Enterprise US Gulf Terminal (Texas, USA)'}
+          </p>
+          <p className="text-[10px] text-slate-300 mb-1">
+            <strong>DESTINATION:</strong> {selectedNodeId === 'desh_vishal' ? 'Vadinar SPM (Gujarat, India)' : selectedNodeId === 'swarna_kamal' ? 'Mangalore SPM (Karnataka, India)' : 'Paradip SPM (Odisha, India)'}
+          </p>
+          <p className="text-[10px] text-amber-300 font-bold">
+            LIVE VOYAGE ROUTE HIGHLIGHTED ON MAP 📍
+          </p>
+        </div>
+      )}
 
       {/* MARITIME LOGISTICS LEGEND CARD - ONLY SHOWN WHEN A STRATEGY CARD IS EXPLICITLY CLICKED */}
       {selectedStrategyId && (
