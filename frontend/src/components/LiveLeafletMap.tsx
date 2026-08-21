@@ -12,7 +12,7 @@ function MapFlyToHandler({ targetPos }: { targetPos: [number, number] | null }) 
     if (targetPos) {
       map.flyTo(targetPos, 6.5, { duration: 1.5 });
     } else {
-      map.flyTo([19.5, 67.5], 5, { duration: 1.5 }); // Wide regional view default
+      map.flyTo([19.5, 67.5], 5, { duration: 1.5 });
     }
   }, [targetPos, map]);
   return null;
@@ -45,10 +45,11 @@ const createRadarIcon = (color: string, label: string, isHighlighted: boolean = 
 };
 
 interface LiveLeafletMapProps {
+  theme: 'dark' | 'cream';
   selectedNodeId: string | null;
 }
 
-export default function LiveLeafletMap({ selectedNodeId }: LiveLeafletMapProps) {
+export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
 
@@ -68,7 +69,9 @@ export default function LiveLeafletMap({ selectedNodeId }: LiveLeafletMapProps) 
 
   if (!isMounted) {
     return (
-      <div className="w-full h-[520px] bg-slate-900 rounded-xl flex items-center justify-center text-xs text-slate-400 font-mono">
+      <div className={`w-full h-[520px] rounded-xl flex items-center justify-center text-xs font-mono ${
+        theme === 'dark' ? 'bg-slate-900 text-slate-400' : 'bg-stone-200 text-stone-600'
+      }`}>
         Loading High-Definition AIS Maritime Telemetry Radar...
       </div>
     );
@@ -232,26 +235,35 @@ export default function LiveLeafletMap({ selectedNodeId }: LiveLeafletMapProps) 
   const selectedLocation = locations.find(l => l.id === selectedNodeId);
   const targetPos = selectedLocation ? selectedLocation.pos : null;
 
+  // Dynamic Tile URL based on Theme
+  const tileUrl = theme === 'dark'
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+
+  const popupClass = theme === 'dark' ? 'custom-dark-popup' : 'custom-cream-popup';
+
   // Primary & Alternative Routes
   const hormuzCorridor: [number, number][] = [[26.56, 56.25], [deshLat, deshLng], [22.45, 69.66]];
   const adcopBypassRoute: [number, number][] = [[25.18, 56.36], [swarnaLat, swarnaLng], [12.91, 74.85]];
   const eastCoastLane: [number, number][] = [[ratnaLat, ratnaLng], [17.68, 83.21], [20.26, 86.67]];
 
   return (
-    <div id="leaflet-map-root" className="w-full h-[520px] rounded-xl overflow-hidden border border-slate-700/60 shadow-2xl relative z-0">
+    <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border shadow-2xl relative z-0 ${
+      theme === 'dark' ? 'border-slate-700/60' : 'border-stone-300'
+    }`}>
       <MapContainer
-        key="leaflet-map-instance"
+        key={`leaflet-map-${theme}`}
         center={[19.5, 67.5]}
         zoom={5}
         scrollWheelZoom={false}
         className="w-full h-full relative z-0"
       >
-        {/* Dynamic FlyTo Handler */}
         <MapFlyToHandler targetPos={targetPos} />
 
+        {/* Dynamic CartoDB Dark / Voyager Light Basemap */}
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url={tileUrl}
         />
 
         <Polyline positions={hormuzCorridor} color="#EF4444" weight={3} dashArray="8, 12" />
@@ -264,7 +276,7 @@ export default function LiveLeafletMap({ selectedNodeId }: LiveLeafletMapProps) 
 
           return (
             <Marker key={loc.id} position={loc.pos} icon={icon}>
-              <Popup className="custom-dark-popup">
+              <Popup className={popupClass}>
                 <div className="font-mono text-xs p-1 max-w-[250px] space-y-1.5">
                   <div className="flex items-center justify-between border-b pb-1 border-slate-200">
                     <strong className="text-slate-900 font-bold text-xs">{loc.name}</strong>

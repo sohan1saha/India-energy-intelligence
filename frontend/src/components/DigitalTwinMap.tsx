@@ -159,7 +159,7 @@ export const DigitalTwinMap: React.FC<{
 
       {/* Live Interactive Leaflet GIS Map Container */}
       <div className="mb-3 flex-1">
-        <LiveLeafletMap selectedNodeId={selectedNodeId} />
+        <LiveLeafletMap theme={theme} selectedNodeId={selectedNodeId} />
       </div>
 
       {/* Node Selection Cards Grid */}
@@ -310,11 +310,11 @@ export const DigitalTwinMap: React.FC<{
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] font-sans pt-2 border-t border-inherit">
             <div>
               <span className="font-bold text-slate-400 font-mono text-[10px] block mb-1 uppercase tracking-wide">Strategic National Role</span>
-              <p className="text-slate-300 leading-relaxed">{activeNode.strategicRole}</p>
+              <p className={`leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-stone-700'}`}>{activeNode.strategicRole}</p>
             </div>
             <div>
               <span className="font-bold text-slate-400 font-mono text-[10px] block mb-1 uppercase tracking-wide">Logistics & Infrastructure Connectivity</span>
-              <p className="text-slate-300 leading-relaxed">{activeNode.logisticsConnectivity}</p>
+              <p className={`leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-stone-700'}`}>{activeNode.logisticsConnectivity}</p>
             </div>
           </div>
         </div>
