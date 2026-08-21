@@ -251,7 +251,7 @@ export default function Home() {
         {
           source_country: "ISPRL National Caverns",
           supplier_name: "ISPRL Ministry of Petroleum",
-          crude_grade="National Strategic Reserve Blend",
+          crude_grade: "National Strategic Reserve Blend",
           api_gravity: 32.5,
           sulfur_pct: 1.85,
           volume_bpd: 840000,
