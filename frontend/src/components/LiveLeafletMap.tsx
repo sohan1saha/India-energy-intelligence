@@ -99,7 +99,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
   const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
   const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
 
-  // Global Maritime Shipping Network Base Ports (Matching reference map nodes)
+  // Global Maritime Shipping Network Base Ports
   const ports = [
     // Indian Gateways & Terminals
     { id: "vadinar", name: "VADINAR", pos: [22.45, 69.66] as [number, number], isMajor: true },
@@ -149,8 +149,8 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
     : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
-  // Wallenius Wilhelmsen Style Oceanic Trunk Lines (Curved coastline-following shipping corridors)
-  const middleEastPersianGulfCorridor: [number, number][] = [
+  // Wallenius Wilhelmsen Style Oceanic Corridors (Only displayed when corresponding strategy is clicked)
+  const middleEastBypassCorridor: [number, number][] = [
     [29.37, 47.97], [26.43, 50.10], [25.01, 51.61], [25.00, 55.06], [26.56, 56.25], [25.18, 56.36], [24.36, 56.73], [deshLat, deshLng], [22.45, 69.66]
   ];
 
@@ -188,37 +188,31 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           url={tileUrl}
         />
 
-        {/* ELEGANT SHIPPING NETWORK TRUNK LINES (Matching reference logistics map) */}
-        
-        {/* Strategy 1: Middle East Express Bypass (Cyan / Amber) */}
-        {(!selectedStrategyId || selectedStrategyId === 'strat_bypass') && (
+        {/* DYNAMIC STRATEGY CORRIDORS - ONLY SHOWN WHEN SPECIFIC STRATEGY CARD IS CLICKED */}
+        {selectedStrategyId === 'strat_bypass' && (
           <>
-            <Polyline positions={middleEastPersianGulfCorridor} color="#00F0FF" weight={2.5} opacity={0.8} />
-            <Polyline positions={redSeaBypassCorridor} color="#F59E0B" weight={2.5} opacity={0.85} dashArray="4, 6" />
+            <Polyline positions={middleEastBypassCorridor} color="#00F0FF" weight={3.5} opacity={0.9} />
+            <Polyline positions={redSeaBypassCorridor} color="#F59E0B" weight={3.5} opacity={0.9} dashArray="4, 6" />
           </>
         )}
 
-        {/* Strategy 2: Atlantic Transatlantic Long-Haul (Red) */}
-        {(!selectedStrategyId || selectedStrategyId === 'strat_global_pivot') && (
-          <Polyline positions={atlanticCapeCorridor} color="#EF4444" weight={2.5} opacity={0.85} />
+        {selectedStrategyId === 'strat_global_pivot' && (
+          <Polyline positions={atlanticCapeCorridor} color="#EF4444" weight={3.5} opacity={0.9} />
         )}
 
-        {/* Strategy 3: Far East Pacific ESPO Line (Emerald) */}
-        {(!selectedStrategyId || selectedStrategyId === 'strat_far_east') && (
-          <Polyline positions={farEastPacificCorridor} color="#10B981" weight={2.5} opacity={0.85} />
+        {selectedStrategyId === 'strat_far_east' && (
+          <Polyline positions={farEastPacificCorridor} color="#10B981" weight={3.5} opacity={0.9} />
         )}
 
-        {/* Strategy 4: Latin America Santos Route (Purple) */}
         {selectedStrategyId === 'strat_latam' && (
-          <Polyline positions={atlanticCapeCorridor} color="#A855F7" weight={3} opacity={0.9} />
+          <Polyline positions={atlanticCapeCorridor} color="#A855F7" weight={3.5} opacity={0.9} />
         )}
 
-        {/* Strategy 5: National Reserve Surge (Pink) */}
         {selectedStrategyId === 'strat_national_surge' && (
-          <Polyline positions={domesticSurgeCorridor} color="#EC4899" weight={3.5} opacity={0.9} dashArray="3, 5" />
+          <Polyline positions={domesticSurgeCorridor} color="#EC4899" weight={4} opacity={0.95} dashArray="3, 5" />
         )}
 
-        {/* RENDERING ALL GLOBAL BASE PORTS AS CLEAN RING DOTS & LABELS */}
+        {/* ALL BASE PORTS & TERMINALS */}
         {ports.map((port) => (
           <Marker
             key={port.id}
@@ -235,7 +229,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         ))}
       </MapContainer>
 
-      {/* MARITIME LOGISTICS LEGEND CARD (Matching Wallenius Wilhelmsen Map Reference) */}
+      {/* MARITIME LOGISTICS LEGEND CARD */}
       <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
         theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-white/90 border-stone-300 text-stone-800'
       }`}>
