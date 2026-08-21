@@ -20,7 +20,8 @@ interface NodeDetail {
   subtitle: string;
   stock: string;
   status: string;
-  colorClass: string;
+  colorClassDark: string;
+  colorClassLight: string;
   badgeBg: string;
   badgeText: string;
   refineryFeed: string;
@@ -57,8 +58,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'Reliance Jamnagar & Nayara Energy Crude Intake Hub',
       stock: '55.0M bbls (13.7 Days Cover)',
       status: '100% Operational (SPM-1 & SPM-2 Active)',
-      colorClass: 'text-alert-amber',
-      badgeBg: 'bg-alert-amber/10 border-alert-amber/30 text-alert-amber',
+      colorClassDark: 'text-amber-400',
+      colorClassLight: 'text-amber-800 font-extrabold',
+      badgeBg: 'bg-amber-500/10 border-amber-500/40 text-amber-800 font-bold',
       badgeText: 'Primary Import Gateway',
       refineryFeed: 'Reliance Jamnagar (1.2M bpd / 68 MMT) & Nayara Vadinar (400k bpd / 20 MMT)',
       slateCompatibility: 'High Sulfur Heavy Arabian, Basrah, Murban Sweet (API 31.0° - 40.5°)',
@@ -74,8 +76,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'ISPRL 2.50 MMT Underground National Emergency Stockpile',
       stock: '18.37M bbls (100% Full Capacity)',
       status: 'Ready for LP Emergency Drawdown',
-      colorClass: 'text-alert-emerald',
-      badgeBg: 'bg-alert-emerald/10 border-alert-emerald/30 text-alert-emerald',
+      colorClassDark: 'text-emerald-400',
+      colorClassLight: 'text-emerald-800 font-extrabold',
+      badgeBg: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 font-bold',
       badgeText: '100% National Reserve',
       refineryFeed: 'Mangalore Refinery & Petrochemicals Ltd (MRPL 15 MMT)',
       slateCompatibility: 'Arab / Basrah Sour Heavy Blend (API 32.0°, Sulfur 2.1%)',
@@ -91,8 +94,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'Indian Oil Corporation East Coast Primary Crude Hub',
       stock: '24.0M bbls (16.0 Days Cover)',
       status: 'Operational (Atlantic & Far East Import Active)',
-      colorClass: 'text-alert-cyan',
-      badgeBg: 'bg-alert-cyan/10 border-alert-cyan/30 text-alert-cyan',
+      colorClassDark: 'text-sky-400',
+      colorClassLight: 'text-sky-800 font-extrabold',
+      badgeBg: 'bg-sky-500/10 border-sky-500/40 text-sky-800 font-bold',
       badgeText: 'East Coast Gateway',
       refineryFeed: 'IOCL Paradip 15 MMT, IOCL Haldia 8 MMT & IOCL Barauni 6 MMT',
       slateCompatibility: 'West African Bonny Light, Russian ESPO, US WTI Midland (API 35.0° - 42.0°)',
@@ -108,8 +112,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'Shipping Corporation of India (SCI) Fleet • MMSI 419001234',
       stock: '2.0M bbls Basrah Heavy (At Sea)',
       status: 'Underway at 14.5 Knots • Heading 124°',
-      colorClass: 'text-alert-amber',
-      badgeBg: 'bg-alert-amber/10 border-alert-amber/30 text-alert-amber',
+      colorClassDark: 'text-amber-400',
+      colorClassLight: 'text-amber-800 font-extrabold',
+      badgeBg: 'bg-amber-500/10 border-amber-500/40 text-amber-800 font-bold',
       badgeText: 'Live AIS Telemetry Active',
       refineryFeed: 'ORIGIN: Fujairah ADCOP Terminal (UAE) ➔ DESTINATION: Vadinar SPM (ETA Aug 24)',
       slateCompatibility: 'Basrah Heavy Crude (API 24.0°, Sulfur 3.8%) for Reliance Jamnagar',
@@ -125,8 +130,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'Shipping Corporation of India (SCI) Fleet • MMSI 419005678',
       stock: '2.0M bbls Murban Sweet (At Sea)',
       status: 'Underway at 13.8 Knots • Heading 142°',
-      colorClass: 'text-alert-cyan',
-      badgeBg: 'bg-alert-cyan/10 border-alert-cyan/30 text-alert-cyan',
+      colorClassDark: 'text-sky-400',
+      colorClassLight: 'text-sky-800 font-extrabold',
+      badgeBg: 'bg-sky-500/10 border-sky-500/40 text-sky-800 font-bold',
       badgeText: 'Live AIS Telemetry Active',
       refineryFeed: 'ORIGIN: Fujairah ADCOP Terminal (UAE) ➔ DESTINATION: Mangalore SPM (ETA Aug 25)',
       slateCompatibility: 'Murban Sweet Crude (API 40.2°, Sulfur 0.78%) for MRPL Mangalore',
@@ -142,8 +148,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       subtitle: 'Great Eastern Shipping Fleet • MMSI 419009876',
       stock: '1.9M bbls WTI Midland (At Sea)',
       status: 'Underway at 15.1 Knots • Heading 022°',
-      colorClass: 'text-alert-emerald',
-      badgeBg: 'bg-alert-emerald/10 border-alert-emerald/30 text-alert-emerald',
+      colorClassDark: 'text-emerald-400',
+      colorClassLight: 'text-emerald-800 font-extrabold',
+      badgeBg: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 font-bold',
       badgeText: 'Live AIS Telemetry Active',
       refineryFeed: 'ORIGIN: Enterprise US Gulf Terminal (Texas, USA) ➔ DESTINATION: Paradip SPM (ETA Aug 26)',
       slateCompatibility: 'WTI Midland Crude (API 40.5°, Sulfur 0.20%) for IOCL Paradip',
@@ -171,32 +178,42 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           {selectedNodeId && (
             <button
               onClick={() => onSelectNode(null)}
-              className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 text-xs font-mono transition border border-slate-700"
+              className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-mono transition border ${
+                theme === 'dark' ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-300 text-slate-900 border-slate-400 font-bold'
+              }`}
               title="Reset map view to show full region"
             >
-              <Maximize2 className="w-3 h-3 text-alert-amber" />
+              <Maximize2 className="w-3 h-3 text-amber-500" />
               <span>Reset Wide View</span>
             </button>
           )}
         </div>
         
-        {/* Interactive GIS Legend Bar */}
-        <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+        {/* High-Contrast GIS Legend Bar in Light Mode */}
+        <div className="flex flex-wrap items-center gap-3.5 text-xs font-mono">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-            <span className="text-[11px] text-red-400 font-semibold">Chokepoints (2)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping" />
+            <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-red-400' : 'text-red-700 font-extrabold'}`}>
+              Chokepoints (2)
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-            <span className="text-[11px] text-amber-400 font-semibold">VLCCs at Sea (3)</span>
+            <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800 font-extrabold'}`}>
+              VLCCs at Sea (3)
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-            <span className="text-[11px] text-emerald-400 font-semibold">ISPRL Caverns (3)</span>
+            <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800 font-extrabold'}`}>
+              ISPRL Caverns (3)
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
-            <span className="text-[11px] text-sky-400 font-semibold">SPM Berths (4)</span>
+            <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800 font-extrabold'}`}>
+              SPM Berths (4)
+            </span>
           </div>
         </div>
       </div>
@@ -218,21 +235,21 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           onClick={() => toggleNodeSelection('vadinar')}
           className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'vadinar'
-              ? 'border-alert-amber bg-alert-amber/10 shadow-md ring-2 ring-alert-amber'
+              ? 'border-amber-500 bg-amber-500/10 shadow-md ring-2 ring-amber-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1 text-alert-amber font-bold text-[10px]">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>
               <Anchor className="w-3 h-3" />
               <span>Vadinar SPM</span>
             </div>
-            {selectedNodeId === 'vadinar' && <span className="w-1.5 h-1.5 rounded-full bg-alert-amber animate-pulse" />}
+            {selectedNodeId === 'vadinar' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
           </div>
-          <p className="text-[9px] text-slate-500">Reliance / Nayara</p>
-          <p className="font-bold text-[10px] mt-0.5 text-alert-amber">55.0M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>Reliance / Nayara</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>55.0M bbls</p>
         </div>
 
         {/* Card 2: Padur */}
@@ -240,21 +257,21 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           onClick={() => toggleNodeSelection('padur')}
           className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'padur'
-              ? 'border-alert-emerald bg-alert-emerald/10 shadow-md ring-2 ring-alert-emerald'
+              ? 'border-emerald-500 bg-emerald-500/10 shadow-md ring-2 ring-emerald-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1 text-alert-emerald font-bold text-[10px]">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>
               <Database className="w-3 h-3" />
               <span>Padur Cavern</span>
             </div>
-            {selectedNodeId === 'padur' && <span className="w-1.5 h-1.5 rounded-full bg-alert-emerald animate-pulse" />}
+            {selectedNodeId === 'padur' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
           </div>
-          <p className="text-[9px] text-slate-500">ISPRL 2.5 MMT</p>
-          <p className="font-bold text-[10px] mt-0.5 text-alert-emerald">18.37M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>ISPRL 2.5 MMT</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>18.37M bbls</p>
         </div>
 
         {/* Card 3: Paradip */}
@@ -262,21 +279,21 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           onClick={() => toggleNodeSelection('paradip')}
           className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'paradip'
-              ? 'border-alert-cyan bg-alert-cyan/10 shadow-md ring-2 ring-alert-cyan'
+              ? 'border-sky-500 bg-sky-500/10 shadow-md ring-2 ring-sky-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1 text-alert-cyan font-bold text-[10px]">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>
               <Factory className="w-3 h-3" />
               <span>Paradip IOCL</span>
             </div>
-            {selectedNodeId === 'paradip' && <span className="w-1.5 h-1.5 rounded-full bg-alert-cyan animate-pulse" />}
+            {selectedNodeId === 'paradip' && <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />}
           </div>
-          <p className="text-[9px] text-slate-500">IOCL East Coast</p>
-          <p className="font-bold text-[10px] mt-0.5 text-alert-cyan">24.0M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>IOCL East Coast</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>24.0M bbls</p>
         </div>
 
         {/* Card 4: Desh Vishal */}
@@ -284,21 +301,21 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           onClick={() => toggleNodeSelection('desh_vishal')}
           className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'desh_vishal'
-              ? 'border-alert-amber bg-alert-amber/10 shadow-md ring-2 ring-alert-amber'
+              ? 'border-amber-500 bg-amber-500/10 shadow-md ring-2 ring-amber-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1 text-alert-amber font-bold text-[10px]">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>
               <Navigation className="w-3 h-3" />
               <span>Desh Vishal</span>
             </div>
-            {selectedNodeId === 'desh_vishal' && <span className="w-1.5 h-1.5 rounded-full bg-alert-amber animate-pulse" />}
+            {selectedNodeId === 'desh_vishal' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
           </div>
-          <p className="text-[9px] text-slate-500">Fujairah ➔ Vadinar</p>
-          <p className="font-bold text-[10px] mt-0.5 text-alert-amber">2.0M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>Fujairah ➔ Vadinar</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>2.0M bbls</p>
         </div>
 
         {/* Card 5: Swarna Kamal */}
@@ -306,21 +323,21 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           onClick={() => toggleNodeSelection('swarna_kamal')}
           className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'swarna_kamal'
-              ? 'border-alert-cyan bg-alert-cyan/10 shadow-md ring-2 ring-alert-cyan'
+              ? 'border-sky-500 bg-sky-500/10 shadow-md ring-2 ring-sky-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1 text-alert-cyan font-bold text-[10px]">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>
               <Navigation className="w-3 h-3" />
               <span>Swarna Kamal</span>
             </div>
-            {selectedNodeId === 'swarna_kamal' && <span className="w-1.5 h-1.5 rounded-full bg-alert-cyan animate-pulse" />}
+            {selectedNodeId === 'swarna_kamal' && <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />}
           </div>
-          <p className="text-[9px] text-slate-500">Fujairah ➔ MRPL</p>
-          <p className="font-bold text-[10px] mt-0.5 text-alert-cyan">2.0M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>Fujairah ➔ MRPL</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>2.0M bbls</p>
         </div>
 
         {/* Card 6: Ratna Shalini */}
@@ -328,21 +345,21 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           onClick={() => toggleNodeSelection('ratna_shalini')}
           className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'ratna_shalini'
-              ? 'border-alert-emerald bg-alert-emerald/10 shadow-md ring-2 ring-alert-emerald'
+              ? 'border-emerald-500 bg-emerald-500/10 shadow-md ring-2 ring-emerald-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-400'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1 text-alert-emerald font-bold text-[10px]">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>
               <Navigation className="w-3 h-3" />
               <span>Ratna Shalini</span>
             </div>
-            {selectedNodeId === 'ratna_shalini' && <span className="w-1.5 h-1.5 rounded-full bg-alert-emerald animate-pulse" />}
+            {selectedNodeId === 'ratna_shalini' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
           </div>
-          <p className="text-[9px] text-slate-500">US Gulf ➔ Paradip</p>
-          <p className="font-bold text-[10px] mt-0.5 text-alert-emerald">1.9M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>US Gulf ➔ Paradip</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>1.9M bbls</p>
         </div>
       </div>
 
@@ -355,7 +372,9 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-inherit">
             <div>
               <div className="flex items-center gap-2">
-                <h3 className={`font-bold text-xs ${activeNode.colorClass}`}>{activeNode.name}</h3>
+                <h3 className={`font-bold text-xs ${theme === 'dark' ? activeNode.colorClassDark : activeNode.colorClassLight}`}>
+                  {activeNode.name}
+                </h3>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${activeNode.badgeBg}`}>
                   {activeNode.badgeText}
                 </span>
@@ -376,38 +395,38 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-[11px] mb-3">
             <div className={`p-2.5 rounded border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
               <span className="text-[10px] text-slate-500 block mb-1">LIVE STOCK / CAPACITY</span>
-              <p className="font-bold text-xs text-alert-emerald">{activeNode.stock}</p>
-              <span className="text-[10px] text-slate-400 block mt-0.5">{activeNode.status}</span>
+              <p className={`font-bold text-xs ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>{activeNode.stock}</p>
+              <span className="text-[10px] text-slate-500 block mt-0.5">{activeNode.status}</span>
             </div>
 
             <div className={`p-2.5 rounded border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
               <span className="text-[10px] text-slate-500 block mb-1">ROUTE TELEMETRY (ORIGIN ➔ DEST)</span>
-              <p className="font-bold text-xs text-alert-amber line-clamp-1">{activeNode.refineryFeed}</p>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Offtake & Delivery Gateway</span>
+              <p className={`font-bold text-xs ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'} line-clamp-1`}>{activeNode.refineryFeed}</p>
+              <span className="text-[10px] text-slate-500 block mt-0.5">Offtake & Delivery Gateway</span>
             </div>
 
             <div className={`p-2.5 rounded border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
               <span className="text-[10px] text-slate-500 block mb-1">CRUDE SLATE COMPATIBILITY</span>
-              <p className="font-bold text-xs text-alert-cyan line-clamp-1">{activeNode.slateCompatibility}</p>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Assay Matched</span>
+              <p className={`font-bold text-xs ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'} line-clamp-1`}>{activeNode.slateCompatibility}</p>
+              <span className="text-[10px] text-slate-500 block mt-0.5">Assay Matched</span>
             </div>
 
             <div className={`p-2.5 rounded border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
               <span className="text-[10px] text-slate-500 block mb-1">OFFLOADING / SPEED</span>
               <p className="font-bold text-xs">{activeNode.drawdownRateOrSpeed}</p>
-              <span className="text-[10px] text-alert-emerald block mt-0.5">{activeNode.bufferDays}</span>
+              <span className={`text-[10px] block mt-0.5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800 font-bold'}`}>{activeNode.bufferDays}</span>
             </div>
           </div>
 
           {/* Strategic Role & Logistics Breakdown */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] font-sans pt-2 border-t border-inherit">
             <div>
-              <span className="font-bold text-slate-400 font-mono text-[10px] block mb-1 uppercase tracking-wide">Strategic National Role</span>
-              <p className={`leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-stone-700'}`}>{activeNode.strategicRole}</p>
+              <span className="font-bold text-slate-500 font-mono text-[10px] block mb-1 uppercase tracking-wide">Strategic National Role</span>
+              <p className={`leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-slate-900 font-medium'}`}>{activeNode.strategicRole}</p>
             </div>
             <div>
-              <span className="font-bold text-slate-400 font-mono text-[10px] block mb-1 uppercase tracking-wide">Logistics & Infrastructure Connectivity</span>
-              <p className={`leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-stone-700'}`}>{activeNode.logisticsConnectivity}</p>
+              <span className="font-bold text-slate-500 font-mono text-[10px] block mb-1 uppercase tracking-wide">Logistics & Infrastructure Connectivity</span>
+              <p className={`leading-relaxed ${theme === 'dark' ? 'text-slate-300' : 'text-slate-900 font-medium'}`}>{activeNode.logisticsConnectivity}</p>
             </div>
           </div>
         </div>
