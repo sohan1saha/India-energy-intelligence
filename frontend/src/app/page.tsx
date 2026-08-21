@@ -8,13 +8,11 @@ import { ScenarioSandbox } from '@/components/ScenarioSandbox';
 import { SPROptimizerCard } from '@/components/SPROptimizerCard';
 import { ProcurementMatrix } from '@/components/ProcurementMatrix';
 import { AICopilotDrawer } from '@/components/AICopilotDrawer';
-import { TenderModal } from '@/components/TenderModal';
-import { ShieldAlert, Database, Navigation, Activity, Bot, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { ShieldAlert, Database, Navigation, Activity, Bot } from 'lucide-react';
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
-  const [isTenderModalOpen, setIsTenderModalOpen] = useState<boolean>(false);
 
   const [corridors, setCorridors] = useState<any[]>([
     {
@@ -182,8 +180,6 @@ export default function Home() {
     }
   ]);
 
-  const [activeTender, setActiveTender] = useState<any>(strategies[0]);
-
   useEffect(() => {
     fetch('http://localhost:8000/api/risk/report')
       .then(res => res.json())
@@ -231,11 +227,6 @@ export default function Home() {
     }
   };
 
-  const handleOpenTenderModal = (strat?: any) => {
-    if (strat) setActiveTender(strat);
-    setIsTenderModalOpen(true);
-  };
-
   return (
     <div className={`min-h-screen transition-colors duration-200 ${
       theme === 'dark' ? 'bg-dark-bg text-dark-text' : 'bg-cream-bg text-cream-text'
@@ -244,15 +235,13 @@ export default function Home() {
       <Header
         theme={theme}
         toggleTheme={() => setTheme(prev => prev === 'dark' ? 'cream' : 'dark')}
-        onOpenTenderModal={() => handleOpenTenderModal(strategies[0])}
       />
 
       {/* Main Command Center Container */}
       <main className="p-4 md:p-6 space-y-6 max-w-[1680px] mx-auto">
         
-        {/* TIER 1: TOP HERO KPI BANNER (Executive Situational Awareness) */}
+        {/* TIER 1: TOP HERO KPI BANNER */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
-          {/* Card 1: National Risk Index */}
           <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>NATIONAL RISK INDEX</span>
@@ -267,7 +256,6 @@ export default function Home() {
             <p className="text-[11px] text-slate-500 mt-1 font-sans">Hormuz & Red Sea Chokepoint Alerts Active</p>
           </div>
 
-          {/* Card 2: ISPRL Reserve Cover */}
           <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>ISPRL STRATEGIC RESERVE</span>
@@ -280,7 +268,6 @@ export default function Home() {
             <p className="text-[11px] text-slate-500 mt-1 font-sans">Visakhapatnam, Mangalore & Padur Caverns</p>
           </div>
 
-          {/* Card 3: Daily Imports & Dependency */}
           <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>DAILY CRUDE IMPORTS</span>
@@ -293,7 +280,6 @@ export default function Home() {
             <p className="text-[11px] text-slate-500 mt-1 font-sans">45% Volume Transits Strait of Hormuz</p>
           </div>
 
-          {/* Card 4: Supertankers at Sea */}
           <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>SUPERTANKERS AT SEA</span>
@@ -307,9 +293,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* TIER 2: PRIMARY SPLIT GRID (70% Live GIS Map Centerpiece + 30% Threat Radar) */}
+        {/* TIER 2: PRIMARY SPLIT GRID (60% Map / 40% Threats) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          {/* Main Interactive Map (7 Cols / ~60%) */}
           <div className="lg:col-span-7 flex flex-col">
             <DigitalTwinMap
               theme={theme}
@@ -318,16 +303,13 @@ export default function Home() {
               totalReserveMbbl={39.16}
             />
           </div>
-
-          {/* Live Geopolitical Threat Radar (5 Cols / ~40%) */}
           <div className="lg:col-span-5 flex flex-col">
             <RiskRadar theme={theme} corridors={corridors} />
           </div>
         </div>
 
-        {/* TIER 3: SECONDARY SPLIT GRID (60% Scenario Modeller + 40% ISPRL Reserve Optimizer) */}
+        {/* TIER 3: SECONDARY SPLIT GRID (60% Scenario Sandbox / 40% ISPRL Optimizer) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          {/* Disruption Scenario Modeller (7 Cols) */}
           <div className="lg:col-span-7 flex flex-col">
             <ScenarioSandbox
               theme={theme}
@@ -335,19 +317,16 @@ export default function Home() {
               simulationResult={simulationResult}
             />
           </div>
-
-          {/* ISPRL Strategic Reserve Optimizer (5 Cols) */}
           <div className="lg:col-span-5 flex flex-col">
             <SPROptimizerCard theme={theme} daysExtended={18.0} />
           </div>
         </div>
 
-        {/* TIER 4: FULL-WIDTH ACTION COMMAND SECTION (Adaptive Procurement Orchestrator & Tenders) */}
+        {/* TIER 4: FULL-WIDTH ACTION COMMAND SECTION (Inline MoPNG Emergency Tender Specs & Rerouting) */}
         <div className="w-full">
           <ProcurementMatrix
             theme={theme}
             strategies={strategies}
-            onOpenTenderModal={(strat) => handleOpenTenderModal(strat)}
           />
         </div>
 
@@ -367,15 +346,6 @@ export default function Home() {
         theme={theme}
         isOpen={isCopilotOpen}
         onClose={() => setIsCopilotOpen(false)}
-      />
-
-      {/* Emergency Tender Spec Modal */}
-      <TenderModal
-        theme={theme}
-        isOpen={isTenderModalOpen}
-        onClose={() => setIsTenderModalOpen(false)}
-        tenderJson={activeTender?.executable_tender_json || ''}
-        tenderText={activeTender?.tender_summary_pdf_text || ''}
       />
     </div>
   );
