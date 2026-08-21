@@ -19,9 +19,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         {/* Title */}
         <div>
           <h1 className="text-xl font-bold tracking-tight">UrjaAegis AI</h1>
-          <p className={`text-xs ${theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'}`}>
-            AI-Driven Energy Supply Chain Resilience & Procurement Rerouting Engine
-          </p>
         </div>
 
         {/* Status Indicator & Theme Toggle */}
