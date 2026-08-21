@@ -229,33 +229,64 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         ))}
       </MapContainer>
 
-      {/* MARITIME LOGISTICS LEGEND CARD */}
-      <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
-        theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-white/90 border-stone-300 text-stone-800'
-      }`}>
-        <div className="font-bold uppercase tracking-wider mb-2 border-b pb-1 border-inherit flex items-center justify-between gap-3">
-          <span>MARITIME SERVICE NETWORK</span>
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+      {/* MARITIME LOGISTICS LEGEND CARD - ONLY SHOWN WHEN A STRATEGY CARD IS EXPLICITLY CLICKED */}
+      {selectedStrategyId && (
+        <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
+          theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-white/90 border-stone-300 text-stone-800'
+        }`}>
+          <div className="font-bold uppercase tracking-wider mb-2 border-b pb-1 border-inherit flex items-center justify-between gap-3">
+            <span>ACTIVE STRATEGY NETWORK</span>
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          </div>
+          <div className="space-y-1.5">
+            {selectedStrategyId === 'strat_bypass' && (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-0.5 bg-amber-500"></span>
+                  <span>PERSIAN GULF / ADCOP BYPASS</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-0.5 bg-cyan-400"></span>
+                  <span>RED SEA YANBU PETROLINE</span>
+                </div>
+              </>
+            )}
+
+            {selectedStrategyId === 'strat_global_pivot' && (
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-0.5 bg-red-500"></span>
+                <span>TRANSATLANTIC & CAPE SERVICE</span>
+              </div>
+            )}
+
+            {selectedStrategyId === 'strat_far_east' && (
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-0.5 bg-emerald-500"></span>
+                <span>FAR EAST & ESPO PACIFIC CORRIDOR</span>
+              </div>
+            )}
+
+            {selectedStrategyId === 'strat_latam' && (
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-0.5 bg-purple-500"></span>
+                <span>SOUTH AMERICAN TRANSATLANTIC ROUTE</span>
+              </div>
+            )}
+
+            {selectedStrategyId === 'strat_national_surge' && (
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-0.5 bg-pink-500"></span>
+                <span>NATIONAL ISPRL & ONGC SURGE</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 pt-1 border-t border-inherit">
+              <span className="w-2 h-2 rounded-full bg-white ring-1 ring-cyan-400"></span>
+              <span>BASE PORTS & SPM TERMINALS</span>
+            </div>
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-0.5 bg-red-500"></span>
-            <span>TRANSATLANTIC & CAPE SERVICE</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-0.5 bg-cyan-400"></span>
-            <span>PERSIAN GULF / ADCOP BYPASS</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-0.5 bg-emerald-500"></span>
-            <span>FAR EAST & ESPO PACIFIC CORRIDOR</span>
-          </div>
-          <div className="flex items-center gap-2 pt-1 border-t border-inherit">
-            <span className="w-2 h-2 rounded-full bg-white ring-1 ring-cyan-400"></span>
-            <span>BASE PORTS & SPM TERMINALS</span>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
