@@ -308,6 +308,9 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
               eventHandlers={{
                 mouseover: (e) => {
                   e.target.openPopup();
+                },
+                mouseout: (e) => {
+                  e.target.closePopup();
                 }
               }}
             >
