@@ -435,7 +435,12 @@ export default function Home() {
             />
           </div>
           <div className="lg:col-span-5 flex flex-col">
-            <SPROptimizerCard theme={theme} daysExtended={18.0} />
+            <SPROptimizerCard
+              theme={theme}
+              daysExtended={18.0}
+              selectedNodeId={selectedNodeId}
+              onSelectCavern={(cavernId) => handleSelectNode(selectedNodeId === cavernId ? null : cavernId)}
+            />
           </div>
         </div>
 

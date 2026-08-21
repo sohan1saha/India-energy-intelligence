@@ -1,14 +1,27 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Database } from 'lucide-react';
 
 interface SPROptimizerCardProps {
   theme: 'dark' | 'cream';
   daysExtended: number;
+  selectedNodeId?: string | null;
+  onSelectCavern?: (cavernId: string) => void;
 }
 
-export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysExtended }) => {
+export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
+  theme,
+  daysExtended,
+  selectedNodeId,
+  onSelectCavern
+}) => {
+  const handleCavernClick = (id: string) => {
+    if (onSelectCavern) {
+      onSelectCavern(id);
+    }
+  };
+
   return (
     <div className={`p-5 rounded-xl border transition-colors flex flex-col h-full ${
       theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
@@ -25,11 +38,22 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
 
       {/* Cavern Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 font-mono">
-        <div className={`p-3.5 rounded-lg border ${
-          theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
-        }`}>
+        {/* Padur Cavern Box */}
+        <div
+          onClick={() => handleCavernClick('padur')}
+          className={`p-3.5 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'padur'
+              ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500 shadow-md scale-[1.02]'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-500'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
+          }`}
+        >
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-xs font-bold truncate">Padur Cavern</span>
+            <div className="flex items-center gap-1 text-xs font-bold truncate">
+              <Database className="w-3 h-3 text-emerald-500 shrink-0" />
+              <span>Padur Cavern</span>
+            </div>
             <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>2.50 MMT</span>
           </div>
           <p className="text-[10px] text-slate-500 mb-2 font-medium">Karnataka • 18.37M bbls</p>
@@ -43,11 +67,22 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
           </div>
         </div>
 
-        <div className={`p-3.5 rounded-lg border ${
-          theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
-        }`}>
+        {/* Mangalore Cavern Box */}
+        <div
+          onClick={() => handleCavernClick('mangalore')}
+          className={`p-3.5 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'mangalore'
+              ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500 shadow-md scale-[1.02]'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-500'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
+          }`}
+        >
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-xs font-bold truncate">Mangalore Cavern</span>
+            <div className="flex items-center gap-1 text-xs font-bold truncate">
+              <Database className="w-3 h-3 text-emerald-500 shrink-0" />
+              <span>Mangalore Cavern</span>
+            </div>
             <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>1.50 MMT</span>
           </div>
           <p className="text-[10px] text-slate-500 mb-2 font-medium">Karnataka • 11.02M bbls</p>
@@ -61,11 +96,22 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
           </div>
         </div>
 
-        <div className={`p-3.5 rounded-lg border ${
-          theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
-        }`}>
+        {/* Visakhapatnam Cavern Box */}
+        <div
+          onClick={() => handleCavernClick('visakh')}
+          className={`p-3.5 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'visakh'
+              ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500 shadow-md scale-[1.02]'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-500'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
+          }`}
+        >
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-xs font-bold truncate">Visakhapatnam</span>
+            <div className="flex items-center gap-1 text-xs font-bold truncate">
+              <Database className="w-3 h-3 text-emerald-500 shrink-0" />
+              <span>Visakhapatnam</span>
+            </div>
             <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>1.33 MMT</span>
           </div>
           <p className="text-[10px] text-slate-500 mb-2 font-medium">Andhra Pradesh • 9.77M bbls</p>
