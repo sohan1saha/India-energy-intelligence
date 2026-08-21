@@ -49,10 +49,10 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
 
   const econ = simulationResult?.economic_impact;
 
-  // Minimalist track styling
-  const getTrackStyle = (val: number, max: number, color: string) => {
-    const pct = (val / max) * 100;
-    const bgTrack = theme === 'dark' ? '#1E293B' : '#C5CBD3';
+  // Exact math calculation for HTML input range fill percentage considering min and max
+  const getTrackStyle = (val: number, min: number, max: number, color: string) => {
+    const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
+    const bgTrack = theme === 'dark' ? '#1E293B' : '#7E8C9F';
     return {
       background: `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, ${bgTrack} ${pct}%, ${bgTrack} 100%)`
     };
@@ -93,7 +93,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               min="0"
               max="100"
               value={hormuz}
-              style={getTrackStyle(hormuz, 100, '#EF4444')}
+              style={getTrackStyle(hormuz, 0, 100, '#EF4444')}
               onChange={(e) => handleSliderChange(Number(e.target.value), redSea, russian, duration)}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-red-500 focus:outline-none transition"
             />
@@ -112,7 +112,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               min="0"
               max="100"
               value={redSea}
-              style={getTrackStyle(redSea, 100, '#F59E0B')}
+              style={getTrackStyle(redSea, 0, 100, '#F59E0B')}
               onChange={(e) => handleSliderChange(hormuz, Number(e.target.value), russian, duration)}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none transition"
             />
@@ -131,7 +131,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               min="0"
               max="100"
               value={russian}
-              style={getTrackStyle(russian, 100, '#06B6D4')}
+              style={getTrackStyle(russian, 0, 100, '#06B6D4')}
               onChange={(e) => handleSliderChange(hormuz, redSea, Number(e.target.value), duration)}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-sky-500 focus:outline-none transition"
             />
@@ -150,7 +150,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               min="7"
               max="90"
               value={duration}
-              style={getTrackStyle(duration, 90, '#10B981')}
+              style={getTrackStyle(duration, 7, 90, '#10B981')}
               onChange={(e) => handleSliderChange(hormuz, redSea, russian, Number(e.target.value))}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none transition"
             />
