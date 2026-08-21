@@ -16,7 +16,9 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
         <h2 className="text-sm font-bold uppercase tracking-wider">Strategic Reserve (ISPRL) Optimisation Agent</h2>
-        <span className="px-2 py-0.5 text-xs font-semibold rounded bg-alert-emerald/10 text-alert-emerald border border-alert-emerald/20 font-mono">
+        <span className={`px-2 py-0.5 text-xs font-semibold rounded border font-mono ${
+          theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-emerald-100 text-emerald-800 border-emerald-300 font-bold'
+        }`}>
           LP Drawdown Active
         </span>
       </div>
@@ -26,54 +28,54 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
         <div className={`p-3.5 rounded-lg border ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
         }`}>
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-bold">Padur Cavern</span>
-            <span className="text-[10px] text-alert-emerald font-bold">2.50 MMT</span>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-xs font-bold truncate">Padur Cavern</span>
+            <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>2.50 MMT</span>
           </div>
-          <p className="text-[10px] text-slate-500 mb-2">Karnataka • 18.37M bbls</p>
+          <p className="text-[10px] text-slate-500 mb-2 font-medium">Karnataka • 18.37M bbls</p>
           
-          <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-2">
-            <div className="bg-alert-emerald h-full w-[85%]" />
+          <div className={`w-full h-2 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-300'}`}>
+            <div className="bg-emerald-500 h-full w-[85%]" />
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Drawdown: <strong>240k bpd</strong></span>
-            <span className="text-alert-emerald">85% Capacity</span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>85% Capacity</span>
           </div>
         </div>
 
         <div className={`p-3.5 rounded-lg border ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
         }`}>
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-bold">Mangalore Cavern</span>
-            <span className="text-[10px] text-alert-emerald font-bold">1.50 MMT</span>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-xs font-bold truncate">Mangalore Cavern</span>
+            <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>1.50 MMT</span>
           </div>
-          <p className="text-[10px] text-slate-500 mb-2">Karnataka • 11.02M bbls</p>
+          <p className="text-[10px] text-slate-500 mb-2 font-medium">Karnataka • 11.02M bbls</p>
           
-          <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-2">
-            <div className="bg-alert-emerald h-full w-[80%]" />
+          <div className={`w-full h-2 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-300'}`}>
+            <div className="bg-emerald-500 h-full w-[80%]" />
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Drawdown: <strong>140k bpd</strong></span>
-            <span className="text-alert-emerald">80% Capacity</span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>80% Capacity</span>
           </div>
         </div>
 
         <div className={`p-3.5 rounded-lg border ${
           theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
         }`}>
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-bold">Visakhapatnam Cavern</span>
-            <span className="text-[10px] text-alert-emerald font-bold">1.33 MMT</span>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <span className="text-xs font-bold truncate">Visakhapatnam</span>
+            <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>1.33 MMT</span>
           </div>
-          <p className="text-[10px] text-slate-500 mb-2">Andhra Pradesh • 9.77M bbls</p>
+          <p className="text-[10px] text-slate-500 mb-2 font-medium">Andhra Pradesh • 9.77M bbls</p>
           
-          <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-2">
-            <div className="bg-alert-emerald h-full w-[90%]" />
+          <div className={`w-full h-2 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-300'}`}>
+            <div className="bg-emerald-500 h-full w-[90%]" />
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Drawdown: <strong>120k bpd</strong></span>
-            <span className="text-alert-emerald">90% Capacity</span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>90% Capacity</span>
           </div>
         </div>
       </div>
@@ -83,10 +85,12 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({ theme, daysE
         theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
       }`}>
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-alert-emerald" />
+          <ShieldCheck className="w-4 h-4 text-emerald-500" />
           <span>National Defense Floor: <strong>15% Reserved</strong></span>
         </div>
-        <span className="text-alert-emerald font-bold">+18.0 Additional Refining Days</span>
+        <span className={`font-extrabold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>
+          +{daysExtended.toFixed(1)} Additional Refining Days
+        </span>
       </div>
     </div>
   );
