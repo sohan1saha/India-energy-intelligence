@@ -230,7 +230,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       cargo: "2.0M bbls Basrah Heavy",
       origin: "Fujairah ADCOP Terminal (UAE)",
       destination: "Vadinar SPM (Gujarat) [ETA Aug 24]",
-      desc: "MMSI 419001234 • Indian Flag (SCI) • Live GPS Telemetry Active."
+      desc: "MMSI 419001234 • Indian Flag (SCI) • Live Telemetry Active"
     },
     {
       id: "swarna_kamal",
@@ -243,7 +243,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       cargo: "2.0M bbls Murban Sweet",
       origin: "Fujairah ADCOP Terminal (UAE)",
       destination: "Mangalore SPM (MRPL) [ETA Aug 25]",
-      desc: "MMSI 419005678 • SCI Fleet • ADCOP Bypassed Cargo in Transit."
+      desc: "MMSI 419005678 • SCI Fleet • ADCOP Bypass Active"
     },
     {
       id: "ratna_shalini",
@@ -256,7 +256,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
       cargo: "1.9M bbls WTI Midland",
       origin: "Enterprise US Gulf Terminal (Texas, USA)",
       destination: "Paradip SPM (Odisha) [ETA Aug 26]",
-      desc: "MMSI 419009876 • Great Eastern Fleet • Transatlantic Sourcing Route."
+      desc: "MMSI 419009876 • Great Eastern Fleet • Transatlantic Sourcing"
     }
   ];
 
@@ -303,49 +303,59 @@ export default function LiveLeafletMap({ theme, selectedNodeId }: LiveLeafletMap
           return (
             <Marker key={loc.id} position={loc.pos} icon={icon}>
               <Popup className={popupClass}>
-                <div className="font-mono text-xs p-1 max-w-[260px] space-y-1.5">
-                  <div className="flex items-center justify-between border-b pb-1 border-slate-200">
-                    <strong className="text-slate-900 font-bold text-xs">{loc.name}</strong>
+                <div className={`font-mono text-xs p-1 max-w-[270px] space-y-1.5 ${
+                  theme === 'dark' ? 'text-slate-100' : 'text-stone-900'
+                }`}>
+                  {/* Header Title */}
+                  <div className="flex items-center justify-between border-b pb-1 border-slate-700/60">
+                    <strong className={`font-bold text-xs ${
+                      theme === 'dark' ? 'text-white' : 'text-stone-900'
+                    }`}>{loc.name}</strong>
                     {loc.threatScore && (
-                      <span className="px-1.5 py-0.5 rounded bg-red-100 text-red-700 text-[10px] font-bold">
+                      <span className="px-1.5 py-0.5 rounded bg-red-500/20 border border-red-500/40 text-red-400 text-[10px] font-bold">
                         {loc.threatScore}
                       </span>
                     )}
                   </div>
                   
-                  <p className="text-[11px] text-slate-700 font-sans leading-tight">{loc.desc}</p>
+                  <p className={`text-[11px] font-sans leading-tight ${
+                    theme === 'dark' ? 'text-slate-300' : 'text-stone-700'
+                  }`}>{loc.desc}</p>
 
+                  {/* Sleek High-Contrast Route Badges */}
                   {loc.origin && (
-                    <div className="text-[10px] text-slate-900 font-semibold bg-emerald-100 p-1 rounded">
-                      Origin: {loc.origin}
+                    <div className="text-[10px] font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 p-1.5 rounded flex items-start gap-1">
+                      <span className="font-bold text-emerald-400">ORIGIN:</span>
+                      <span className="truncate">{loc.origin}</span>
                     </div>
                   )}
 
                   {loc.destination && (
-                    <div className="text-[10px] text-blue-900 font-bold bg-blue-100 p-1 rounded">
-                      Destination: {loc.destination}
+                    <div className="text-[10px] font-bold bg-sky-950/80 text-sky-300 border border-sky-500/40 p-1.5 rounded flex items-start gap-1">
+                      <span className="font-bold text-sky-400">DESTINATION:</span>
+                      <span className="truncate">{loc.destination}</span>
                     </div>
                   )}
 
                   {loc.status && (
-                    <div className="text-[10px] text-amber-900 font-semibold bg-amber-100 p-1 rounded">
-                      Status: {loc.status}
+                    <div className="text-[10px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-500/40 p-1 rounded">
+                      STATUS: {loc.status}
                     </div>
                   )}
                   
                   {loc.capacity && (
-                    <div className="text-[10px] text-slate-800 font-semibold bg-slate-100 p-1 rounded">
-                      Capacity: {loc.capacity}
+                    <div className="text-[10px] font-semibold bg-slate-800/80 text-slate-200 border border-slate-700 p-1 rounded">
+                      CAPACITY: {loc.capacity}
                     </div>
                   )}
                   {loc.cargo && (
-                    <div className="text-[10px] text-amber-800 font-semibold bg-amber-50 p-1 rounded">
-                      Cargo: {loc.cargo}
+                    <div className="text-[10px] font-semibold bg-slate-800/90 text-amber-300 border border-slate-700 p-1 rounded">
+                      CARGO: {loc.cargo}
                     </div>
                   )}
                   {loc.action && (
-                    <div className="text-[10px] text-blue-700 font-bold bg-blue-50 p-1 rounded">
-                      {loc.action}
+                    <div className="text-[10px] font-bold text-sky-400 bg-sky-950/40 border border-sky-800/50 p-1 rounded">
+                      ACTION: {loc.action}
                     </div>
                   )}
                 </div>
