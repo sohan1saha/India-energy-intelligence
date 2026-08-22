@@ -148,14 +148,8 @@ export const ProcurementMatrix: React.FC<ProcurementMatrixProps> = ({
           <div className={`p-4 rounded-lg border ${
             theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'
           }`}>
-            <h3 className="text-xs font-bold uppercase tracking-wide mb-3 font-mono flex items-center justify-between">
-              <span>Crude Basket Allocation & Logistics Rerouting ({selectedStrategy.name})</span>
-              <button
-                onClick={() => handleSelect(selectedStrategy.strategy_id)}
-                className="text-[10px] text-alert-amber hover:underline font-normal"
-              >
-                [ Clear Strategy Selection ]
-              </button>
+            <h3 className="text-xs font-bold uppercase tracking-wide mb-3 font-mono">
+              Crude Basket Allocation & Logistics Rerouting ({selectedStrategy.name})
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-[11px] font-mono text-left">
