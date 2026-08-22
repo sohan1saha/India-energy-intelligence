@@ -191,6 +191,12 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     [-33.00, 16.50], [-34.35, 18.47], [-33.50, 21.00]
   ];
 
+  // Strict World Latitude/Longitude Bounds to eliminate white/grey empty space above/below world map
+  const maxWorldBounds: L.LatLngBoundsExpression = [
+    [-65.0, -180.0],
+    [75.0, 180.0]
+  ];
+
   return (
     <div id="leaflet-map-root" className={`w-full h-[520px] rounded-xl overflow-hidden border relative z-0 ${
       theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17] shadow-2xl' : 'border-[#7E8C9F] bg-[#BCC5D1]'
@@ -198,7 +204,11 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       <MapContainer
         key={`leaflet-map-${theme}`}
         center={[19.5, 67.5]}
-        zoom={5}
+        zoom={4}
+        minZoom={3}
+        maxZoom={10}
+        maxBounds={maxWorldBounds}
+        maxBoundsViscosity={1.0}
         scrollWheelZoom={true}
         zoomControl={true}
         className="w-full h-full relative z-0"
@@ -206,6 +216,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url={tileUrl}
+          noWrap={true}
         />
 
         {/* DYNAMIC STRATEGY CORRIDORS - SHOWN WHEN STRATEGY CARD IS CLICKED */}
