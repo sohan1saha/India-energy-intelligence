@@ -22,47 +22,63 @@ export default function Home() {
 
   const [corridors, setCorridors] = useState<any[]>([
     {
+      id: "corridor_hormuz",
       code: "hormuz",
       name: "Strait of Hormuz",
+      risk_score: 82.5,
       threat_score: 82.5,
       risk_level: "HIGH_RISK",
       transit_delay_days: 4.5,
+      war_risk_insurance_pct: 1.25,
       war_insurance_surcharge_pct: 1.25,
       daily_volume_mbpd: 21.0,
       bypass_route_available: true,
+      threat_description: "High Tension Standoff • Coastal Battery Deployment • 45% India Crude Baseline Transits Here",
       status_summary: "High Tension Standoff • Coastal Battery Deployment • 45% India Crude Baseline Transits Here"
     },
     {
+      id: "corridor_red_sea",
       code: "red_sea",
       name: "Bab-el-Mandeb & Red Sea",
+      risk_score: 76.0,
       threat_score: 76.0,
       risk_level: "HIGH_RISK",
       transit_delay_days: 16.0,
+      war_risk_insurance_pct: 1.50,
       war_insurance_surcharge_pct: 1.50,
       daily_volume_mbpd: 4.8,
       bypass_route_available: true,
+      threat_description: "Houthi Missile & Drone Hazards • Cape Route Detours Active (+16 Days Transit)",
       status_summary: "Houthi Missile & Drone Hazards • Cape Route Detours Active (+16 Days Transit)"
     },
     {
+      id: "corridor_cape_gh",
       code: "cape_gh",
       name: "Cape of Good Hope",
+      risk_score: 35.0,
       threat_score: 35.0,
       risk_level: "MODERATE_RISK",
       transit_delay_days: 0.0,
+      war_risk_insurance_pct: 0.15,
       war_insurance_surcharge_pct: 0.15,
       daily_volume_mbpd: 6.2,
       bypass_route_available: true,
+      threat_description: "Secondary Cape Bypass Active • High Bunker Fuel Burn • Safe Transatlantic Passage",
       status_summary: "Secondary Cape Bypass Active • High Bunker Fuel Burn • Safe Transatlantic Passage"
     },
     {
+      id: "corridor_malacca",
       code: "malacca",
       name: "Strait of Malacca",
+      risk_score: 24.0,
       threat_score: 24.0,
       risk_level: "LOW_RISK",
       transit_delay_days: 0.0,
+      war_risk_insurance_pct: 0.05,
       war_insurance_surcharge_pct: 0.05,
       daily_volume_mbpd: 16.0,
       bypass_route_available: true,
+      threat_description: "Normal Traffic Flow • Far East & Russian ESPO Strategic Corridor Active",
       status_summary: "Normal Traffic Flow • Far East & Russian ESPO Strategic Corridor Active"
     }
   ]);
@@ -249,13 +265,17 @@ export default function Home() {
     fetch('/api/risk/report')
       .then(res => res.json())
       .then(data => {
-        if (data.corridors) setCorridors(data.corridors);
+        if (data.corridors && data.corridors.length > 0) {
+          setCorridors(data.corridors);
+        }
       })
       .catch(() => {
         fetch('http://localhost:8000/api/risk/report')
           .then(res => res.json())
           .then(data => {
-            if (data.corridors) setCorridors(data.corridors);
+            if (data.corridors && data.corridors.length > 0) {
+              setCorridors(data.corridors);
+            }
           })
           .catch(() => {});
       });

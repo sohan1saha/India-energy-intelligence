@@ -3,15 +3,18 @@
 import React from 'react';
 
 interface CorridorRisk {
-  id: string;
+  id?: string;
   name: string;
   code: string;
-  risk_score: number;
-  status: string;
-  daily_vessel_count: number;
-  transit_delay_days: number;
-  war_risk_insurance_pct: number;
-  threat_description: string;
+  risk_score?: number;
+  threat_score?: number;
+  status?: string;
+  daily_vessel_count?: number;
+  transit_delay_days?: number;
+  war_risk_insurance_pct?: number;
+  war_insurance_surcharge_pct?: number;
+  threat_description?: string;
+  status_summary?: string;
 }
 
 interface RiskRadarProps {
@@ -38,11 +41,16 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
 
       {/* Corridor Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {corridors.map((c) => {
-          const codeId = c.code.toLowerCase();
+        {corridors.map((c, index) => {
+          const codeId = c.code ? c.code.toLowerCase() : `corridor_${index}`;
           const isSelected = selectedNodeId === codeId;
-          const isHigh = c.risk_score >= 70;
-          const isElevated = c.risk_score >= 35 && c.risk_score < 70;
+          const score = c.risk_score ?? c.threat_score ?? 0;
+          const insurance = c.war_risk_insurance_pct ?? c.war_insurance_surcharge_pct ?? 0;
+          const delay = c.transit_delay_days ?? 0;
+          const description = c.threat_description || c.status_summary || '';
+
+          const isHigh = score >= 70;
+          const isElevated = score >= 35 && score < 70;
           
           const statusBadge = isHigh
             ? 'bg-alert-red/10 text-alert-red border-alert-red/30'
@@ -52,7 +60,7 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
 
           return (
             <div
-              key={c.id}
+              key={c.id || codeId || index}
               onClick={() => onSelectCorridor(codeId)}
               className={`p-3.5 rounded-lg border cursor-pointer transition ${
                 isSelected
@@ -68,26 +76,28 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
                   {isSelected && <span className="w-2 h-2 rounded-full bg-alert-amber animate-pulse" />}
                 </div>
                 <span className={`px-2 py-0.5 text-[10px] font-bold rounded border font-mono ${statusBadge}`}>
-                  {c.risk_score}/100
+                  {score}/100
                 </span>
               </div>
 
               {/* Threat Description */}
-              <p className={`text-[11px] leading-relaxed mb-3 line-clamp-2 ${
-                theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'
-              }`}>
-                {c.threat_description}
-              </p>
+              {description && (
+                <p className={`text-[11px] leading-relaxed mb-3 line-clamp-2 ${
+                  theme === 'dark' ? 'text-dark-muted' : 'text-cream-muted'
+                }`}>
+                  {description}
+                </p>
+              )}
 
               {/* Metrics */}
               <div className="grid grid-cols-2 gap-2 text-[10px] pt-2 border-t border-inherit font-mono">
                 <div>
                   <span className="block text-slate-500">Delay</span>
-                  <span className="font-bold text-alert-amber">+{c.transit_delay_days} Days</span>
+                  <span className="font-bold text-alert-amber">+{delay} Days</span>
                 </div>
                 <div>
                   <span className="block text-slate-500">Insurance</span>
-                  <span className="font-bold text-alert-red">+{c.war_risk_insurance_pct}%</span>
+                  <span className="font-bold text-alert-red">+{insurance}%</span>
                 </div>
               </div>
             </div>
