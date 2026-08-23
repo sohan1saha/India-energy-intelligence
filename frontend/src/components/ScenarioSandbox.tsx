@@ -25,23 +25,21 @@ export interface DisruptionScenarioResult {
 
 interface ScenarioSandboxProps {
   theme: 'dark' | 'cream';
-  onSimulate?: (hormuz: number, redSea: number, russian: number, duration: number) => void;
+  onSimulate?: (hormuz: number, redSea: number, duration: number) => void;
   simulationResult?: DisruptionScenarioResult | null;
 }
 
-// 100% Empirically Calibrated Disruption Simulation Engine
+// 100% Empirically Calibrated Disruption Simulation Engine (3 Shock Levers)
 export function calculateDisruptionScenario(
   h: number,   // Hormuz Blockade %
   r: number,   // Red Sea Suspension %
-  ru: number,  // Russian Sanctions %
   d: number    // Duration Days
 ): DisruptionScenarioResult {
   // Base daily crude deficit components (bpd)
   const hormuzLoss = 2025000 * (h / 100);
   const redSeaLoss = 1125000 * (r / 100) * 0.36;
-  const russianLoss = 1035000 * (ru / 100) * 1.00;
 
-  const totalDeficitBpd = Math.round(hormuzLoss + redSeaLoss + russianLoss);
+  const totalDeficitBpd = Math.round(hormuzLoss + redSeaLoss);
   const totalShortfallMbbl = Number(((totalDeficitBpd * d) / 1000000).toFixed(5));
 
   // Stockout Horizon (Days) = Total Buffer (81.0M bbls) / Daily Deficit (M bpd)
@@ -50,21 +48,20 @@ export function calculateDisruptionScenario(
 
   // Landed Crude Price ($/bbl) & Surge %
   const baselinePrice = 78.50;
-  const priceSurgePct = Number(((h * 0.42) + (r * 0.11) + (ru * 0.16)).toFixed(1));
+  const priceSurgePct = Number(((h * 0.42) + (r * 0.11)).toFixed(1));
   const landedPrice = Number((baselinePrice * (1 + (priceSurgePct / 100))).toFixed(2));
-  const priceDeltaUsd = landedPrice - baselinePrice;
 
   // Import Bill Surge (INR Crores & USD Billion)
   const importBillSurgeInrCrores = Math.round(totalShortfallMbbl * 8333.333);
   const importBillSurgeUsdBn = Number((totalShortfallMbbl * (landedPrice / 1.197)).toFixed(2));
 
   // Fuel Pump Price Surge (INR/L)
-  const petrolSurge = Number(((h * 0.15) + (r * 0.074) + (ru * 0.06)).toFixed(1));
-  const dieselSurge = Number(((h * 0.17) + (r * 0.08) + (ru * 0.06)).toFixed(1));
+  const petrolSurge = Number(((h * 0.15) + (r * 0.074)).toFixed(1));
+  const dieselSurge = Number(((h * 0.17) + (r * 0.08)).toFixed(1));
 
   // Macroeconomic CAD & CPI Inflation Impact
-  const cadImpact = Number(((h * 0.005) + (r * 0.002) + (ru * 0.003)).toFixed(2));
-  const cpiImpact = Math.round((h * 0.38) + (r * 0.16) + (ru * 0.18));
+  const cadImpact = Number(((h * 0.005) + (r * 0.002)).toFixed(2));
+  const cpiImpact = Math.round((h * 0.38) + (r * 0.16));
 
   return {
     scenario_name: 'Custom Disruption Simulation',
@@ -92,26 +89,23 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
 }) => {
   const [hormuz, setHormuz] = useState<number>(80);
   const [redSea, setRedSea] = useState<number>(50);
-  const [russian, setRussian] = useState<number>(20);
   const [duration, setDuration] = useState<number>(30);
 
-  // Real-time instant mathematical computation directly derived from current slider state
+  // Real-time instant mathematical computation directly derived from current 3 slider states
   const activeResult: DisruptionScenarioResult = calculateDisruptionScenario(
     hormuz,
     redSea,
-    russian,
     duration
   );
 
   const econ = activeResult.economic_impact;
 
-  const handleSliderChange = (h: number, r: number, ru: number, d: number) => {
+  const handleSliderChange = (h: number, r: number, d: number) => {
     setHormuz(h);
     setRedSea(r);
-    setRussian(ru);
     setDuration(d);
     if (onSimulate) {
-      onSimulate(h, r, ru, d);
+      onSimulate(h, r, d);
     }
   };
 
@@ -144,8 +138,8 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* Left Column: Minimalist Sleek Controls */}
-        <div className="lg:col-span-5 space-y-4 font-mono">
+        {/* Left Column: Minimalist Sleek 3-Slider Controls */}
+        <div className="lg:col-span-5 space-y-5 font-mono">
           {/* Hormuz Slider */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
@@ -160,7 +154,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               max="100"
               value={hormuz}
               style={getTrackStyle(hormuz, 0, 100, '#EF4444')}
-              onChange={(e) => handleSliderChange(Number(e.target.value), redSea, russian, duration)}
+              onChange={(e) => handleSliderChange(Number(e.target.value), redSea, duration)}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-red-500 focus:outline-none transition"
             />
           </div>
@@ -179,27 +173,8 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               max="100"
               value={redSea}
               style={getTrackStyle(redSea, 0, 100, '#F59E0B')}
-              onChange={(e) => handleSliderChange(hormuz, Number(e.target.value), russian, duration)}
+              onChange={(e) => handleSliderChange(hormuz, Number(e.target.value), duration)}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none transition"
-            />
-          </div>
-
-          {/* Russian Sanctions Slider */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-sans font-semibold">Russian Shadow Fleet Sanctions</span>
-              <span className={`font-bold ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>
-                {russian}%
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={russian}
-              style={getTrackStyle(russian, 0, 100, '#06B6D4')}
-              onChange={(e) => handleSliderChange(hormuz, redSea, Number(e.target.value), duration)}
-              className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-sky-500 focus:outline-none transition"
             />
           </div>
 
@@ -217,7 +192,7 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
               max="90"
               value={duration}
               style={getTrackStyle(duration, 7, 90, '#10B981')}
-              onChange={(e) => handleSliderChange(hormuz, redSea, russian, Number(e.target.value))}
+              onChange={(e) => handleSliderChange(hormuz, redSea, Number(e.target.value))}
               className="w-full h-1.5 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none transition"
             />
           </div>

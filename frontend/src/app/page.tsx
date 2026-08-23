@@ -4,66 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { DigitalTwinMap } from '@/components/DigitalTwinMap';
 import { RiskRadar } from '@/components/RiskRadar';
-import { ScenarioSandbox } from '@/components/ScenarioSandbox';
+import { ScenarioSandbox, calculateDisruptionScenario } from '@/components/ScenarioSandbox';
 import { SPROptimizerCard } from '@/components/SPROptimizerCard';
 import { ProcurementMatrix } from '@/components/ProcurementMatrix';
 import { GeopoliticalNewsFeed } from '@/components/GeopoliticalNewsFeed';
 import { AICopilotDrawer } from '@/components/AICopilotDrawer';
 import { ShieldAlert, Database, Activity, Navigation, Flame } from 'lucide-react';
-
-// Exact unified mathematical engine for Disruption Scenario Modeller
-export function calculateDisruptionScenario(
-  hormuz: number,
-  redSea: number,
-  russian: number,
-  duration: number
-) {
-  const hormuzLoss = 1890000 * (hormuz / 100);
-  const redSeaLoss = 1125000 * (redSea / 100) * 0.45;
-  const russianLoss = 1620000 * (russian / 100);
-
-  const totalDeficitBpd = hormuzLoss + redSeaLoss + russianLoss;
-  const totalShortfallMbbl = (totalDeficitBpd * duration) / 1000000;
-
-  const deficitRatio = totalDeficitBpd / 4500000;
-  const stockoutDays = deficitRatio > 0 ? Number((18.0 / deficitRatio).toFixed(1)) : 999.0;
-
-  const baselinePrice = 78.50;
-  const priceSurgePct = (hormuz * 0.45) + (redSea * 0.18) + (russian * 0.22);
-  const landedPrice = baselinePrice * (1 + (priceSurgePct / 100));
-  const priceDeltaUsd = landedPrice - baselinePrice;
-
-  const monthlyImportBbls = 4.5 * 30.0; // 135M bbls/month
-  const additionalCostUsdMn = monthlyImportBbls * priceDeltaUsd;
-  const importBillSurgeUsdBn = Number((additionalCostUsdMn / 1000).toFixed(2));
-  const importBillSurgeInrCrores = Number(((additionalCostUsdMn * 83.5) / 10).toFixed(0));
-
-  const pumpSurgeInr = (priceDeltaUsd / 10.0) * 6.5;
-  const petrolSurge = Number((pumpSurgeInr * 1.05).toFixed(1));
-  const dieselSurge = Number((pumpSurgeInr * 0.95).toFixed(1));
-
-  const cadImpact = Number(((priceDeltaUsd / 10.0) * 0.48).toFixed(2));
-  const cpiImpact = Number(((priceDeltaUsd / 10.0) * 36.0).toFixed(0));
-
-  return {
-    scenario_name: 'Custom Disruption Simulation',
-    duration_days: duration,
-    daily_crude_deficit_bpd: Number(totalDeficitBpd.toFixed(0)),
-    total_shortfall_mbbl: Number(totalShortfallMbbl.toFixed(2)),
-    stockout_horizon_without_mitigation_days: stockoutDays,
-    economic_impact: {
-      baseline_crude_price_usd: baselinePrice,
-      landed_crude_price_usd: Number(landedPrice.toFixed(2)),
-      price_increase_pct: Number(priceSurgePct.toFixed(1)),
-      import_bill_surge_inr_crores: importBillSurgeInrCrores,
-      import_bill_surge_usd_billion: importBillSurgeUsdBn,
-      petrol_pump_price_impact_inr_l: petrolSurge,
-      diesel_pump_price_impact_inr_l: dieselSurge,
-      current_account_deficit_impact_pct_gdp: cadImpact,
-      cpi_inflation_impact_bps: cpiImpact
-    }
-  };
-}
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
@@ -71,8 +17,8 @@ export default function Home() {
   const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>('strat_bypass');
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
 
-  // Initial Scenario State computed with exact math engine (80% Hormuz, 50% Red Sea, 20% Russian, 30 Days)
-  const [simulationResult, setSimulationResult] = useState<any>(calculateDisruptionScenario(80, 50, 20, 30));
+  // Initial Scenario State computed with exact 3-lever math engine (80% Hormuz, 50% Red Sea, 30 Days)
+  const [simulationResult, setSimulationResult] = useState<any>(calculateDisruptionScenario(80, 50, 30));
 
   const [corridors, setCorridors] = useState<any[]>([
     {
@@ -328,7 +274,7 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const handleSimulateScenario = async (hormuz: number, redSea: number, russian: number, duration: number) => {
+  const handleSimulateScenario = async (hormuz: number, redSea: number, duration: number) => {
     try {
       const res = await fetch('/api/scenarios/simulate', {
         method: 'POST',
@@ -337,7 +283,7 @@ export default function Home() {
           scenario_name: 'Custom Disruption Simulation',
           hormuz_blockade_pct: hormuz,
           red_sea_blockade_pct: redSea,
-          russian_sanctions_tightening_pct: russian,
+          russian_sanctions_tightening_pct: 0,
           duration_days: duration
         })
       });
@@ -345,8 +291,7 @@ export default function Home() {
       const data = await res.json();
       setSimulationResult(data);
     } catch (e) {
-      // Fallback calculation using exact unified mathematical engine
-      setSimulationResult(calculateDisruptionScenario(hormuz, redSea, russian, duration));
+      setSimulationResult(calculateDisruptionScenario(hormuz, redSea, duration));
     }
   };
 

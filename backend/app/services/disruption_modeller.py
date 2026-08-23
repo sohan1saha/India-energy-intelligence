@@ -6,14 +6,12 @@ class DisruptionScenarioModeller:
     def simulate_scenario(self, req: DisruptionScenarioRequest) -> DisruptionScenarioResult:
         h = req.hormuz_blockade_pct
         r = req.red_sea_blockade_pct
-        ru = req.russian_sanctions_tightening_pct
         d = req.duration_days
 
         hormuz_loss_bpd = 2025000.0 * (h / 100.0)
         red_sea_delay_bpd = 1125000.0 * (r / 100.0) * 0.36
-        russian_loss_bpd = 1035000.0 * (ru / 100.0) * 1.00
 
-        total_daily_deficit_bpd = round(hormuz_loss_bpd + red_sea_delay_bpd + russian_loss_bpd)
+        total_daily_deficit_bpd = round(hormuz_loss_bpd + red_sea_delay_bpd)
         total_shortfall_mbbl = round((total_daily_deficit_bpd * d) / 1_000_000.0, 5)
 
         deficit_mbpd = total_daily_deficit_bpd / 1_000_000.0
@@ -39,17 +37,17 @@ class DisruptionScenarioModeller:
             ))
 
         baseline_price = 78.50
-        price_surge_pct = round((h * 0.42) + (r * 0.11) + (ru * 0.16), 1)
+        price_surge_pct = round((h * 0.42) + (r * 0.11), 1)
         landed_price = round(baseline_price * (1.0 + (price_surge_pct / 100.0)), 2)
 
         import_bill_surge_inr_crores = round(total_shortfall_mbbl * 8333.333)
         import_bill_surge_usd_bn = round(total_shortfall_mbbl * (landed_price / 1.197), 2)
 
-        petrol_surge = round((h * 0.15) + (r * 0.074) + (ru * 0.06), 1)
-        diesel_surge = round((h * 0.17) + (r * 0.08) + (ru * 0.06), 1)
+        petrol_surge = round((h * 0.15) + (r * 0.074), 1)
+        diesel_surge = round((h * 0.17) + (r * 0.08), 1)
 
-        cad_impact = round((h * 0.005) + (r * 0.002) + (ru * 0.003), 2)
-        cpi_impact = round((h * 0.38) + (r * 0.16) + (ru * 0.18))
+        cad_impact = round((h * 0.005) + (r * 0.002), 2)
+        cpi_impact = round((h * 0.38) + (r * 0.16))
 
         economic_metrics = EconomicImpactMetrics(
             baseline_crude_price_usd=baseline_price,
