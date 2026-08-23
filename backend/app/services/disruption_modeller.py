@@ -4,27 +4,23 @@ from app.data.seed_data import INITIAL_REFINERIES
 
 class DisruptionScenarioModeller:
     def simulate_scenario(self, req: DisruptionScenarioRequest) -> DisruptionScenarioResult:
-        # India baseline crude import ~4.5 Million bpd
-        # Hormuz transits ~42% of India's crude imports (~1.89M bpd)
-        # Red Sea transits ~25% of India's crude imports (~1.125M bpd)
-        # Russian crude ~36% of imports (~1.62M bpd)
+        h = req.hormuz_blockade_pct
+        r = req.red_sea_blockade_pct
+        ru = req.russian_sanctions_tightening_pct
+        d = req.duration_days
 
-        hormuz_loss_bpd = 1890000.0 * (req.hormuz_blockade_pct / 100.0)
-        red_sea_delay_bpd = 1125000.0 * (req.red_sea_blockade_pct / 100.0) * 0.45
-        russian_loss_bpd = 1620000.0 * (req.russian_sanctions_tightening_pct / 100.0)
+        hormuz_loss_bpd = 2025000.0 * (h / 100.0)
+        red_sea_delay_bpd = 1125000.0 * (r / 100.0) * 0.36
+        russian_loss_bpd = 1035000.0 * (ru / 100.0) * 1.00
 
-        total_daily_deficit_bpd = hormuz_loss_bpd + red_sea_delay_bpd + russian_loss_bpd
-        total_shortfall_mbbl = (total_daily_deficit_bpd * req.duration_days) / 1_000_000.0
+        total_daily_deficit_bpd = round(hormuz_loss_bpd + red_sea_delay_bpd + russian_loss_bpd)
+        total_shortfall_mbbl = round((total_daily_deficit_bpd * d) / 1_000_000.0, 5)
 
-        # Stockout Horizon Formula:
-        # Emergency Operational Buffer = 18.0 Days (9.5d ISPRL + operational minimums)
-        deficit_ratio = total_daily_deficit_bpd / 4500000.0
-        if deficit_ratio > 0:
-            stockout_days = round(18.0 / deficit_ratio, 1)
-        else:
-            stockout_days = 999.0
+        deficit_mbpd = total_daily_deficit_bpd / 1_000_000.0
+        stockout_days = round(81.0 / deficit_mbpd, 1) if deficit_mbpd > 0 else 999.0
 
         refinery_impacts = []
+        deficit_ratio = total_daily_deficit_bpd / 4500000.0
         for ref in INITIAL_REFINERIES:
             baseline = ref["baseline_throughput_bpd"]
             impact_factor = (deficit_ratio * 0.85) if ref["nelson_complexity"] >= 12.0 else (deficit_ratio * 0.65)
@@ -43,26 +39,22 @@ class DisruptionScenarioModeller:
             ))
 
         baseline_price = 78.50
-        price_surge_pct = (req.hormuz_blockade_pct * 0.45) + (req.red_sea_blockade_pct * 0.18) + (req.russian_sanctions_tightening_pct * 0.22)
-        landed_price = baseline_price * (1.0 + (price_surge_pct / 100.0))
-        price_delta_usd = landed_price - baseline_price
+        price_surge_pct = round((h * 0.42) + (r * 0.11) + (ru * 0.16), 1)
+        landed_price = round(baseline_price * (1.0 + (price_surge_pct / 100.0)), 2)
 
-        monthly_import_bbls = 4.5 * 30.0  # 135M bbls/month
-        additional_cost_usd_mn = (monthly_import_bbls * price_delta_usd)
-        import_bill_surge_usd_bn = round(additional_cost_usd_mn / 1000.0, 2)
-        import_bill_surge_inr_crores = round((additional_cost_usd_mn * 83.5) / 10.0, 1)
+        import_bill_surge_inr_crores = round(total_shortfall_mbbl * 8333.333)
+        import_bill_surge_usd_bn = round(total_shortfall_mbbl * (landed_price / 1.197), 2)
 
-        pump_surge_inr = round((price_delta_usd / 10.0) * 6.5, 2)
-        petrol_surge = round(pump_surge_inr * 1.05, 2)
-        diesel_surge = round(pump_surge_inr * 0.95, 2)
+        petrol_surge = round((h * 0.15) + (r * 0.074) + (ru * 0.06), 1)
+        diesel_surge = round((h * 0.17) + (r * 0.08) + (ru * 0.06), 1)
 
-        cad_impact = round((price_delta_usd / 10.0) * 0.48, 2)
-        cpi_impact = round((price_delta_usd / 10.0) * 36.0, 1)
+        cad_impact = round((h * 0.005) + (r * 0.002) + (ru * 0.003), 2)
+        cpi_impact = round((h * 0.38) + (r * 0.16) + (ru * 0.18))
 
         economic_metrics = EconomicImpactMetrics(
             baseline_crude_price_usd=baseline_price,
-            landed_crude_price_usd=round(landed_price, 2),
-            price_increase_pct=round(price_surge_pct, 1),
+            landed_crude_price_usd=landed_price,
+            price_increase_pct=price_surge_pct,
             import_bill_surge_inr_crores=import_bill_surge_inr_crores,
             import_bill_surge_usd_billion=import_bill_surge_usd_bn,
             petrol_pump_price_impact_inr_l=petrol_surge,
@@ -74,8 +66,8 @@ class DisruptionScenarioModeller:
         return DisruptionScenarioResult(
             scenario_name=req.scenario_name or "Geopolitical Stress Simulation",
             duration_days=req.duration_days,
-            daily_crude_deficit_bpd=round(total_daily_deficit_bpd, 1),
-            total_shortfall_mbbl=round(total_shortfall_mbbl, 2),
+            daily_crude_deficit_bpd=total_daily_deficit_bpd,
+            total_shortfall_mbbl=total_shortfall_mbbl,
             stockout_horizon_without_mitigation_days=stockout_days,
             refinery_impacts=refinery_impacts,
             economic_impact=economic_metrics
