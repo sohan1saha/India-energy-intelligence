@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, Database } from 'lucide-react';
+import { ShieldCheck, Database, Factory } from 'lucide-react';
 
 interface SPROptimizerCardProps {
   theme: 'dark' | 'cream';
@@ -28,7 +28,7 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
     }`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
-        <h2 className="text-sm font-bold uppercase tracking-wider">Strategic Reserve (ISPRL) Optimisation Agent</h2>
+        <h2 className="text-sm font-bold uppercase tracking-wider">Strategic Reserve (ISPRL) & Gateway Optimisation Agent</h2>
         <span className={`px-2 py-0.5 text-xs font-semibold rounded border font-mono ${
           theme === 'dark' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-emerald-100 text-emerald-800 border-emerald-300 font-bold'
         }`}>
@@ -37,11 +37,11 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
       </div>
 
       {/* Cavern Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 font-mono">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 mb-4 font-mono">
         {/* Padur Cavern Box */}
         <div
           onClick={() => handleCavernClick('padur')}
-          className={`p-3.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'padur'
               ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500 shadow-md scale-[1.02]'
               : theme === 'dark'
@@ -49,7 +49,7 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
               : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-1">
+          <div className="flex items-center justify-between gap-1.5 mb-1">
             <div className="flex items-center gap-1 text-xs font-bold truncate">
               <Database className="w-3 h-3 text-emerald-500 shrink-0" />
               <span>Padur Cavern</span>
@@ -63,14 +63,14 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Drawdown: <strong>240k bpd</strong></span>
-            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>85% Capacity</span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>85%</span>
           </div>
         </div>
 
         {/* Mangalore Cavern Box */}
         <div
           onClick={() => handleCavernClick('mangalore')}
-          className={`p-3.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'mangalore'
               ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500 shadow-md scale-[1.02]'
               : theme === 'dark'
@@ -78,10 +78,10 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
               : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-1">
+          <div className="flex items-center justify-between gap-1.5 mb-1">
             <div className="flex items-center gap-1 text-xs font-bold truncate">
               <Database className="w-3 h-3 text-emerald-500 shrink-0" />
-              <span>Mangalore Cavern</span>
+              <span>Mangalore</span>
             </div>
             <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>1.50 MMT</span>
           </div>
@@ -92,14 +92,14 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Drawdown: <strong>140k bpd</strong></span>
-            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>80% Capacity</span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>80%</span>
           </div>
         </div>
 
         {/* Visakhapatnam Cavern Box */}
         <div
           onClick={() => handleCavernClick('visakh')}
-          className={`p-3.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'visakh'
               ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500 shadow-md scale-[1.02]'
               : theme === 'dark'
@@ -107,7 +107,7 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
               : 'bg-cream-bg border-cream-border hover:border-slate-500'
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-1">
+          <div className="flex items-center justify-between gap-1.5 mb-1">
             <div className="flex items-center gap-1 text-xs font-bold truncate">
               <Database className="w-3 h-3 text-emerald-500 shrink-0" />
               <span>Visakhapatnam</span>
@@ -121,7 +121,36 @@ export const SPROptimizerCard: React.FC<SPROptimizerCardProps> = ({
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Drawdown: <strong>120k bpd</strong></span>
-            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>90% Capacity</span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>90%</span>
+          </div>
+        </div>
+
+        {/* Paradip IOCL Gateway Box */}
+        <div
+          onClick={() => handleCavernClick('paradip')}
+          className={`p-3 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'paradip'
+              ? 'border-sky-500 bg-sky-500/10 ring-2 ring-sky-500 shadow-md scale-[1.02]'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-500'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-1.5 mb-1">
+            <div className="flex items-center gap-1 text-xs font-bold truncate">
+              <Factory className="w-3 h-3 text-sky-500 shrink-0" />
+              <span>Paradip IOCL</span>
+            </div>
+            <span className={`text-[10px] font-bold shrink-0 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>15 MMT</span>
+          </div>
+          <p className="text-[10px] text-slate-500 mb-2 font-medium">Odisha • 24.0M bbls</p>
+          
+          <div className={`w-full h-2 rounded-full overflow-hidden mb-2 ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-300'}`}>
+            <div className="bg-sky-500 h-full w-[88%]" />
+          </div>
+          <div className="flex justify-between text-[10px]">
+            <span>Intake: <strong>180k bpd</strong></span>
+            <span className={`font-bold ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>88%</span>
           </div>
         </div>
       </div>
