@@ -318,11 +318,8 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
           <p className="text-[10px] font-medium mb-1">
             <strong>ORIGIN:</strong> {selectedNodeId === 'desh_vishal' ? 'Fujairah ADCOP Terminal (UAE)' : selectedNodeId === 'swarna_kamal' ? 'Fujairah ADCOP Terminal (UAE)' : 'Enterprise US Gulf Terminal (Texas, USA)'}
           </p>
-          <p className="text-[10px] font-medium mb-1">
+          <p className="text-[10px] font-medium">
             <strong>DESTINATION:</strong> {selectedNodeId === 'desh_vishal' ? 'Vadinar SPM (Gujarat, India)' : selectedNodeId === 'swarna_kamal' ? 'Mangalore SPM (Karnataka, India)' : 'Paradip SPM (Odisha, India)'}
-          </p>
-          <p className="text-[10px] text-amber-600 font-bold">
-            LIVE VOYAGE ROUTE HIGHLIGHTED ON MAP 📍
           </p>
         </div>
       )}
