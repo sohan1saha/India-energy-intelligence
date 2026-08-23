@@ -126,7 +126,6 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
       <div className="flex items-center justify-between mb-5 pb-3 border-b border-inherit">
         <div>
           <h2 className="text-sm font-bold uppercase tracking-wider">Disruption Scenario Modeller</h2>
-          <p className="text-[11px] text-slate-500 font-sans mt-0.5">Adjust shock levers to model real-time crude deficit and macroeconomic impact</p>
         </div>
         <span className={`px-2.5 py-1 text-xs font-semibold rounded font-mono border ${
           theme === 'dark'
