@@ -14,7 +14,7 @@ import { ShieldAlert, Database, Activity, Navigation, Flame } from 'lucide-react
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>('strat_bypass');
+  const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>(null);
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
 
   // Initial Scenario State computed with exact 3-lever math engine (80% Hormuz, 50% Red Sea, 30 Days)
