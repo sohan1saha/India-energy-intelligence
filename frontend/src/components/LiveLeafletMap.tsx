@@ -91,8 +91,9 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
   // Global Maritime Shipping Network Base Ports & Risk Corridors
   const ports = [
-    // Indian Gateways & Terminals
+    // Indian Gateways & Offshore Assets
     { id: "vadinar", name: "VADINAR", pos: [22.45, 69.66] as [number, number], isMajor: true },
+    { id: "mumbai_high", name: "MUMBAI HIGH OFFSHORE (290k bpd)", pos: [19.42, 71.33] as [number, number], isMajor: true },
     { id: "mundra", name: "MUNDRA", pos: [22.75, 69.70] as [number, number], isMajor: false },
     { id: "mumbai", name: "MUMBAI / JNPT", pos: [18.95, 72.95] as [number, number], isMajor: true },
     { id: "mangalore", name: "MANGALORE", pos: [12.91, 74.85] as [number, number], isMajor: true },

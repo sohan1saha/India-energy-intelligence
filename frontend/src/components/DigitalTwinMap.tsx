@@ -69,41 +69,23 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       drawdownRateOrSpeed: 'Offloading Capacity: 240,000 bpd per berth',
       bufferDays: '+13.7 Days West Coast Refining Buffer'
     },
-    padur: {
-      id: 'padur',
-      name: 'Padur ISPRL Strategic Petroleum Cavern (Karnataka)',
-      type: 'Underground Rock Cavern Strategic Petroleum Reserve',
-      subtitle: 'ISPRL 2.50 MMT Underground National Emergency Stockpile',
-      stock: '18.37M bbls (100% Full Capacity)',
-      status: 'Ready for LP Emergency Drawdown',
+    mumbai_high: {
+      id: 'mumbai_high',
+      name: 'ONGC Mumbai High Offshore Petroleum Extraction Point',
+      type: 'Offshore Crude Oil Drilling & Production Complex',
+      subtitle: 'Oil & Natural Gas Corporation (ONGC) Primary Offshore Asset',
+      stock: '290.0k bpd Domestic Production',
+      status: '100% Operational (Surge Production Ready)',
       colorClassDark: 'text-emerald-400',
       colorClassLight: 'text-emerald-800 font-extrabold',
       badgeBg: 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 font-bold',
-      badgeText: '100% National Reserve',
-      refineryFeed: 'Mangalore Refinery & Petrochemicals Ltd (MRPL 15 MMT)',
-      slateCompatibility: 'Arab / Basrah Sour Heavy Blend (API 32.0°, Sulfur 2.1%)',
-      strategicRole: 'Protects against Strait of Hormuz closure for up to 18 additional refining days.',
-      logisticsConnectivity: 'Direct subsea cross-country pipeline connected directly to MRPL & coastal barge docks',
-      drawdownRateOrSpeed: 'Max Drawdown Rate: 240,000 bpd via hydraulic pumps',
-      bufferDays: '+4.5 Days National Consumption Cover'
-    },
-    paradip: {
-      id: 'paradip',
-      name: 'Paradip IOCL Deepwater SPM & Refinery (Odisha)',
-      type: 'East Coast Deepwater SPM & Integrated 15 MMT Refinery',
-      subtitle: 'Indian Oil Corporation East Coast Primary Crude Hub',
-      stock: '24.0M bbls (16.0 Days Cover)',
-      status: 'Operational (Atlantic & Far East Import Active)',
-      colorClassDark: 'text-sky-400',
-      colorClassLight: 'text-sky-800 font-extrabold',
-      badgeBg: 'bg-sky-500/10 border-sky-500/40 text-sky-800 font-bold',
-      badgeText: 'East Coast Gateway',
-      refineryFeed: 'IOCL Paradip 15 MMT, IOCL Haldia 8 MMT & IOCL Barauni 6 MMT',
-      slateCompatibility: 'West African Bonny Light, Russian ESPO, US WTI Midland (API 35.0° - 42.0°)',
-      strategicRole: 'Primary intake hub for Atlantic transatlantic bypass imports and Russian Kozmino crude.',
-      logisticsConnectivity: 'Paradip-Haldia-Barauni-Guwahati Crude Pipeline (PHBPL 1,400 km network)',
-      drawdownRateOrSpeed: 'Discharge Rate: 180,000 bpd offloading',
-      bufferDays: '+16.0 Days East Coast Refining Buffer'
+      badgeText: 'Domestic Offshore Extraction',
+      refineryFeed: 'Feeds BPCL Mumbai (12.0 MMT) & HPCL Mumbai (9.5 MMT)',
+      slateCompatibility: 'Mumbai High Sweet Light Crude (API 38.5°, Sulfur 0.15%)',
+      strategicRole: "India's largest domestic oilfield. Provides critical domestic crude surge during maritime chokepoint blockades.",
+      logisticsConnectivity: 'Offshore trunk pipelines to Uran Processing Terminal & Jawahar Dweep Crude Oil Tank Farm',
+      drawdownRateOrSpeed: 'Production Output: 290,000 bpd',
+      bufferDays: 'Primary Domestic Energy Security Asset'
     },
     desh_vishal: {
       id: 'desh_vishal',
@@ -198,6 +180,12 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00C4FF]" />
+            <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-[#00C4FF]' : 'text-cyan-800 font-extrabold'}`}>
+              Offshore Extraction (1)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
             <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800 font-extrabold'}`}>
               VLCCs at Sea (3)
@@ -206,13 +194,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
             <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800 font-extrabold'}`}>
-              ISPRL Caverns (3)
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
-            <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800 font-extrabold'}`}>
-              SPM Berths (4)
+              SPM Gateway (1)
             </span>
           </div>
         </div>
@@ -229,11 +211,11 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       </div>
 
       {/* Node Selection Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 font-mono text-xs mb-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono text-xs mb-3">
         {/* Card 1: Vadinar */}
         <div
           onClick={() => toggleNodeSelection('vadinar')}
-          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'vadinar'
               ? 'border-amber-500 bg-amber-500/10 shadow-md ring-2 ring-amber-500'
               : theme === 'dark'
@@ -252,11 +234,11 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>55.0M bbls</p>
         </div>
 
-        {/* Card 2: Padur */}
+        {/* Card 2: Mumbai High Offshore Extraction */}
         <div
-          onClick={() => toggleNodeSelection('padur')}
-          className={`p-2.5 rounded-lg border cursor-pointer transition ${
-            selectedNodeId === 'padur'
+          onClick={() => toggleNodeSelection('mumbai_high')}
+          className={`p-3 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'mumbai_high'
               ? 'border-emerald-500 bg-emerald-500/10 shadow-md ring-2 ring-emerald-500'
               : theme === 'dark'
               ? 'bg-dark-bg border-dark-border hover:border-slate-600'
@@ -265,41 +247,19 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
         >
           <div className="flex items-center justify-between mb-1">
             <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>
-              <Database className="w-3 h-3" />
-              <span>Padur Cavern</span>
-            </div>
-            {selectedNodeId === 'padur' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
-          </div>
-          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>ISPRL 2.5 MMT</p>
-          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>18.37M bbls</p>
-        </div>
-
-        {/* Card 3: Paradip */}
-        <div
-          onClick={() => toggleNodeSelection('paradip')}
-          className={`p-2.5 rounded-lg border cursor-pointer transition ${
-            selectedNodeId === 'paradip'
-              ? 'border-sky-500 bg-sky-500/10 shadow-md ring-2 ring-sky-500'
-              : theme === 'dark'
-              ? 'bg-dark-bg border-dark-border hover:border-slate-600'
-              : 'bg-cream-bg border-cream-border hover:border-slate-500'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-1">
-            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>
               <Factory className="w-3 h-3" />
-              <span>Paradip IOCL</span>
+              <span>Mumbai High</span>
             </div>
-            {selectedNodeId === 'paradip' && <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />}
+            {selectedNodeId === 'mumbai_high' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
           </div>
-          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>IOCL East Coast</p>
-          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>24.0M bbls</p>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>ONGC Offshore Surge</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>290.0k bpd</p>
         </div>
 
-        {/* Card 4: Desh Vishal */}
+        {/* Card 3: Desh Vishal */}
         <div
           onClick={() => toggleNodeSelection('desh_vishal')}
-          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'desh_vishal'
               ? 'border-amber-500 bg-amber-500/10 shadow-md ring-2 ring-amber-500'
               : theme === 'dark'
@@ -318,10 +278,10 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>2.0M bbls</p>
         </div>
 
-        {/* Card 5: Swarna Kamal */}
+        {/* Card 4: Swarna Kamal */}
         <div
           onClick={() => toggleNodeSelection('swarna_kamal')}
-          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'swarna_kamal'
               ? 'border-sky-500 bg-sky-500/10 shadow-md ring-2 ring-sky-500'
               : theme === 'dark'
@@ -340,10 +300,10 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>2.0M bbls</p>
         </div>
 
-        {/* Card 6: Ratna Shalini */}
+        {/* Card 5: Ratna Shalini */}
         <div
           onClick={() => toggleNodeSelection('ratna_shalini')}
-          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+          className={`p-3 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'ratna_shalini'
               ? 'border-emerald-500 bg-emerald-500/10 shadow-md ring-2 ring-emerald-500'
               : theme === 'dark'
