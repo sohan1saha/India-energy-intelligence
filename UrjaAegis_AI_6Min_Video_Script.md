@@ -12,9 +12,9 @@
 | **0:45 – 1:30** | **2. Hero KPI Banner (Tier 1)** | Top 4 KPI metric cards: Risk Index (72.2), ISPRL Reserve (9.5 Days), Crude Imports (4.5M bpd), Tankers at Sea (3 VLCCs). | National energy risk overview and high-level capacity indicators. |
 | **1:30 – 2:30** | **3. GIS Digital Twin & Quick Cards (Tier 2)** | Leaflet map with zoom controls + 6 Quick Cards (Vadinar SPM, Mumbai High, Paradip IOCL, Desh Vishal, Swarna Kamal, Ratna Shalini). | Spire/MarineTraffic Satellite AIS stream, neon fuchsia hazard corridors & detailed node modal. |
 | **2:30 – 3:15** | **4. Geopolitical Risk Radar (Tier 3)** | Risk Cards (Strait of Hormuz 82.5/100, Red Sea 76.0/100, Cape 35/100, Malacca 24/100). | Threat scoring formula ($R_c$), war risk insurance surcharges (+1.25%), and transit delays (+16d). |
-| **3:15 – 4:00** | **5. Disruption Scenario Sandbox (Tier 4 Left)** | Interactive Sliders (80% Hormuz, 50% Red Sea, 30 Days) + Real-time Macroeconomic Shock Cards. | Stockout horizon (34.2d), import bill surge (₹34,500 Cr / $4.13B), retail pump price hikes (+₹14.2/L petrol). |
+| **3:15 – 4:00** | **5. Disruption Scenario Sandbox (Tier 4 Left)** | Interactive Sliders (80% Hormuz, 50% Red Sea, 30 Days) + Real-time Macroeconomic Shock Cards. | Stockout horizon (44.4d), import bill surge (₹455,625 Cr / $4.99B), retail pump price hikes (+₹15.7/L petrol). |
 | **4:00 – 4:45** | **6. ISPRL Caverns & 23 Refineries VDU LP (Tier 4 Right)** | Cavern Cards (Padur 2.5 MMT, Mangalore 1.5 MMT, Vizag 1.33 MMT) + LP Solver output. | 15% mandatory military floor protection & SciPy VDU LP crude slate blending across **all 23 refineries**. |
-| **4:45 – 5:15** | **7. Procurement Rerouting Matrix & News Wire (Tiers 5 & 6)** | 5 Strategy Cards + 1-Click MoPNG Tender Generator + Live War & Conflict News Wire. | ADCOP Fujairah bypass, 1-click tender specs in <5s ($1.2B savings), and direct verified news links. |
+| **4:45 – 5:15** | **7. Procurement Rerouting Matrix & News Wire (Tiers 5 & 6)** | 5 Strategy Cards + 1-Click MoPNG Tender Generator + Live War & Conflict News Wire. | ADCOP Fujairah pipeline bypass, 5 dynamic strategies, <5s MoPNG tender specs ($1.2B savings), & live news links. |
 | **5:15 – 5:45** | **8. Urja Sathi AI Assistant (ऊर्जा साथी)** | Floating Energy Flame button ➔ Interactive AI Chat Drawer live Q&A session. | Natural language intelligence assistant for prices, vessel telemetry, and strategic Q&A. |
 | **5:45 – 6:00** | **9. Production Architecture & Outro** | Live Railway production URL + GitHub repository link + Key metrics summary. | Stockout horizon extended to 90+ days, 99.9% faster decision time. |
 
@@ -124,19 +124,19 @@
    - Set *Red Sea Suspension* to **50%**.
    - Set *Crisis Duration* to **30 Days**.
 3. Point to the real-time calculated metric cards:
-   - **Daily Crude Deficit**: **1,512,000 bpd** (Total Shortfall: **45.36M bbls**).
-   - **Stockout Horizon without Mitigation**: **34.2 Days**.
-   - **Landed Crude Price**: **$106.80/bbl** (+36.1% increase).
-   - **Import Bill Surge**: **+₹34,500 Crore (+$4.13 Billion USD)**.
-   - **Retail Pump Price Hike**: **+₹14.20/L Petrol**, **+₹16.50/L Diesel**.
-   - **Macroeconomic Impact**: **+36 Basis Points CPI Inflation**, **+0.48% GDP Current Account Deficit**.
+   - **Daily Crude Deficit**: **1,823,000 bpd (1,823k bpd)** (Total Shortfall: **54.675M bbls**).
+   - **Stockout Horizon without Mitigation**: **44.4 Days**.
+   - **Landed Crude Price**: **$109.19/bbl** (+39.1% surge).
+   - **Import Bill Surge**: **+₹455,625 Crore** (+$4.99 Billion USD).
+   - **Retail Pump Price Hike**: **+₹15.70/L Petrol**, **+₹17.60/L Diesel**.
+   - **Macroeconomic Impact**: **+38 Basis Points CPI Inflation**, **+0.50% GDP Current Account Deficit**.
 
 **[SPOKEN SCRIPT]**
 > *"Now let's perform macro stress testing in the **Disruption Scenario Sandbox**.*
 >
-> *If an 80% naval blockade occurs in Hormuz alongside a 50% Red Sea suspension for 30 days, India faces an immediate **crude deficit of 1.51 million barrels per day** — a total shortfall of 45.36 million barrels.*
+> *If an 80% naval blockade occurs in Hormuz alongside a 50% Red Sea suspension for 30 days, India faces an immediate **crude deficit of 1.82 million barrels per day** — a total shortfall of 54.68 million barrels.*
 >
-> *Without mitigation, our national stockout horizon drops to **34.2 days**, landed crude spikes to **$106.80 per barrel**, India's import bill surges by **₹34,500 Crore ($4.13B USD)**, and petrol pump prices jump by **₹14.20 per Litre**. UrjaAegis AI quantifies these cascading macroeconomic shocks instantly."*
+> *Without mitigation, our national stockout horizon drops to **44.4 days**, landed crude spikes to **$109.19 per barrel**, India's import bill surges by **₹455,625 Crore ($4.99B USD)**, and petrol pump prices jump by **₹15.70 per Litre**. UrjaAegis AI quantifies these cascading macroeconomic shocks instantly."*
 
 ---
 
@@ -165,28 +165,34 @@
 ### ⏱️ MINUTE 7 (4:45 – 5:15): Adaptive Procurement Rerouting Matrix & Live News Wire (Tiers 5 & 6)
 
 **[ON-SCREEN VISUAL ACTIONS]**
-1. Scroll to the **Adaptive Procurement Orchestrator**.
-2. Click through the 5 Strategy Cards:
-   - *Strategy 1*: **Emergency Chokepoint Bypass (ADCOP Fujairah + Yanbu Petroline)** — Landed Cost: **$83.80/bbl**, Lead Time: **2.8 Days**, Refinery Slate Fit: **97%**.
-   - *Strategy 2*: **Global Atlantic & Far East Pivot (WTI + Bonny Light + ESPO)**.
-   - *Strategy 3*: **Far East & Russian ESPO Strategic Corridor (Kozmino + Sakhalin)**.
-   - *Strategy 4*: **Latin American Heavy-Sweet Blend (Brazil Tupi + Guyana Liza)**.
-   - *Strategy 5*: **National Reserve Drawdown & Domestic Surge (ISPRL + ONGC)**.
-3. Show the **Executable MoPNG Tender Specification Box**:
-   - Point out the **1-Click MoPNG Emergency Tender Specification** generated in **< 5 seconds**, showing downloadable JSON and summary text saving **~$1.2 Billion USD**.
-4. Scroll to the **Live War & Conflict Maritime News Wire**:
-   - Point out the live sync indicator (*"Updated: Just now"*).
-   - Hover over news card to show the sleek **`Read Full Article on [Source]`** button.
-   - Click a link to show it opening official news articles on *gCaptain* or *Economic Times Energy* in a new browser tab.
+1. Scroll down to the **Adaptive Procurement Orchestrator** section.
+2. Click through and highlight the **5 Dynamic Rerouting Strategies**:
+   - **Strategy 1 (Emergency Chokepoint Bypass)**: Highlights the Habshan-Fujairah pipeline (ADCOP) in the UAE and Saudi Arabia's East-West Petroline to Yanbu (Landed cost: **$83.80/bbl**, Lead time: **2.8 Days**, Refinery Slate Fit: **97%**).
+   - **Strategy 2 (Global Atlantic Pivot)**: Shows West African Bonny Light & US Gulf WTI Midland transits via the Cape Route (Landed cost: **$87.10/bbl**).
+   - **Strategy 3 (Far East & Russian ESPO Corridor)**: Highlights Kozmino & Sakhalin Aframax shuttle routes to Paradip/Visakh (Landed cost: **$81.50/bbl**, Lead time: **11.5 Days**).
+   - **Strategy 4 (Latin American Heavy-Sweet Blend)**: Shows Petrobras Tupi & Guyanese Liza crude bypassing Middle Eastern waters entirely (Landed cost: **$85.90/bbl**).
+   - **Strategy 5 (National Reserve Drawdown & Domestic Surge)**: Shows 100% ISPRL cavern release + ONGC Mumbai High 360k bpd surge (Landed cost: **$77.20/bbl**, Lead time: **0.8 Days**).
+3. Demonstrate the **1-Click Executable MoPNG Tender Specification Box**:
+   - Point out the auto-generated MoPNG Tender Reference ID (`MoPNG/EMERGENCY/2026-08/STRAT-1`), target intake ports (*Vadinar, Mundra, Mangalore*), and execution lead time (**6 Hours**).
+   - Click the **`Download Tender Specs (JSON)`** and **`Export MoPNG PDF Directive`** buttons, showing instant execution in **under 5 seconds** saving **~$1.2 Billion USD** in landed crude costs.
+4. Scroll down to **Tier 6: Live Geopolitical & Maritime News Wire**:
+   - Highlight the real-time sync status indicator (*"Live Sync: Active"*).
+   - Hover over breaking maritime intelligence cards (Houthi missile alerts, Strait of Hormuz naval standoff).
+   - Click the **`Read Full Article on gCaptain`** button, demonstrating direct external redirect to verified news sources.
 
 **[SPOKEN SCRIPT]**
-> *"Here is our core innovation: **The Adaptive Procurement Orchestrator**.*
+> *"Here is our core national innovation: **The Adaptive Procurement Orchestrator**.*
 >
-> *Instead of waiting weeks for manual procurement tenders, UrjaAegis AI evaluates 5 dynamic rerouting strategies — such as bypassing Hormuz via the **ADCOP Fujairah pipeline** in the UAE and the **Saudi Yanbu Petroline** — generating 1-click MoPNG emergency tenders in **less than 5 seconds**.*
+> *Instead of waiting weeks for cumbersome manual procurement committees, UrjaAegis AI evaluates 5 dynamic, assay-compatible rerouting strategies in real time:*
+> 1. **Emergency Chokepoint Bypass**: Reroutes Persian Gulf crude via UAE's **ADCOP Habshan-Fujairah pipeline** to Fujairah SPM and Saudi Arabia's **East-West Petroline to Yanbu**, achieving a **97% refinery assay fit** and delivering crude in just **2.8 days** at **$83.80/bbl**.
+> 2. **Global Atlantic Pivot**: Directs supertankers around Africa's Cape Route to import West African Bonny Light and US Gulf WTI Midland.
+> 3. **Far East & Russian ESPO Corridor**: Charters Aframax shuttles from Kozmino directly to Paradip and Visakhapatnam in **11.5 days**.
+> 4. **Latin American Transatlantic Route**: Ships Brazilian Tupi and Guyanese Liza crude, completely avoiding Middle Eastern chokepoints.
+> 5. **National Reserve & Domestic Surge**: Combines a **100% ISPRL cavern drawdown** with a **360,000 bpd surge from ONGC's Mumbai High offshore platforms**.
 >
-> *This strategy achieves a **97% refinery assay fit** and saves India **~$1.2 Billion USD** in import bill shock.*
+> *With a single click, our platform auto-generates executable **Ministry of Petroleum & Natural Gas (MoPNG) emergency tender directives** — complete with official tender reference codes, chartering terms, target discharge ports at Vadinar and Mundra, and downloadable JSON/PDF specifications in **less than 5 seconds**, saving India **~$1.2 Billion USD** in landed crude price shock.*
 >
-> *Below, our **Live War & Conflict News Wire** streams breaking maritime intelligence with 100% verified links to articles on Reuters, Bloomberg, and gCaptain."*
+> *Directly below, our **Live Geopolitical & Maritime News Wire** streams breaking naval bulletins and shipping advisories with 100% verified, direct clickable links to official reporting on Reuters, Bloomberg, and gCaptain."*
 
 ---
 
@@ -212,7 +218,7 @@
 2. Show closing summary slide / dashboard overview.
 
 **[SPOKEN SCRIPT]**
-> *"In summary, **UrjaAegis AI** extends India's national stockout horizon from **34.2 days to over 90+ days**, cuts emergency rerouting decision time by **99.9%**, and protects our national energy sovereignty.*
+> *"In summary, **UrjaAegis AI** extends India's national stockout horizon from **44.4 days to over 90+ days**, cuts emergency rerouting decision time by **99.9%**, and protects our national energy sovereignty.*
 >
 > *Our full system is live in production on Railway, powered by FastAPI, PostgreSQL PostGIS, SciPy LP solvers, Next.js 14, and live satellite AIS feeds.*
 >
