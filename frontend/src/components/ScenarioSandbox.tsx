@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-interface EconomicImpactMetrics {
+export interface EconomicImpactMetrics {
   baseline_crude_price_usd: number;
   landed_crude_price_usd: number;
   price_increase_pct: number;
@@ -14,7 +14,7 @@ interface EconomicImpactMetrics {
   cpi_inflation_impact_bps: number;
 }
 
-interface DisruptionScenarioResult {
+export interface DisruptionScenarioResult {
   scenario_name: string;
   duration_days: number;
   daily_crude_deficit_bpd: number;
@@ -25,8 +25,62 @@ interface DisruptionScenarioResult {
 
 interface ScenarioSandboxProps {
   theme: 'dark' | 'cream';
-  onSimulate: (hormuz: number, redSea: number, russian: number, duration: number) => void;
-  simulationResult: DisruptionScenarioResult | null;
+  onSimulate?: (hormuz: number, redSea: number, russian: number, duration: number) => void;
+  simulationResult?: DisruptionScenarioResult | null;
+}
+
+// Unified 100% mathematically synchronized disruption calculation engine
+export function calculateDisruptionScenario(
+  hormuz: number,
+  redSea: number,
+  russian: number,
+  duration: number
+): DisruptionScenarioResult {
+  const hormuzLoss = 1890000 * (hormuz / 100);
+  const redSeaLoss = 1125000 * (redSea / 100) * 0.45;
+  const russianLoss = 1620000 * (russian / 100);
+
+  const totalDeficitBpd = hormuzLoss + redSeaLoss + russianLoss;
+  const totalShortfallMbbl = (totalDeficitBpd * duration) / 1000000;
+
+  const deficitRatio = totalDeficitBpd / 4500000;
+  const stockoutDays = deficitRatio > 0 ? Number((18.0 / deficitRatio).toFixed(1)) : 999.0;
+
+  const baselinePrice = 78.50;
+  const priceSurgePct = (hormuz * 0.45) + (redSea * 0.18) + (russian * 0.22);
+  const landedPrice = baselinePrice * (1 + (priceSurgePct / 100));
+  const priceDeltaUsd = landedPrice - baselinePrice;
+
+  const monthlyImportBbls = 4.5 * 30.0; // 135M bbls/month
+  const additionalCostUsdMn = monthlyImportBbls * priceDeltaUsd;
+  const importBillSurgeUsdBn = Number((additionalCostUsdMn / 1000).toFixed(2));
+  const importBillSurgeInrCrores = Number(((additionalCostUsdMn * 83.5) / 10).toFixed(0));
+
+  const pumpSurgeInr = (priceDeltaUsd / 10.0) * 6.5;
+  const petrolSurge = Number((pumpSurgeInr * 1.05).toFixed(1));
+  const dieselSurge = Number((pumpSurgeInr * 0.95).toFixed(1));
+
+  const cadImpact = Number(((priceDeltaUsd / 10.0) * 0.48).toFixed(2));
+  const cpiImpact = Number(((priceDeltaUsd / 10.0) * 36.0).toFixed(0));
+
+  return {
+    scenario_name: 'Custom Disruption Simulation',
+    duration_days: duration,
+    daily_crude_deficit_bpd: Number(totalDeficitBpd.toFixed(0)),
+    total_shortfall_mbbl: Number(totalShortfallMbbl.toFixed(2)),
+    stockout_horizon_without_mitigation_days: stockoutDays,
+    economic_impact: {
+      baseline_crude_price_usd: baselinePrice,
+      landed_crude_price_usd: Number(landedPrice.toFixed(2)),
+      price_increase_pct: Number(priceSurgePct.toFixed(1)),
+      import_bill_surge_inr_crores: importBillSurgeInrCrores,
+      import_bill_surge_usd_billion: importBillSurgeUsdBn,
+      petrol_pump_price_impact_inr_l: petrolSurge,
+      diesel_pump_price_impact_inr_l: dieselSurge,
+      current_account_deficit_impact_pct_gdp: cadImpact,
+      cpi_inflation_impact_bps: cpiImpact
+    }
+  };
 }
 
 export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
@@ -39,17 +93,27 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
   const [russian, setRussian] = useState<number>(20);
   const [duration, setDuration] = useState<number>(30);
 
+  // Real-time instant mathematical computation directly derived from current slider state
+  const activeResult: DisruptionScenarioResult = calculateDisruptionScenario(
+    hormuz,
+    redSea,
+    russian,
+    duration
+  );
+
+  const econ = activeResult.economic_impact;
+
   const handleSliderChange = (h: number, r: number, ru: number, d: number) => {
     setHormuz(h);
     setRedSea(r);
     setRussian(ru);
     setDuration(d);
-    onSimulate(h, r, ru, d);
+    if (onSimulate) {
+      onSimulate(h, r, ru, d);
+    }
   };
 
-  const econ = simulationResult?.economic_impact;
-
-  // Exact math calculation for HTML input range fill percentage considering min and max
+  // Dynamic CSS track gradient background for clean visual slider progress
   const getTrackStyle = (val: number, min: number, max: number, color: string) => {
     const pct = Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100));
     const bgTrack = theme === 'dark' ? '#1E293B' : '#7E8C9F';
@@ -157,20 +221,20 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Real-Time Economic Metrics */}
+        {/* Right Column: Real-Time Instant Synchronized Metrics */}
         <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono">
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Daily Crude Deficit</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>
-              {simulationResult ? (simulationResult.daily_crude_deficit_bpd / 1000).toFixed(0) : '2089'}k bpd
+              {(activeResult.daily_crude_deficit_bpd / 1000).toFixed(0)}k bpd
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">Total: {simulationResult?.total_shortfall_mbbl || 62.67}M bbls</span>
+            <span className="text-[10px] text-slate-500 font-medium">Total: {activeResult.total_shortfall_mbbl}M bbls</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Stockout Horizon</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-amber' : 'text-amber-800'}`}>
-              {simulationResult?.stockout_horizon_without_mitigation_days || 38.8} Days
+              {activeResult.stockout_horizon_without_mitigation_days} Days
             </p>
             <span className="text-[10px] text-slate-500 font-medium">Without Rerouting</span>
           </div>
@@ -178,33 +242,33 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Import Bill Surge</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>
-              +₹{econ ? econ.import_bill_surge_inr_crores.toLocaleString() : '43,715'} Cr
+              +₹{econ.import_bill_surge_inr_crores.toLocaleString()} Cr
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">+${econ?.import_bill_surge_usd_billion || 5.24}B USD</span>
+            <span className="text-[10px] text-slate-500 font-medium">+${econ.import_bill_surge_usd_billion}B USD</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Petrol Pump Hike</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-amber' : 'text-amber-800'}`}>
-              +₹{econ?.petrol_pump_price_impact_inr_l || 26.5}/L
+              +₹{econ.petrol_pump_price_impact_inr_l}/L
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">Diesel: +₹{econ?.diesel_pump_price_impact_inr_l || 24.0}/L</span>
+            <span className="text-[10px] text-slate-500 font-medium">Diesel: +₹{econ.diesel_pump_price_impact_inr_l}/L</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Landed Crude Price</span>
             <p className="text-xl font-extrabold">
-              ${econ?.landed_crude_price_usd || 117.28}/bbl
+              ${econ.landed_crude_price_usd}/bbl
             </p>
-            <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>+{econ?.price_increase_pct || 49.4}% surge</span>
+            <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>+{econ.price_increase_pct}% surge</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">CAD & CPI Inflation</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>
-              +{econ?.current_account_deficit_impact_pct_gdp || 1.86}% GDP
+              +{econ.current_account_deficit_impact_pct_gdp}% GDP
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">CPI: +{econ?.cpi_inflation_impact_bps || 140} bps</span>
+            <span className="text-[10px] text-slate-500 font-medium">CPI: +{econ.cpi_inflation_impact_bps} bps</span>
           </div>
         </div>
       </div>
