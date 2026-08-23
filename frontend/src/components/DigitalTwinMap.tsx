@@ -87,6 +87,24 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       drawdownRateOrSpeed: 'Production Output: 290,000 bpd',
       bufferDays: 'Primary Domestic Energy Security Asset'
     },
+    paradip: {
+      id: 'paradip',
+      name: 'Paradip IOCL Deepwater SPM & Refinery (Odisha)',
+      type: 'East Coast Deepwater SPM & Integrated 15 MMT Refinery',
+      subtitle: 'Indian Oil Corporation East Coast Primary Crude Hub',
+      stock: '24.0M bbls (16.0 Days Cover)',
+      status: 'Operational (Atlantic & Far East Import Active)',
+      colorClassDark: 'text-sky-400',
+      colorClassLight: 'text-sky-800 font-extrabold',
+      badgeBg: 'bg-sky-500/10 border-sky-500/40 text-sky-800 font-bold',
+      badgeText: 'East Coast Gateway',
+      refineryFeed: 'IOCL Paradip 15 MMT, IOCL Haldia 8 MMT & IOCL Barauni 6 MMT',
+      slateCompatibility: 'West African Bonny Light, Russian ESPO, US WTI Midland (API 35.0° - 42.0°)',
+      strategicRole: 'Primary intake hub for Atlantic transatlantic bypass imports and Russian Kozmino crude.',
+      logisticsConnectivity: 'Paradip-Haldia-Barauni-Guwahati Crude Pipeline (PHBPL 1,400 km network)',
+      drawdownRateOrSpeed: 'Discharge Rate: 180,000 bpd offloading',
+      bufferDays: '+16.0 Days East Coast Refining Buffer'
+    },
     desh_vishal: {
       id: 'desh_vishal',
       name: 'VLCC Desh Vishal (Indian Supertanker at Sea)',
@@ -194,7 +212,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
             <span className={`text-[11px] font-bold ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800 font-extrabold'}`}>
-              SPM Gateway (1)
+              SPM Gateways (2)
             </span>
           </div>
         </div>
@@ -211,11 +229,11 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
       </div>
 
       {/* Node Selection Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono text-xs mb-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 font-mono text-xs mb-3">
         {/* Card 1: Vadinar */}
         <div
           onClick={() => toggleNodeSelection('vadinar')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'vadinar'
               ? 'border-amber-500 bg-amber-500/10 shadow-md ring-2 ring-amber-500'
               : theme === 'dark'
@@ -237,7 +255,7 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
         {/* Card 2: Mumbai High Offshore Extraction */}
         <div
           onClick={() => toggleNodeSelection('mumbai_high')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'mumbai_high'
               ? 'border-emerald-500 bg-emerald-500/10 shadow-md ring-2 ring-emerald-500'
               : theme === 'dark'
@@ -256,10 +274,32 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-emerald-400' : 'text-emerald-800'}`}>290.0k bpd</p>
         </div>
 
-        {/* Card 3: Desh Vishal */}
+        {/* Card 3: Paradip IOCL */}
+        <div
+          onClick={() => toggleNodeSelection('paradip')}
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
+            selectedNodeId === 'paradip'
+              ? 'border-sky-500 bg-sky-500/10 shadow-md ring-2 ring-sky-500'
+              : theme === 'dark'
+              ? 'bg-dark-bg border-dark-border hover:border-slate-600'
+              : 'bg-cream-bg border-cream-border hover:border-slate-500'
+          }`}
+        >
+          <div className="flex items-center justify-between mb-1">
+            <div className={`flex items-center gap-1 font-bold text-[10px] ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>
+              <Factory className="w-3 h-3" />
+              <span>Paradip IOCL</span>
+            </div>
+            {selectedNodeId === 'paradip' && <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />}
+          </div>
+          <p className={`text-[9px] ${theme === 'dark' ? 'text-slate-400' : 'text-slate-700 font-medium'}`}>IOCL East Coast</p>
+          <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>24.0M bbls</p>
+        </div>
+
+        {/* Card 4: Desh Vishal */}
         <div
           onClick={() => toggleNodeSelection('desh_vishal')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'desh_vishal'
               ? 'border-amber-500 bg-amber-500/10 shadow-md ring-2 ring-amber-500'
               : theme === 'dark'
@@ -278,10 +318,10 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-amber-400' : 'text-amber-800'}`}>2.0M bbls</p>
         </div>
 
-        {/* Card 4: Swarna Kamal */}
+        {/* Card 5: Swarna Kamal */}
         <div
           onClick={() => toggleNodeSelection('swarna_kamal')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'swarna_kamal'
               ? 'border-sky-500 bg-sky-500/10 shadow-md ring-2 ring-sky-500'
               : theme === 'dark'
@@ -300,10 +340,10 @@ export const DigitalTwinMap: React.FC<DigitalTwinMapProps> = ({
           <p className={`font-bold text-[10px] mt-0.5 ${theme === 'dark' ? 'text-sky-400' : 'text-sky-800'}`}>2.0M bbls</p>
         </div>
 
-        {/* Card 5: Ratna Shalini */}
+        {/* Card 6: Ratna Shalini */}
         <div
           onClick={() => toggleNodeSelection('ratna_shalini')}
-          className={`p-3 rounded-lg border cursor-pointer transition ${
+          className={`p-2.5 rounded-lg border cursor-pointer transition ${
             selectedNodeId === 'ratna_shalini'
               ? 'border-emerald-500 bg-emerald-500/10 shadow-md ring-2 ring-emerald-500'
               : theme === 'dark'
