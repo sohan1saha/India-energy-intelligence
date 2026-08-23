@@ -162,49 +162,49 @@ export const ScenarioSandbox: React.FC<ScenarioSandboxProps> = ({
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Daily Crude Deficit</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>
-              {simulationResult ? (simulationResult.daily_crude_deficit_bpd / 1000).toFixed(0) : '1,512'}k bpd
+              {simulationResult ? (simulationResult.daily_crude_deficit_bpd / 1000).toFixed(0) : '2089'}k bpd
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">Total: {simulationResult?.total_shortfall_mbbl}M bbls</span>
+            <span className="text-[10px] text-slate-500 font-medium">Total: {simulationResult?.total_shortfall_mbbl || 62.67}M bbls</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Stockout Horizon</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-amber' : 'text-amber-800'}`}>
-              {simulationResult?.stockout_horizon_without_mitigation_days || 34.2} Days
+              {simulationResult?.stockout_horizon_without_mitigation_days || 38.8} Days
             </p>
             <span className="text-[10px] text-slate-500 font-medium">Without Rerouting</span>
           </div>
 
-          <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
+          <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Import Bill Surge</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>
-              +₹{econ ? econ.import_bill_surge_inr_crores.toLocaleString() : '34,500'} Cr
+              +₹{econ ? econ.import_bill_surge_inr_crores.toLocaleString() : '43,715'} Cr
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">+${econ?.import_bill_surge_usd_billion}B USD</span>
+            <span className="text-[10px] text-slate-500 font-medium">+${econ?.import_bill_surge_usd_billion || 5.24}B USD</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Petrol Pump Hike</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-amber' : 'text-amber-800'}`}>
-              +₹{econ?.petrol_pump_price_impact_inr_l || 14.2}/L
+              +₹{econ?.petrol_pump_price_impact_inr_l || 26.5}/L
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">Diesel: +₹{econ?.diesel_pump_price_impact_inr_l || 16.5}/L</span>
+            <span className="text-[10px] text-slate-500 font-medium">Diesel: +₹{econ?.diesel_pump_price_impact_inr_l || 24.0}/L</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">Landed Crude Price</span>
             <p className="text-xl font-extrabold">
-              ${econ?.landed_crude_price_usd || 106.8}/bbl
+              ${econ?.landed_crude_price_usd || 117.28}/bbl
             </p>
-            <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>+{econ?.price_increase_pct || 36}% surge</span>
+            <span className={`text-[10px] font-bold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>+{econ?.price_increase_pct || 49.4}% surge</span>
           </div>
 
           <div className={`p-3.5 rounded-lg border ${theme === 'dark' ? 'bg-dark-bg border-dark-border' : 'bg-cream-bg border-cream-border'}`}>
             <span className="text-[10px] text-slate-500 block mb-1 uppercase tracking-wide">CAD & CPI Inflation</span>
             <p className={`text-xl font-extrabold ${theme === 'dark' ? 'text-alert-red' : 'text-red-700'}`}>
-              +{econ?.current_account_deficit_impact_pct_gdp || 0.48}% GDP
+              +{econ?.current_account_deficit_impact_pct_gdp || 1.86}% GDP
             </p>
-            <span className="text-[10px] text-slate-500 font-medium">CPI: +{econ?.cpi_inflation_impact_bps || 36} bps</span>
+            <span className="text-[10px] text-slate-500 font-medium">CPI: +{econ?.cpi_inflation_impact_bps || 140} bps</span>
           </div>
         </div>
       </div>

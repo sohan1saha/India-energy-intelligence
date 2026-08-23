@@ -2,120 +2,146 @@
 
 import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
-import { RiskRadar } from '@/components/RiskRadar';
 import { DigitalTwinMap } from '@/components/DigitalTwinMap';
+import { RiskRadar } from '@/components/RiskRadar';
 import { ScenarioSandbox } from '@/components/ScenarioSandbox';
 import { SPROptimizerCard } from '@/components/SPROptimizerCard';
 import { ProcurementMatrix } from '@/components/ProcurementMatrix';
 import { GeopoliticalNewsFeed } from '@/components/GeopoliticalNewsFeed';
 import { AICopilotDrawer } from '@/components/AICopilotDrawer';
-import { ShieldAlert, Database, Navigation, Activity, Flame } from 'lucide-react';
+import { ShieldAlert, Database, Activity, Navigation, Flame } from 'lucide-react';
+
+// Exact unified mathematical engine for Disruption Scenario Modeller
+export function calculateDisruptionScenario(
+  hormuz: number,
+  redSea: number,
+  russian: number,
+  duration: number
+) {
+  const hormuzLoss = 1890000 * (hormuz / 100);
+  const redSeaLoss = 1125000 * (redSea / 100) * 0.45;
+  const russianLoss = 1620000 * (russian / 100);
+
+  const totalDeficitBpd = hormuzLoss + redSeaLoss + russianLoss;
+  const totalShortfallMbbl = (totalDeficitBpd * duration) / 1000000;
+
+  const deficitRatio = totalDeficitBpd / 4500000;
+  const stockoutDays = deficitRatio > 0 ? Number((18.0 / deficitRatio).toFixed(1)) : 999.0;
+
+  const baselinePrice = 78.50;
+  const priceSurgePct = (hormuz * 0.45) + (redSea * 0.18) + (russian * 0.22);
+  const landedPrice = baselinePrice * (1 + (priceSurgePct / 100));
+  const priceDeltaUsd = landedPrice - baselinePrice;
+
+  const monthlyImportBbls = 4.5 * 30.0; // 135M bbls/month
+  const additionalCostUsdMn = monthlyImportBbls * priceDeltaUsd;
+  const importBillSurgeUsdBn = Number((additionalCostUsdMn / 1000).toFixed(2));
+  const importBillSurgeInrCrores = Number(((additionalCostUsdMn * 83.5) / 10).toFixed(0));
+
+  const pumpSurgeInr = (priceDeltaUsd / 10.0) * 6.5;
+  const petrolSurge = Number((pumpSurgeInr * 1.05).toFixed(1));
+  const dieselSurge = Number((pumpSurgeInr * 0.95).toFixed(1));
+
+  const cadImpact = Number(((priceDeltaUsd / 10.0) * 0.48).toFixed(2));
+  const cpiImpact = Number(((priceDeltaUsd / 10.0) * 36.0).toFixed(0));
+
+  return {
+    scenario_name: 'Custom Disruption Simulation',
+    duration_days: duration,
+    daily_crude_deficit_bpd: Number(totalDeficitBpd.toFixed(0)),
+    total_shortfall_mbbl: Number(totalShortfallMbbl.toFixed(2)),
+    stockout_horizon_without_mitigation_days: stockoutDays,
+    economic_impact: {
+      baseline_crude_price_usd: baselinePrice,
+      landed_crude_price_usd: Number(landedPrice.toFixed(2)),
+      price_increase_pct: Number(priceSurgePct.toFixed(1)),
+      import_bill_surge_inr_crores: importBillSurgeInrCrores,
+      import_bill_surge_usd_billion: importBillSurgeUsdBn,
+      petrol_pump_price_impact_inr_l: petrolSurge,
+      diesel_pump_price_impact_inr_l: dieselSurge,
+      current_account_deficit_impact_pct_gdp: cadImpact,
+      cpi_inflation_impact_bps: cpiImpact
+    }
+  };
+}
 
 export default function Home() {
   const [theme, setTheme] = useState<'dark' | 'cream'>('dark');
-  const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>(null);
+  const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>('strat_bypass');
+  const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
+
+  // Initial Scenario State computed with exact math engine (80% Hormuz, 50% Red Sea, 20% Russian, 30 Days)
+  const [simulationResult, setSimulationResult] = useState<any>(calculateDisruptionScenario(80, 50, 20, 30));
 
   const [corridors, setCorridors] = useState<any[]>([
     {
-      id: "c1",
+      code: "hormuz",
       name: "Strait of Hormuz",
-      code: "HORMUZ",
-      risk_score: 82.5,
-      status: "HIGH_RISK",
-      daily_vessel_count: 42,
+      threat_score: 82.5,
+      risk_level: "HIGH_RISK",
       transit_delay_days: 4.5,
-      war_risk_insurance_pct: 1.25,
-      threat_description: "Elevated US-Iran military standoff, naval patrols, GPS spoofing, and mine/missile threats along Iranian coast."
+      war_insurance_surcharge_pct: 1.25,
+      daily_volume_mbpd: 21.0,
+      bypass_route_available: true,
+      status_summary: "High Tension Standoff • Coastal Battery Deployment • 45% India Crude Baseline Transits Here"
     },
     {
-      id: "c2",
+      code: "red_sea",
       name: "Bab-el-Mandeb & Red Sea",
-      code: "RED_SEA",
-      risk_score: 76.0,
-      status: "HIGH_RISK",
-      daily_vessel_count: 18,
+      threat_score: 76.0,
+      risk_level: "HIGH_RISK",
       transit_delay_days: 16.0,
-      war_risk_insurance_pct: 1.50,
-      threat_description: "Continuous Houthi anti-ship missile/drone attacks; major tankers forced into 16-day Cape of Good Hope detour."
+      war_insurance_surcharge_pct: 1.50,
+      daily_volume_mbpd: 4.8,
+      bypass_route_available: true,
+      status_summary: "Houthi Missile & Drone Hazards • Cape Route Detours Active (+16 Days Transit)"
     },
     {
-      id: "c3",
-      name: "Strait of Malacca",
-      code: "MALACCA",
-      risk_score: 24.0,
-      status: "NORMAL",
-      daily_vessel_count: 85,
-      transit_delay_days: 0.5,
-      war_risk_insurance_pct: 0.05,
-      threat_description: "Dense maritime traffic; low geopolitical threat; key corridor for Russian Far East (ESPO) & Asian trade."
-    },
-    {
-      id: "c4",
+      code: "cape_gh",
       name: "Cape of Good Hope",
-      code: "CAPE_GH",
-      risk_score: 35.0,
-      status: "ELEVATED",
-      daily_vessel_count: 60,
-      transit_delay_days: 15.0,
-      war_risk_insurance_pct: 0.15,
-      threat_description: "Congestion at South African bunkering ports (Port Louis, Durban) due to Red Sea diversions."
+      threat_score: 35.0,
+      risk_level: "MODERATE_RISK",
+      transit_delay_days: 0.0,
+      war_insurance_surcharge_pct: 0.15,
+      daily_volume_mbpd: 6.2,
+      bypass_route_available: true,
+      status_summary: "Secondary Cape Bypass Active • High Bunker Fuel Burn • Safe Transatlantic Passage"
+    },
+    {
+      code: "malacca",
+      name: "Strait of Malacca",
+      threat_score: 24.0,
+      risk_level: "LOW_RISK",
+      transit_delay_days: 0.0,
+      war_insurance_surcharge_pct: 0.05,
+      daily_volume_mbpd: 16.0,
+      bypass_route_available: true,
+      status_summary: "Normal Traffic Flow • Far East & Russian ESPO Strategic Corridor Active"
     }
   ]);
-
-  const [simulationResult, setSimulationResult] = useState<any>({
-    scenario_name: "Hormuz & Red Sea Disruption",
-    duration_days: 30,
-    daily_crude_deficit_bpd: 1512000.0,
-    total_shortfall_mbbl: 45.36,
-    stockout_horizon_without_mitigation_days: 34.2,
-    economic_impact: {
-      baseline_crude_price_usd: 78.50,
-      landed_crude_price_usd: 106.80,
-      price_increase_pct: 36.0,
-      import_bill_surge_inr_crores: 34500.0,
-      import_bill_surge_usd_billion: 4.13,
-      petrol_pump_price_impact_inr_l: 14.2,
-      diesel_pump_price_impact_inr_l: 16.5,
-      current_account_deficit_impact_pct_gdp: 0.48,
-      cpi_inflation_impact_bps: 36.0
-    }
-  });
 
   const [strategies, setStrategies] = useState<any[]>([
     {
       strategy_id: "strat_bypass",
-      name: "Emergency Chokepoint Bypass (ADCOP + Yanbu + ISPRL)",
-      tagline: "Fastest delivery (0.5–4.5 days) by utilizing pipeline bypasses in UAE & Saudi Arabia + ISPRL release.",
+      name: "Emergency Chokepoint Bypass (ADCOP Fujairah + Yanbu Petroline)",
+      tagline: "Reroutes Arabian Gulf crude via Habshan-Fujairah pipeline (UAE) & Saudi East-West Petroline to Red Sea.",
       landed_cost_usd_bbl: 83.80,
       cost_delta_vs_baseline_usd: 5.30,
       avg_transit_days: 2.8,
       overall_refinery_fit: 0.97,
       allocations: [
         {
-          source_country: "UAE (ADCOP Bypass)",
+          source_country: "United Arab Emirates (ADCOP)",
           supplier_name: "ADNOC",
           crude_grade: "Murban Sweet",
           api_gravity: 40.2,
           sulfur_pct: 0.78,
-          volume_bpd: 540000,
-          transport_mode: "VLCC Direct from Fujairah Terminal",
-          transit_days: 3.0,
-          landed_cost_usd_bbl: 84.50,
-          refinery_fit_score: 0.95
-        },
-        {
-          source_country: "Saudi Arabia (Petroline)",
-          supplier_name: "Saudi Aramco",
-          crude_grade: "Arab Light",
-          api_gravity: 33.4,
-          sulfur_pct: 1.97,
-          volume_bpd: 420000,
-          transport_mode: "VLCC from Yanbu Red Sea Terminal",
-          transit_days: 4.5,
-          landed_cost_usd_bbl: 86.20,
-          refinery_fit_score: 0.98
+          volume_bpd: 960000,
+          transport_mode: "Habshan-Fujairah Pipeline ➔ Fujairah SPM ➔ Vadinar SPM",
+          transit_days: 2.5,
+          landed_cost_usd_bbl: 84.10,
+          refinery_fit_score: 0.97
         },
         {
           source_country: "ISPRL Strategic Reserves",
@@ -274,14 +300,21 @@ export default function Home() {
   ]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/risk/report')
+    fetch('/api/risk/report')
       .then(res => res.json())
       .then(data => {
         if (data.corridors) setCorridors(data.corridors);
       })
-      .catch(() => {});
+      .catch(() => {
+        fetch('http://localhost:8000/api/risk/report')
+          .then(res => res.json())
+          .then(data => {
+            if (data.corridors) setCorridors(data.corridors);
+          })
+          .catch(() => {});
+      });
 
-    fetch('http://localhost:8000/api/procurement/reroute', {
+    fetch('/api/procurement/reroute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ deficit_bpd: 1200000.0 })
@@ -297,7 +330,7 @@ export default function Home() {
 
   const handleSimulateScenario = async (hormuz: number, redSea: number, russian: number, duration: number) => {
     try {
-      const res = await fetch('http://localhost:8000/api/scenarios/simulate', {
+      const res = await fetch('/api/scenarios/simulate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -308,28 +341,12 @@ export default function Home() {
           duration_days: duration
         })
       });
+      if (!res.ok) throw new Error('API Error');
       const data = await res.json();
       setSimulationResult(data);
     } catch (e) {
-      const deficit = (1890000 * (hormuz / 100)) + (1125000 * (redSea / 100) * 0.45);
-      setSimulationResult({
-        scenario_name: 'Custom Disruption Simulation',
-        duration_days: duration,
-        daily_crude_deficit_bpd: deficit,
-        total_shortfall_mbbl: (deficit * duration) / 1000000,
-        stockout_horizon_without_mitigation_days: Number((18.0 / (deficit / 4500000)).toFixed(1)),
-        economic_impact: {
-          baseline_crude_price_usd: 78.50,
-          landed_crude_price_usd: Number((78.5 * (1 + (hormuz * 0.45 / 100))).toFixed(2)),
-          price_increase_pct: Number((hormuz * 0.45).toFixed(1)),
-          import_bill_surge_inr_crores: Number((deficit * 0.25).toFixed(0)),
-          import_bill_surge_usd_billion: Number((deficit * 0.0028).toFixed(2)),
-          petrol_pump_price_impact_inr_l: Number((hormuz * 0.18).toFixed(1)),
-          diesel_pump_price_impact_inr_l: Number((hormuz * 0.20).toFixed(1)),
-          current_account_deficit_impact_pct_gdp: Number((hormuz * 0.006).toFixed(2)),
-          cpi_inflation_impact_bps: Number((hormuz * 0.45).toFixed(0))
-        }
-      });
+      // Fallback calculation using exact unified mathematical engine
+      setSimulationResult(calculateDisruptionScenario(hormuz, redSea, russian, duration));
     }
   };
 
