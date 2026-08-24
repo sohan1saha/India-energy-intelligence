@@ -13,7 +13,6 @@
 
 - **Live Production Railway App**: [https://india-energy-intelligence-production.up.railway.app](https://india-energy-intelligence-production.up.railway.app)
 - **Local Dev Dashboard**: [http://localhost:3000](http://localhost:3000)
-- **GitHub Repository**: [https://github.com/sohan1saha/India-energy-intelligence](https://github.com/sohan1saha/India-energy-intelligence)
 
 ---
 
