@@ -65,7 +65,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
 
     const interval = setInterval(() => {
       setVesselTicks(prev => prev + 1);
-    }, 3000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -80,15 +80,18 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     );
   }
 
-  // Live Drifting Telemetry Calculations for Supertankers
-  const deshLat = 24.50 + Math.sin(vesselTicks * 0.1) * 0.08;
-  const deshLng = 58.20 + Math.cos(vesselTicks * 0.1) * 0.12;
+  // Active Real-Time Voyage Progress Interpolation along Oceanic Shipping Lanes
+  const tDesh = ((vesselTicks * 0.02) % 1.0);
+  const deshLat = Number((25.18 + (22.45 - 25.18) * tDesh).toFixed(4));
+  const deshLng = Number((56.36 + (69.66 - 56.36) * tDesh).toFixed(4));
 
-  const swarnaLat = 15.10 + Math.cos(vesselTicks * 0.12) * 0.10;
-  const swarnaLng = 71.40 + Math.sin(vesselTicks * 0.12) * 0.10;
+  const tSwarna = (((vesselTicks + 20) * 0.018) % 1.0);
+  const swarnaLat = Number((25.18 + (12.91 - 25.18) * tSwarna).toFixed(4));
+  const swarnaLng = Number((56.36 + (74.85 - 56.36) * tSwarna).toFixed(4));
 
-  const ratnaLat = 11.50 + Math.sin(vesselTicks * 0.08) * 0.12;
-  const ratnaLng = 84.20 + Math.cos(vesselTicks * 0.08) * 0.08;
+  const tRatna = (((vesselTicks + 35) * 0.015) % 1.0);
+  const ratnaLat = Number((10.00 + (20.26 - 10.00) * tRatna).toFixed(4));
+  const ratnaLng = Number((78.00 + (86.67 - 78.00) * tRatna).toFixed(4));
 
   // Global Maritime Shipping Network Base Ports & Risk Corridors
   const ports = [
@@ -132,10 +135,10 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "santos", name: "SANTOS BRAZIL", pos: [-23.96, -46.33] as [number, number], isMajor: true },
     { id: "houston", name: "HOUSTON US GULF", pos: [28.95, -95.35] as [number, number], isMajor: true },
 
-    // Supertankers at Sea
-    { id: "desh_vishal", name: "VLCC DESH VISHAL (2.0M bbls)", pos: [deshLat, deshLng] as [number, number], isMajor: true, cargo: "2.0M bbls Basrah Heavy", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Vadinar SPM (Gujarat)" },
-    { id: "swarna_kamal", name: "VLCC SWARNA KAMAL (2.0M bbls)", pos: [swarnaLat, swarnaLng] as [number, number], isMajor: true, cargo: "2.0M bbls Murban Sweet", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Mangalore SPM (MRPL)" },
-    { id: "ratna_shalini", name: "VLCC RATNA SHALINI (1.9M bbls)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true, cargo: "1.9M bbls WTI Midland", origin: "Enterprise US Gulf Terminal (Texas, USA)", destination: "Paradip SPM (Odisha)" }
+    // Supertankers at Sea (Dynamic Coordinates Streaming)
+    { id: "desh_vishal", name: `VLCC DESH VISHAL (2.0M bbls) • ${deshLat.toFixed(2)}°N ${deshLng.toFixed(2)}°E`, pos: [deshLat, deshLng] as [number, number], isMajor: true, cargo: "2.0M bbls Basrah Heavy", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Vadinar SPM (Gujarat)" },
+    { id: "swarna_kamal", name: `VLCC SWARNA KAMAL (2.0M bbls) • ${swarnaLat.toFixed(2)}°N ${swarnaLng.toFixed(2)}°E`, pos: [swarnaLat, swarnaLng] as [number, number], isMajor: true, cargo: "2.0M bbls Murban Sweet", origin: "Fujairah ADCOP Terminal (UAE)", destination: "Mangalore SPM (MRPL)" },
+    { id: "ratna_shalini", name: `VLCC RATNA SHALINI (1.9M bbls) • ${ratnaLat.toFixed(2)}°N ${ratnaLng.toFixed(2)}°E`, pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true, cargo: "1.9M bbls WTI Midland", origin: "Enterprise US Gulf Terminal (Texas, USA)", destination: "Paradip SPM (Odisha)" }
   ];
 
   // Official CARTO Basemaps Key Integration
