@@ -54,6 +54,7 @@ interface LiveLeafletMapProps {
 export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategyId, onSelectNode }: LiveLeafletMapProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [vesselTicks, setVesselTicks] = useState<number>(0);
+  const [tileProvider, setTileProvider] = useState<number>(0);
 
   useEffect(() => {
     const container = L.DomUtil.get('leaflet-map-root');
@@ -137,9 +138,23 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
     { id: "ratna_shalini", name: "VLCC RATNA SHALINI (1.9M bbls)", pos: [ratnaLat, ratnaLng] as [number, number], isMajor: true, cargo: "1.9M bbls WTI Midland", origin: "Enterprise US Gulf Terminal (Texas, USA)", destination: "Paradip SPM (Odisha)" }
   ];
 
-  const tileUrl = theme === 'dark'
-    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-    : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+  // Official CARTO Basemaps Key Integration
+  const cartoApiKey = "cb1_2ilt_1_0dff281f238b545b8cef7b95";
+
+  const darkTileSources = [
+    `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`,
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  ];
+
+  const lightTileSources = [
+    `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${cartoApiKey}`,
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+  ];
+
+  const activeSources = theme === 'dark' ? darkTileSources : lightTileSources;
+  const currentTileUrl = activeSources[tileProvider % activeSources.length];
 
   // Oceanic Corridors
   const middleEastBypassCorridor: [number, number][] = [
@@ -203,7 +218,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       theme === 'dark' ? 'border-slate-700/60 bg-[#0A0E17] shadow-2xl' : 'border-[#7E8C9F] bg-[#BCC5D1]'
     }`}>
       <MapContainer
-        key={`leaflet-map-${theme}`}
+        key={`leaflet-map-${theme}-${tileProvider}`}
         center={[19.5, 67.5]}
         zoom={4}
         minZoom={3}
@@ -215,9 +230,16 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
         className="w-full h-full relative z-0"
       >
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url={tileUrl}
+          attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+          url={currentTileUrl}
+          subdomains={['a', 'b', 'c', 'd']}
           noWrap={true}
+          eventHandlers={{
+            tileerror: () => {
+              console.warn("Tile provider failed, switching to backup tile server...");
+              setTileProvider(prev => prev + 1);
+            }
+          }}
         />
 
         {/* DYNAMIC STRATEGY CORRIDORS - SHOWN WHEN STRATEGY CARD IS CLICKED */}
@@ -308,7 +330,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       {/* SHIP VOYAGE ROUTE CARD */}
       {selectedNodeId && ['desh_vishal', 'swarna_kamal', 'ratna_shalini'].includes(selectedNodeId) && (
         <div className={`absolute bottom-4 left-4 p-3.5 rounded-lg border shadow-xl z-20 font-mono text-[11px] max-w-sm ${
-          theme === 'dark' ? 'bg-slate-900/95 border-amber-500/50 text-slate-100' : 'bg-[#D4DCEC] border-[#7E8C9F] text-slate-950'
+          theme === 'dark' ? 'bg-slate-900/95 border-amber-500/50 text-slate-100' : 'bg-[#D4DCEC] border-[#7E8C9F] text-[#0F172A]'
         }`}>
           <div className="flex items-center justify-between border-b pb-1.5 mb-2 border-inherit">
             <span className="font-bold text-amber-600 uppercase tracking-wide">
@@ -328,7 +350,7 @@ export default function LiveLeafletMap({ theme, selectedNodeId, selectedStrategy
       {/* MARITIME LOGISTICS LEGEND CARD */}
       {selectedStrategyId && (
         <div className={`absolute bottom-4 right-4 p-3 rounded-lg border shadow-xl z-20 font-mono text-[10px] ${
-          theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-[#D4DCEC] border-[#7E8C9F] text-slate-950'
+          theme === 'dark' ? 'bg-slate-900/90 border-slate-700 text-slate-200' : 'bg-[#D4DCEC] border-[#7E8C9F] text-[#0F172A]'
         }`}>
           <div className="font-bold uppercase tracking-wider mb-2 border-b pb-1 border-inherit flex items-center justify-between gap-3">
             <span>ACTIVE STRATEGY NETWORK</span>
