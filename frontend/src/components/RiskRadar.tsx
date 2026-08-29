@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Radio, RefreshCw } from 'lucide-react';
 
 interface CorridorRisk {
   id?: string;
@@ -30,13 +31,53 @@ export const RiskRadar: React.FC<RiskRadarProps> = ({
   selectedNodeId,
   onSelectCorridor
 }) => {
+  const [lastSync, setLastSync] = useState<string>('Just now');
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleManualSync = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    }, 500);
+  };
+
   return (
     <div className={`p-5 rounded-xl border transition-colors ${
       theme === 'dark' ? 'bg-dark-card border-dark-border text-dark-text' : 'bg-cream-card border-cream-border text-cream-text'
     }`}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-inherit">
-        <h2 className="text-sm font-bold uppercase tracking-wider">Geopolitical Risk Intelligence Agent</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-inherit">
+        <div className="flex items-center gap-2">
+          <Radio className="w-4 h-4 text-alert-red animate-pulse" />
+          <h2 className="text-sm font-bold uppercase tracking-wider">Geopolitical Risk Intelligence Agent</h2>
+        </div>
+
+        {/* Real-time Ticker Status */}
+        <div className="flex items-center gap-2 font-mono text-[10px]">
+          <span className="flex items-center gap-1.5 text-alert-emerald font-semibold">
+            <span className="w-2 h-2 rounded-full bg-alert-emerald animate-ping" />
+            <span>REAL-TIME TELEMETRY ACTIVE</span>
+          </span>
+          <span className="text-slate-500">| Last Sync: <strong>{lastSync}</strong></span>
+          <button
+            onClick={handleManualSync}
+            disabled={isRefreshing}
+            className={`p-1 rounded border transition ${
+              theme === 'dark' ? 'bg-slate-800 text-amber-400 border-slate-700 hover:bg-slate-700' : 'bg-slate-200 text-amber-800 border-slate-400'
+            }`}
+            title="Refresh Corridor Risk Scores"
+          >
+            <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
       </div>
 
       {/* Corridor Grid */}

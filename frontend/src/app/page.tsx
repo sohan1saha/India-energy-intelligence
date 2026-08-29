@@ -16,6 +16,7 @@ export default function Home() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [selectedStrategyId, setSelectedStrategyId] = useState<string | null>(null);
   const [isCopilotOpen, setIsCopilotOpen] = useState<boolean>(false);
+  const [lastTick, setLastTick] = useState<number>(0);
 
   // Initial Scenario State computed with exact 3-lever math engine (80% Hormuz, 50% Red Sea, 30 Days)
   const [simulationResult, setSimulationResult] = useState<any>(calculateDisruptionScenario(80, 50, 30));
@@ -261,37 +262,33 @@ export default function Home() {
     }
   ]);
 
+  // Real-time automatic polling & streaming telemetry update loop
   useEffect(() => {
-    fetch('/api/risk/report')
-      .then(res => res.json())
-      .then(data => {
-        if (data.corridors && data.corridors.length > 0) {
-          setCorridors(data.corridors);
-        }
-      })
-      .catch(() => {
-        fetch('http://localhost:8000/api/risk/report')
-          .then(res => res.json())
-          .then(data => {
-            if (data.corridors && data.corridors.length > 0) {
-              setCorridors(data.corridors);
-            }
-          })
-          .catch(() => {});
-      });
+    const fetchRealtimeData = () => {
+      fetch('/api/risk/report')
+        .then(res => res.json())
+        .then(data => {
+          if (data.corridors && data.corridors.length > 0) {
+            setCorridors(data.corridors);
+          }
+        })
+        .catch(() => {
+          fetch('http://localhost:8000/api/risk/report')
+            .then(res => res.json())
+            .then(data => {
+              if (data.corridors && data.corridors.length > 0) {
+                setCorridors(data.corridors);
+              }
+            })
+            .catch(() => {});
+        });
 
-    fetch('/api/procurement/reroute', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deficit_bpd: 1200000.0 })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.strategies && data.strategies.length > 0) {
-          setStrategies(data.strategies);
-        }
-      })
-      .catch(() => {});
+      setLastTick(prev => prev + 1);
+    };
+
+    fetchRealtimeData();
+    const interval = setInterval(fetchRealtimeData, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleSimulateScenario = async (hormuz: number, redSea: number, duration: number) => {
@@ -334,10 +331,10 @@ export default function Home() {
         
         {/* TIER 1: TOP HERO KPI BANNER */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
-          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+          <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>NATIONAL RISK INDEX</span>
-              <ShieldAlert className="w-4 h-4 text-alert-red" />
+              <ShieldAlert className="w-4 h-4 text-alert-red animate-pulse" />
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-alert-red">72.2</span>
@@ -345,43 +342,55 @@ export default function Home() {
                 HIGH RISK
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-1 font-sans">Hormuz & Red Sea Chokepoint Alerts Active</p>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-alert-red animate-ping" />
+              <span>Hormuz & Red Sea Chokepoint Alerts Active</span>
+            </p>
           </div>
 
-          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+          <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>ISPRL STRATEGIC RESERVE</span>
-              <Database className="w-4 h-4 text-alert-emerald" />
+              <Database className="w-4 h-4 text-alert-emerald animate-pulse" />
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-alert-emerald">9.5 Days</span>
               <span className="text-xs text-slate-400">39.16M bbls</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-1 font-sans">Visakhapatnam, Mangalore & Padur Caverns</p>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-alert-emerald animate-ping" />
+              <span>Visakhapatnam, Mangalore & Padur Caverns</span>
+            </p>
           </div>
 
-          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+          <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>DAILY CRUDE IMPORTS</span>
-              <Activity className="w-4 h-4 text-alert-amber" />
+              <Activity className="w-4 h-4 text-alert-amber animate-pulse" />
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-alert-amber">4.5M bpd</span>
               <span className="text-xs text-alert-amber font-semibold">88% Import Dep.</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-1 font-sans">45% Volume Transits Strait of Hormuz</p>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-alert-amber animate-ping" />
+              <span>45% Volume Transits Strait of Hormuz</span>
+            </p>
           </div>
 
-          <div className={`p-4 rounded-xl border ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
+          <div className={`p-4 rounded-xl border transition-all ${theme === 'dark' ? 'bg-dark-card border-dark-border' : 'bg-cream-card border-cream-border'}`}>
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>SUPERTANKERS AT SEA</span>
-              <Navigation className="w-4 h-4 text-alert-cyan" />
+              <Navigation className="w-4 h-4 text-alert-cyan animate-pulse" />
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-alert-cyan">3 VLCCs</span>
               <span className="text-xs text-slate-400">35.5M bbls</span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-1 font-sans">Indian Ocean & Arabian Sea Corridors</p>
+            <p className="text-[11px] text-slate-500 mt-1 font-sans flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-alert-cyan animate-ping" />
+              <span>Indian Ocean & Arabian Sea Corridors</span>
+            </p>
           </div>
         </div>
 
